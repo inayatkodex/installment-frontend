@@ -1,0 +1,12 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.admin-navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 40; height: $navbar-height; padding: 0 8px;
+  @include flex(8px); background: $primary-dark; color: $white;
+  .an-menu { width: 48px; height: 48px; border: 0; background: none; color: $white; @include flex-center(); }
+  .an-brand { flex: 1; min-width: 0; strong { font-size: 17px; margin-right: 8px; } span { font-size: 12px; padding: 2px 8px; border-radius: 99px; background: rgba(255, 255, 255, 0.18); } }
+  .an-right { @include flex(10px); .an-user { font-size: 14px; display: none; } }
+  .an-logout { @include flex(6px); min-height: 44px; padding: 0 12px; border: 0; border-radius: 10px; background: rgba(255, 255, 255, 0.14); color: $white; font-size: 14px; font-weight: 700; }
+  @include from-desktop() { padding: 0 24px; .an-menu { display: none; } .an-right .an-user { display: inline; } }
+}

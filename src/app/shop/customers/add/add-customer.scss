@@ -1,0 +1,4 @@
+@use "../../../../styles/mixin.scss" as *;
+@use "../../../../styles/variables.scss" as *;
+
+.add-customer-page { .ac-back { @include flex(4px); min-height: 48px; font-size: 15px; font-weight: 700; color: $primary; margin-bottom: 4px; } }

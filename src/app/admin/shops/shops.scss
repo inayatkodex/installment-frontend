@@ -1,0 +1,10 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.admin-shops {
+  .as-filters { @include flex-wrapper(10px); margin: 12px 0 14px; }
+  .as-fee { @include flex(10px); flex-wrap: wrap; span { font-size: 14px; color: $muted; } }
+  .as-error { color: $danger; font-weight: 600; text-align: center; padding: 24px 0; }
+  .as-loading { opacity: 0.6; transition: opacity 0.15s; }
+  @include from-desktop() { .search-bar { max-width: 420px; } }
+}

@@ -1,0 +1,73 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.shop-sidebar {
+  display: none;
+}
+
+.shop-tabs {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  height: $tabs-height;
+  padding-bottom: env(safe-area-inset-bottom);
+  display: flex;
+  background: $white;
+  border-top: 1px solid #e5e7eb;
+  a {
+    flex: 1;
+    @include flex-wrapper(2px);
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: $muted;
+    min-width: 0;
+  }
+  a.active {
+    color: $primary;
+    font-weight: 700;
+  }
+}
+
+@include from-desktop() {
+  .shop-tabs {
+    display: none;
+  }
+  .shop-sidebar {
+    display: block;
+    position: fixed;
+    top: $navbar-height;
+    left: 0;
+    bottom: 0;
+    width: $sidebar-width;
+    z-index: 30;
+    background: $white;
+    border-right: 1px solid #e5e7eb;
+    padding: 16px 12px;
+    nav {
+      @include flex-wrapper(4px);
+    }
+    a {
+      @include flex(12px);
+      min-height: 52px;
+      padding: 0 14px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      color: $muted;
+      .ur {
+        margin-left: auto;
+        font-size: 15px;
+      }
+      &:hover {
+        background: $primary-soft;
+      }
+    }
+    a.active {
+      background: $primary-soft;
+      color: $primary;
+    }
+  }
+}

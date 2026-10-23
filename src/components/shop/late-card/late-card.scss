@@ -1,0 +1,11 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.late-card {
+  @include card(); @include flex-wrapper(8px);
+  .lc-top { @include flex(12px); }
+  .lc-avatar { width: 44px; height: 44px; border-radius: 50%; background: $danger-soft; color: $danger; font-weight: 700; font-size: 14px; @include flex-center(); flex: none; &.lc-avatar-img { object-fit: cover; } }
+  .lc-name { flex: 1; min-width: 0; @include flex-wrapper(0); a { font-weight: 700; font-size: 16px; @include eclipse(); } span { font-size: 13px; color: $muted; } }
+  .lc-mid { @include flex-between(); align-items: baseline; strong { font-size: 24px; color: $danger; font-variant-numeric: tabular-nums; } span { font-size: 14px; color: $muted; } }
+  .lc-last { font-size: 13px; color: $muted; margin-bottom: 4px; }
+}

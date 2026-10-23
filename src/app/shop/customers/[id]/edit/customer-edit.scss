@@ -1,0 +1,201 @@
+@use "../../../../../styles/mixin.scss" as *;
+@use "../../../../../styles/variables.scss" as *;
+
+.customer-edit-page {
+  @include flex-wrapper(16px);
+  padding-bottom: 30px;
+  @include from-desktop() { max-width: 640px; }
+
+  .ce-back {
+    @include flex(4px);
+    min-height: 48px;
+    font-size: 15px;
+    font-weight: 700;
+    color: $primary;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    padding: 0;
+  }
+
+  .ce-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1e293b;
+    margin-top: -6px;
+  }
+
+  .ce-card {
+    @include card();
+    @include flex-wrapper(14px);
+
+    h2 {
+      font-size: 17px;
+      font-weight: 700;
+      color: #1e293b;
+      @include flex-between();
+      span.muted {
+        font-size: 13px;
+        color: $muted;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .ce-form-grid {
+    @include grid(2, 12px);
+    @include mobile() {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .ce-full-field {
+    grid-column: 1 / -1;
+  }
+
+  .ce-info-grid {
+    @include grid(2, 12px);
+    @include mobile() {
+      grid-template-columns: 1fr;
+    }
+
+    .ce-info-item {
+      @include flex-wrapper(2px);
+      background: #f8fafc;
+      border: 1px solid #e5eaf1;
+      border-radius: 12px;
+      padding: 10px 12px;
+
+      span {
+        font-size: 12px;
+        color: $muted;
+      }
+
+      strong {
+        font-size: 14px;
+        color: #1e293b;
+        word-break: break-word;
+      }
+    }
+  }
+
+  .ce-docs-list {
+    @include flex-wrapper(10px);
+  }
+
+  .ce-doc-row {
+    @include flex-between(12px);
+    background: #f8fafc;
+    border: 1px solid #e5eaf1;
+    border-radius: 14px;
+    padding: 10px 12px;
+    flex-wrap: wrap;
+
+    .ce-doc-left {
+      @include flex(10px);
+      align-items: center;
+      min-width: 0;
+    }
+
+    .ce-doc-thumb {
+      width: 52px;
+      height: 52px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #eef2f6;
+      flex: none;
+      position: relative;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+    }
+
+    .ce-doc-empty-box {
+      width: 52px;
+      height: 52px;
+      border-radius: 10px;
+      background: #f1f5f9;
+      border: 1.5px dashed #cbd5e1;
+      @include flex-center();
+      color: #94a3b8;
+      flex: none;
+    }
+
+    .ce-doc-meta {
+      @include flex-wrapper(2px);
+      strong {
+        font-size: 14px;
+        color: #1e293b;
+      }
+      .ce-has-photo-badge {
+        font-size: 11px;
+        color: #1b5e20;
+        font-weight: 700;
+      }
+      .ce-no-photo-badge {
+        font-size: 11px;
+        color: $muted;
+        font-weight: 600;
+      }
+    }
+
+    .ce-doc-actions {
+      @include flex(8px);
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .ce-action-btn {
+      @include flex(6px);
+      align-items: center;
+      min-height: 38px;
+      padding: 0 12px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+      transition: background 0.15s ease;
+
+      &.change-btn {
+        background: $primary-soft;
+        color: $primary;
+        border-color: rgba(21, 101, 192, 0.2);
+        &:hover { background: #d6e8fb; }
+      }
+
+      &.remove-btn {
+        background: $danger-soft;
+        color: $danger;
+        border-color: rgba(211, 47, 47, 0.2);
+        &:hover { background: #fcdad7; }
+      }
+
+      &.add-btn {
+        background: $primary;
+        color: $white;
+        border-color: $primary;
+        &:hover { background: $primary-dark; }
+      }
+    }
+  }
+
+  .ce-footer-actions {
+    @include flex(12px);
+    margin-top: 8px;
+    .common-btn {
+      flex: 1;
+    }
+  }
+
+  .ce-error {
+    text-align: center;
+    @include flex-wrapper(12px);
+    align-items: center;
+    padding: 24px 0;
+    color: $muted;
+  }
+}

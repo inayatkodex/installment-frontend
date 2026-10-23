@@ -1,0 +1,28 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.common-btn {
+  @include flex(8px);
+  justify-content: center;
+  min-height: 52px;
+  padding: 0 20px;
+  border-radius: 12px;
+  border: 1.5px solid $primary;
+  background: $primary;
+  color: $white;
+  font-size: 16px;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: transform 0.1s ease, background 0.15s ease;
+
+  &:hover:not(:disabled) { background: $primary-dark; }
+  &:active:not(:disabled) { transform: scale(0.98); }
+  &:disabled { opacity: 0.55; cursor: not-allowed; }
+
+  &.sm-btn { min-height: 44px; padding: 0 14px; font-size: 14px; }
+  &.full-btn { width: 100%; }
+  &.outline-btn { background: $white; color: $primary; &:hover:not(:disabled) { background: $primary-soft; } }
+  &.gray-btn { background: $white; color: $text; border-color: $border; &:hover:not(:disabled) { background: #f3f4f6; } }
+  &.danger-btn { background: $danger; border-color: $danger; &:hover:not(:disabled) { background: #8f1515; } }
+  &.success-btn { background: $success; border-color: $success; &:hover:not(:disabled) { background: #144a18; } }
+}

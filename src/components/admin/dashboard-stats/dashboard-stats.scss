@@ -1,0 +1,21 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.dashboard-stats { @include flex-wrapper(26px);
+  h2 { font-size: 19px; .ds-month { font-size: 14px; font-weight: 700; color: $primary; margin-left: 8px; } }
+  .ds-sub { font-size: 14px; color: $muted; margin: 2px 0 12px; }
+
+  .ds-grid { @include grid(2, 12px); @include from-desktop() { grid-template-columns: repeat(4, 1fr); } }
+  .ds-card { @include flex-wrapper(4px); padding: 18px; border-radius: 16px; min-height: 130px;
+    span { font-size: 15px; font-weight: 700; color: $muted; } strong { font-size: 40px; line-height: 1.1; } b { margin-top: auto; font-size: 14px; color: $primary; padding: 6px 0; }
+    &.green { background: $success-soft; strong { color: $success; } } &.yellow { background: $warning-soft; strong { color: $warning; } }
+    &.red { background: $danger-soft; strong { color: $danger; } } &.gray { background: #eef0f3; strong { color: #374151; } } }
+
+  .ds-fees { @include flex-wrapper(12px); @include from-desktop() { display: grid; grid-template-columns: 1fr 1fr 1fr; } }
+  .ds-fee { @include flex-wrapper(6px); padding: 20px; border-radius: 16px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); justify-content: center;
+    span { font-size: 15px; font-weight: 700; color: $muted; } strong { font-size: 34px; font-variant-numeric: tabular-nums; } p { font-size: 15px; color: #374151; }
+    &.green { background: $success-soft; strong { color: $success; } } &.red { background: $danger-soft; strong { color: $danger; } }
+    &.white { background: $white; span { font-size: 18px; color: $text; } } }
+  .ds-bar { height: 12px; border-radius: 99px; background: #d6e4f5; overflow: hidden; margin: 6px 0; i { display: block; height: 100%; background: $primary; } }
+  .ds-link { @include flex-center(); min-height: 44px; border-radius: 12px; border: 1.5px solid $primary; color: $primary; font-size: 14px; font-weight: 700; }
+}

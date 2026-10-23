@@ -1,0 +1,11 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.shop-navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 40;
+  height: $navbar-height; padding: 0 8px 0 16px;
+  @include flex-between();
+  background: $primary; color: $white;
+  .shop-navbar-name { min-width: 0; strong { display: block; font-size: 17px; @include eclipse(); } span { font-size: 12px; opacity: 0.85; } }
+  .shop-navbar-logout { @include flex(6px); min-height: 44px; padding: 0 12px; border: 0; background: rgba(255, 255, 255, 0.14); color: $white; border-radius: 10px; font-size: 14px; font-weight: 700; flex: none; }
+}

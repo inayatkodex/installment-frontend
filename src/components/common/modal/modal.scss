@@ -1,0 +1,41 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.modal-backdrop {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(17, 24, 39, 0.5);
+  @include flex-center();
+  align-items: flex-end;
+  @include from-tablet() { align-items: center; }
+}
+.modal-sheet {
+  width: 100%; max-height: 92vh; overflow-y: auto;
+  background: $white; border-radius: 24px 24px 0 0;
+  padding: 10px 16px calc(20px + env(safe-area-inset-bottom));
+  @include from-tablet() { max-width: 480px; border-radius: 20px; padding: 20px 24px 24px; .modal-handle { display: none; } }
+
+  .modal-handle { display: block; width: 40px; height: 4px; border-radius: 9px; background: $border; margin: 0 auto 12px; }
+  .modal-head { @include flex-between(); h2 { font-size: 20px; @include flex(10px); flex-wrap: wrap; .ur { font-size: 18px; color: $muted; } } }
+  .modal-close { width: 44px; height: 44px; border: 0; border-radius: 50%; background: #f3f4f6; color: $text; @include flex-center(); flex: none; }
+  .modal-body { margin-top: 14px; }
+}
+
+.modal-title-wrap {
+  @include flex(10px);
+  align-items: center;
+}
+
+.modal-backdrop.modal-centered {
+  align-items: center;
+  padding: 16px;
+
+  .modal-sheet {
+    max-width: 480px;
+    border-radius: 20px;
+    padding: 20px 24px 24px;
+
+    .modal-handle {
+      display: none;
+    }
+  }
+}

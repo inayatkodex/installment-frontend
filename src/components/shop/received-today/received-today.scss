@@ -1,0 +1,9 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.received-today { margin-top: 14px; @include flex-wrapper(8px);
+  .rt-band { @include flex-between(8px); min-height: 56px; padding: 0 16px; border: 0; border-radius: 14px; background: $success-soft; color: $success; font-size: 15px; font-weight: 700; width: 100%;
+    > span { @include flex(8px); } }
+  .rt-list { @include flex-wrapper(8px); }
+  .rt-list li { @include card(); @include flex-between(8px); padding: 10px 12px; div { @include flex-wrapper(2px); min-width: 0; strong { font-size: 15px; } span { font-size: 13px; color: $muted; } } }
+}

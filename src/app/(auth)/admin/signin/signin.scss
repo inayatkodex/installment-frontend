@@ -1,0 +1,25 @@
+@use "../../../../styles/mixin.scss" as *;
+@use "../../../../styles/variables.scss" as *;
+
+.admin-signin { min-height: 100vh; display: flex; flex-direction: column; background: $white;
+  @include from-desktop() { flex-direction: row; }
+
+  .as-hero { position: relative; overflow: hidden; background: $primary-dark; color: $white; padding: 28px 20px 32px;
+    &::before, &::after { content: ""; position: absolute; border-radius: 50%; background: rgba(255, 255, 255, 0.07); }
+    &::before { width: 260px; height: 260px; right: -80px; top: -90px; }
+    &::after { width: 180px; height: 180px; left: -60px; bottom: -70px; }
+    @include from-desktop() { flex: 1.05; padding: 64px; display: flex; align-items: center; &::before { width: 420px; height: 420px; right: -140px; top: -120px; } &::after { width: 300px; height: 300px; } }
+    .as-hero-inner { position: relative; z-index: 1; max-width: 520px; }
+    .as-badge { @include flex(10px); width: fit-content; padding: 6px 14px 6px 10px; border-radius: 99px; background: rgba(255, 255, 255, 0.14); font-weight: 700; font-size: 15px; }
+    h1 { font-size: 32px; margin-top: 18px; @include from-desktop() { font-size: 44px; } }
+    .as-lead { font-size: 16px; opacity: 0.9; margin-top: 6px; }
+    ul { @include flex-wrapper(16px); margin-top: 22px; display: none; @include from-tablet() { display: flex; } }
+    li { @include flex(14px); align-items: flex-start; span { width: 44px; height: 44px; border-radius: 12px; background: rgba(255, 255, 255, 0.14); @include flex-center(); flex: none; } strong { font-size: 16px; } p { font-size: 14px; opacity: 0.85; margin-top: 2px; } }
+  }
+
+  .as-form-side { flex: 1; @include flex-center(); padding: 28px 20px 40px; }
+  .as-form { width: 100%; max-width: 400px; @include flex-wrapper(14px); h2 { font-size: 26px; } .as-sub { color: $muted; font-size: 15px; margin-top: -8px; } }
+  .as-fields { @include flex-wrapper(16px); }
+  .as-remember { @include flex(10px); min-height: 44px; font-size: 15px; color: $muted; input { width: 22px; height: 22px; accent-color: $primary; } }
+  .as-demo { font-size: 12px; color: $muted; background: #f3f4f6; padding: 8px 12px; border-radius: 8px; text-align: center; }
+}

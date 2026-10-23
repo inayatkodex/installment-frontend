@@ -1,0 +1,10 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.status-control { @include flex-wrapper(6px); .sc-label { font-size: 13px; font-weight: 700; color: $muted; }
+  .sc-seg { display: grid; grid-template-columns: repeat(2, 1fr); border: 1.5px solid $border; border-radius: 12px; overflow: hidden; background: $white;
+    @include from-tablet() { display: flex; } }
+  button { min-height: 48px; padding: 0 20px; border: 0; background: none; font-size: 14px; font-weight: 700; color: #374151; flex: 1;
+    &:hover:not(.on) { background: #f3f4f6; }
+    &.on { color: $white; &.pending { background: #f9a825; color: #3b2a00; } &.active { background: #2e7d32; } &.inactive { background: $danger; } &.archived { background: #4b5563; } } }
+}

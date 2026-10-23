@@ -1,0 +1,69 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.rp-who {
+  @include flex-wrapper(2px);
+  strong {
+    font-size: 18px;
+  }
+  span {
+    font-size: 14px;
+    color: $muted;
+  }
+  .rp-late {
+    color: $danger;
+    font-weight: 700;
+  }
+}
+.rp-expected {
+  @include flex-between();
+  background: $primary-soft;
+  border-radius: 14px;
+  padding: 14px;
+  margin: 14px 0;
+  span {
+    font-size: 14px;
+    color: $muted;
+  }
+  strong {
+    font-size: 26px;
+    color: $primary-dark;
+    font-variant-numeric: tabular-nums;
+  }
+}
+.rp-fields {
+  @include flex-wrapper(14px);
+}
+.rp-help {
+  font-size: 13px;
+  color: $muted;
+  margin-top: -8px;
+}
+.rp-actions {
+  @include flex(10px);
+  margin-top: 20px;
+  .gray-btn {
+    flex: none;
+  }
+}
+.rp-done {
+  @include flex-wrapper(14px);
+  align-items: center;
+  text-align: center;
+  padding: 8px 0;
+  p {
+    font-size: 17px;
+    line-height: 1.4;
+  }
+  .common-btn {
+    width: 100%;
+  }
+}
+.rp-tick {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: $success-soft;
+  color: $success;
+  @include flex-center();
+}

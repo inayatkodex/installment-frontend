@@ -1,0 +1,171 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.dm-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  background: $primary-soft;
+  color: $primary;
+  border: 1px solid rgba(21, 101, 192, 0.2);
+  font-size: 13px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.15s ease, transform 0.1s ease;
+  &:hover {
+    background: #d6e8fb;
+  }
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+.documents-modal-content {
+  @include flex-wrapper(14px);
+
+  .dm-info-card {
+    background: #f8fafc;
+    border: 1px solid #e5eaf1;
+    border-radius: 14px;
+    padding: 10px 14px;
+    @include flex-wrapper(8px);
+  }
+
+  .dm-info-row {
+    @include flex-between(12px);
+    font-size: 14px;
+    .dm-label {
+      color: $muted;
+      font-size: 13px;
+      flex: none;
+    }
+    .dm-value {
+      color: #1e293b;
+      font-weight: 600;
+      text-align: right;
+      word-break: break-word;
+    }
+  }
+
+  .dm-phone-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .dm-call-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #1b5e20;
+    color: #ffffff;
+    @include flex-center();
+    flex: none;
+    text-decoration: none;
+    transition: opacity 0.15s ease, transform 0.1s ease;
+    &:hover {
+      opacity: 0.9;
+    }
+    &:active {
+      transform: scale(0.94);
+    }
+  }
+
+  .dm-tiles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .dm-tile {
+    background: #ffffff;
+    border: 1px solid #e5eaf1;
+    border-radius: 14px;
+    padding: 8px;
+    text-align: center;
+    @include flex-wrapper(4px);
+    align-items: center;
+    width: 100%;
+    transition: transform 0.15s ease, border-color 0.15s ease;
+
+    &.has-photo {
+      cursor: pointer;
+      border-color: #d6e4f5;
+      &:active {
+        transform: scale(0.98);
+      }
+    }
+
+    &.empty {
+      background: #fafcff;
+      border: 1.5px dashed #bbd6f5;
+      cursor: default;
+    }
+
+    .dm-tile-thumb {
+      width: 100%;
+      height: 72px;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      background: #eef2f6;
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+    }
+
+    .dm-tile-badge {
+      position: absolute;
+      bottom: 4px;
+      left: 4px;
+      right: 4px;
+      background: rgba(46, 125, 50, 0.92);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 4px;
+      border-radius: 6px;
+      text-align: center;
+      letter-spacing: 0.2px;
+    }
+
+    .dm-tile-empty-box {
+      width: 100%;
+      height: 72px;
+      border-radius: 10px;
+      background: #f1f5f9;
+      @include flex-wrapper(4px);
+      align-items: center;
+      justify-content: center;
+      span {
+        font-size: 10px;
+        color: $muted;
+        font-weight: 600;
+      }
+      .dm-empty-icon {
+        color: #94a3b8;
+      }
+    }
+
+    .dm-tile-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1e293b;
+      margin-top: 2px;
+      @include eclipse();
+      max-width: 100%;
+    }
+
+    .dm-tile-sub {
+      font-size: 11px;
+      color: $muted;
+      @include eclipse();
+      max-width: 100%;
+    }
+  }
+}

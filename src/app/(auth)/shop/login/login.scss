@@ -1,0 +1,12 @@
+@use "../../../../styles/mixin.scss" as *;
+@use "../../../../styles/variables.scss" as *;
+
+.shop-login { min-height: 100vh; @include flex-center(); padding: 24px 16px;
+  .shop-login-card { width: 100%; max-width: 420px; @include flex-wrapper(8px); align-items: center; text-align: center; background: $white; border-radius: 24px; padding: 28px 20px; box-shadow: 0 2px 16px rgba(21, 101, 192, 0.12);
+    h1 { font-size: 28px; } .common-btn { margin-top: 8px; } }
+  .shop-login-tag { color: $muted; font-size: 14px; margin-bottom: 14px; }
+  .shop-login-fields { width: 100%; text-align: left; @include flex-wrapper(16px); }
+  .shop-login-divider { width: 100%; @include flex(12px); margin: 14px 0 2px; color: $muted; font-size: 14px; &::before, &::after { content: ""; flex: 1; height: 1px; background: $border; } }
+  .shop-login-signup { width: 100%; @include flex-center(); gap: 10px; min-height: 52px; border-radius: 12px; border: 1.5px solid $primary; color: $primary; font-size: 16px; font-weight: 700; &:hover { background: $primary-soft; } .ur { font-size: 16px; } }
+  .shop-login-demo { margin-top: 12px; font-size: 12px; color: $muted; background: #f3f4f6; padding: 8px 12px; border-radius: 8px; }
+}

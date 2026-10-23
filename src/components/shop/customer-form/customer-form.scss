@@ -1,0 +1,110 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.customer-form { padding-bottom: 96px; @include from-desktop() { padding-bottom: 0; max-width: 560px; }
+  .cf-help { font-size: 14px; color: $muted; }
+  .cf-docs { @include grid(2, 12px); > :last-child { grid-column: 1 / -1; } @include from-tablet() { grid-template-columns: repeat(3, 1fr); > :last-child { grid-column: auto; } } }
+  .cf-card { @include card(); }
+  .cf-card-head { @include flex-between(); margin-bottom: 12px; font-size: 15px; .ur { font-size: 15px; color: $muted; margin-left: 6px; } }
+  .cf-fields { @include flex-wrapper(16px); }
+  .cf-trash { width: 44px; height: 44px; border: 0; border-radius: 50%; background: $danger-soft; color: $danger; @include flex-center(); }
+  .cf-total { @include flex-between(); padding: 14px; background: $primary-soft; border-radius: 14px; font-weight: 700; strong { font-size: 22px; color: $primary-dark; } .ur { font-size: 15px; color: $muted; margin-left: 6px; } }
+
+  .cf-months { border: 0; legend { font-size: 14px; font-weight: 700; margin-bottom: 8px; .ur { font-size: 15px; color: $muted; margin-left: 8px; } } }
+  .cf-chips { @include grid(3, 10px); button { min-height: 56px; border-radius: 12px; border: 1.5px solid $border; background: $white; font-size: 20px; font-weight: 700; color: $text; &.on { background: $primary; border-color: $primary; color: $white; } } }
+
+  .cf-summary { @include card(); @include flex-wrapper(6px);
+    > div { @include flex-between(); font-size: 15px; color: $muted; b { color: $text; font-variant-numeric: tabular-nums; } }
+    .cf-monthly { margin-top: 6px; padding: 12px; background: $success-soft; border-radius: 12px; font-weight: 700; color: $text; strong { font-size: 24px; color: $success; } .ur { font-size: 15px; color: $muted; margin-left: 6px; } }
+    p { font-size: 13px; color: $muted; } }
+
+  .cf-actions { position: fixed; left: 0; right: 0; bottom: calc(#{$tabs-height} + env(safe-area-inset-bottom)); z-index: 30; @include flex(10px); padding: 12px 16px; background: $white; border-top: 1px solid $border; .gray-btn { flex: none; }
+    @include from-desktop() { position: static; margin-top: 24px; padding: 0; border: 0; background: none; } }
+}
+
+.cf-done { @include flex-wrapper(10px); align-items: center; text-align: center; padding-top: 24px; max-width: 460px; h1 { font-size: 26px; } .ur { color: $muted; font-size: 18px; } .common-btn { width: 100%; }
+  .cf-done-card { width: 100%; text-align: left; @include flex-wrapper(8px); > div { @include flex-between(); font-size: 15px; color: $muted; b { color: $text; } } }
+  .cf-tick { width: 76px; height: 76px; border-radius: 50%; background: $success-soft; color: $success; @include flex-center(); }
+  .cf-link-primary { @include flex-center(); width: 100%; min-height: 52px; border-radius: 12px; background: $primary; color: $white; font-weight: 700; }
+  .cf-link { color: $primary; font-weight: 700; padding: 12px; } }
+
+.customer-form {
+  .cf-photo { @include flex(12px); position: relative; }
+  .cf-photo-btn { width: 72px; height: 72px; flex: none; border-radius: 14px; border: 2px dashed #90b4e6; background: $white; color: $primary; @include flex-center(); overflow: hidden; padding: 0; img { width: 100%; height: 100%; object-fit: cover; } }
+  .cf-photo-text { @include flex-wrapper(2px); b { font-size: 14px; } span { font-size: 13px; color: $muted; } }
+  .cf-photo-x { margin-left: auto; width: 44px; height: 44px; border: 0; border-radius: 50%; background: $danger-soft; color: $danger; @include flex-center(); }
+
+  .cf-photo-top {
+    @include flex-wrapper(8px);
+    align-items: center;
+    text-align: center;
+    margin-bottom: 20px;
+    padding-bottom: 4px;
+
+    .cf-photo-circle-wrap {
+      position: relative;
+      width: 96px;
+      height: 96px;
+      margin: 0 auto;
+    }
+    .cf-photo-circle {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      border: 2.5px dashed #90b4e6;
+      background: $white;
+      color: $primary;
+      @include flex-center();
+      overflow: hidden;
+      padding: 0;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      &.has-img {
+        border: 3px solid $primary;
+        box-shadow: 0 4px 12px rgba(21, 101, 192, 0.15);
+      }
+      &:hover {
+        border-color: $primary;
+        background: $primary-soft;
+      }
+    }
+    .cf-photo-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .cf-photo-empty {
+      @include flex-wrapper(4px);
+      align-items: center;
+      color: $primary;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .cf-photo-del {
+      position: absolute;
+      top: -2px;
+      right: -2px;
+      width: 28px;
+      height: 28px;
+      border: 2px solid $white;
+      border-radius: 50%;
+      background: $danger;
+      color: $white;
+      @include flex-center();
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+      transition: transform 0.15s ease;
+      &:hover {
+        transform: scale(1.1);
+      }
+    }
+    .cf-photo-hint {
+      font-size: 13px;
+      color: $muted;
+      .ur {
+        margin-left: 6px;
+        font-size: 13px;
+      }
+    }
+  }
+}

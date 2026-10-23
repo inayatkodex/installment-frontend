@@ -1,0 +1,111 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.shop-dashboard {
+  .sd-grid {
+    @include grid(2, 10px);
+    margin-bottom: 14px;
+    @include from-desktop() {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .sd-cta {
+    @include flex-center();
+    gap: 6px;
+    min-height: 56px;
+    border-radius: 14px;
+    background: $primary;
+    color: $white;
+    font-size: 17px;
+    font-weight: 700;
+    &:hover {
+      background: $primary-dark;
+    }
+  }
+  .sd-add {
+    @include flex-center();
+    gap: 8px;
+    min-height: 52px;
+    margin-top: 10px;
+    border-radius: 14px;
+    border: 1.5px solid $primary;
+    background: $white;
+    color: $primary;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .sd-head {
+    @include flex-between();
+    margin: 22px 0 10px;
+    h2 {
+      font-size: 17px;
+    }
+    a {
+      color: $primary;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 10px 4px;
+    }
+  }
+  .sd-list {
+    @include flex-wrapper(8px);
+  }
+  .sd-late {
+    @include flex(12px);
+    margin-top: 16px;
+    padding: 14px;
+    border-radius: 16px;
+    background: $danger-soft;
+    color: $danger;
+    > span {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: $danger;
+      color: $white;
+      @include flex-center();
+      flex: none;
+    }
+    div {
+      flex: 1;
+      min-width: 0;
+      strong {
+        font-size: 16px;
+      }
+      p {
+        font-size: 13px;
+        color: $muted;
+      }
+    }
+    b {
+      font-size: 18px;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+  .sd-bar {
+    height: 10px;
+    background: #d6e4f5;
+    border-radius: 99px;
+    overflow: hidden;
+    i {
+      display: block;
+      height: 100%;
+      background: $primary;
+    }
+  }
+  .sd-meta {
+    @include flex-between();
+    font-size: 13px;
+    color: $muted;
+    margin-top: 8px;
+  }
+}
+
+.shop-dashboard .sd-all-done {
+  background: $success-soft;
+  color: $success;
+  border-radius: 14px;
+  padding: 14px;
+  font-weight: 700;
+  text-align: center;
+}

@@ -1,0 +1,11 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.customers-page {
+  .cu-head { @include flex-between(); .cu-add-desktop { display: none; } @include from-desktop() { .cu-add-desktop { @include flex-center(); gap: 8px; min-height: 48px; padding: 0 20px; border-radius: 12px; background: $primary; color: $white; font-weight: 700; } } }
+  .cu-filters { margin: 12px 0; }
+  .cu-list { @include flex-wrapper(10px); }
+  .cu-error { text-align: center; @include flex-wrapper(12px); align-items: center; padding: 24px 0; color: $muted; }
+  .cu-empty-btn { @include flex-center(); min-height: 52px; padding: 0 22px; border-radius: 12px; background: $primary; color: $white; font-weight: 700; margin-top: 6px; }
+  .cu-fab { position: fixed; right: 16px; bottom: calc(#{$tabs-height} + 16px + env(safe-area-inset-bottom)); z-index: 35; @include flex(8px); min-height: 56px; padding: 0 22px; border-radius: 99px; background: $primary; color: $white; font-size: 16px; font-weight: 700; box-shadow: 0 4px 14px rgba(21, 101, 192, 0.4); @include from-desktop() { display: none; } }
+}

@@ -1,0 +1,80 @@
+@use "./variables.scss" as *;
+
+@mixin mobile() {
+  @media only screen and (max-width: $breakpoint-sm) {
+    @content;
+  }
+}
+@mixin tablet() {
+  @media only screen and (max-width: $breakpoint-md) {
+    @content;
+  }
+}
+@mixin desktop() {
+  @media only screen and (max-width: $breakpoint-lg) {
+    @content;
+  }
+}
+@mixin desktop-xl() {
+  @media only screen and (max-width: $breakpoint-xl) {
+    @content;
+  }
+}
+
+@mixin flex($gap: 1rem, $align: center, $justify: flex-start) {
+  display: flex;
+  align-items: $align;
+  justify-content: $justify;
+  gap: $gap;
+}
+@mixin flex-between($gap: 1rem) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $gap;
+}
+@mixin flex-center() {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@mixin flex-wrapper($gap: 1rem) {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+}
+@mixin grid($columns: 2, $gap: 1rem) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr);
+  gap: $gap;
+}
+@mixin eclipse() {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@mixin card() {
+  background: $white;
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+// min-width helpers (mobile first)
+@mixin from-tablet() {
+  @media only screen and (min-width: #{$breakpoint-md + 1}) {
+    @content;
+  }
+}
+@mixin from-desktop() {
+  @media only screen and (min-width: 1025px) {
+    @content;
+  }
+}
+
+@mixin hide-scroll() {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}

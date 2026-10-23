@@ -1,0 +1,28 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.status-summary {
+  @include flex-wrapper(14px);
+  .ss-line {
+    background: $primary-soft;
+    color: $primary-dark;
+    border-radius: 14px;
+    padding: 14px;
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 600;
+    b {
+      font-variant-numeric: tabular-nums;
+    }
+  }
+  .ss-grid {
+    @include grid(2, 10px);
+    @include from-desktop() {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  .ss-chart {
+    @include card();
+    padding: 16px;
+  }
+}

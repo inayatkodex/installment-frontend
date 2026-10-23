@@ -1,0 +1,8 @@
+@use "../../../../styles/mixin.scss" as *;
+@use "../../../../styles/variables.scss" as *;
+
+.admin-shop-detail-page {
+  .asd-back { @include flex(4px); min-height: 48px; font-size: 15px; font-weight: 700; color: $primary; }
+  .asd-error { text-align: center; @include flex-wrapper(12px); align-items: center; padding: 24px 0; color: $muted; }
+  @include from-desktop() { max-width: 900px; }
+}

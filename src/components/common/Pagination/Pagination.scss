@@ -1,0 +1,10 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.pagination {
+  @include flex(14px);
+  justify-content: center;
+  margin-top: 16px;
+  font-size: 14px; font-weight: 600; color: $muted;
+  button { width: 48px; height: 48px; border-radius: 12px; border: 1px solid $border; background: $white; color: $text; @include flex-center(); &:disabled { opacity: 0.4; cursor: not-allowed; } }
+}

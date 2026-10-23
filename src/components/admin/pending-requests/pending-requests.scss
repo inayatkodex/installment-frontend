@@ -1,0 +1,14 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.pending-requests { @include card(); padding: 16px;
+  .pr-head { @include flex-between(); margin-bottom: 8px; h2 { font-size: 17px; } a { color: $primary; font-weight: 700; font-size: 14px; padding: 10px 4px; } }
+  ul { @include flex-wrapper(0); }
+  li {
+    @include flex(12px); align-items: center; padding: 12px 0; border-top: 1px solid #eef1f5;
+    .pr-avatar { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid #e5eaf1; flex-shrink: 0; }
+    .pr-avatar-fallback { width: 44px; height: 44px; border-radius: 50%; background: $primary-soft; color: $primary; font-weight: 700; @include flex-center(); flex-shrink: 0; }
+    div { flex: 1 1 180px; min-width: 0; strong { display: block; font-size: 15px; } span { font-size: 13px; color: $muted; } }
+  }
+  .pr-review { @include flex-center(); min-height: 44px; padding: 0 18px; border-radius: 10px; background: $primary; color: $white; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+}

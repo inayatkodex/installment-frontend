@@ -1,0 +1,25 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.empty-state {
+  @include flex-wrapper(8px);
+  align-items: center;
+  text-align: center;
+  padding: 36px 16px;
+  .empty-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: $primary-soft;
+    color: $primary;
+    @include flex-center();
+  }
+  h3 {
+    font-size: 18px;
+  }
+  p {
+    color: $muted;
+    font-size: 15px;
+    max-width: 320px;
+  }
+}

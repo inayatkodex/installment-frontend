@@ -1,0 +1,15 @@
+@use "../../../styles/variables.scss" as *;
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  &.paid, &.active { background: $success-soft; color: $success; }
+  &.pending, &.partial { background: $warning-soft; color: $warning; }
+  &.overdue, &.inactive { background: $danger-soft; color: $danger; }
+  &.archived, &.completed { background: #e5e7eb; color: #374151; }
+  &.next { background: $primary-soft; color: $primary-dark; }
+}

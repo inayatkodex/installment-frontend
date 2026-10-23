@@ -1,0 +1,21 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.signup-form {
+  .su-help { font-size: 14px; color: $muted; }
+  .su-docs { @include grid(2, 12px); }
+  .su-profile-step { @include flex-wrapper(14px); }
+  .su-profile-box { max-width: 280px; width: 100%; margin: 6px auto; }
+  .su-error { color: $danger; font-weight: 600; font-size: 14px; text-align: center; }
+  .su-actions { @include flex(10px); margin-top: 24px; .gray-btn { flex: none; } }
+  .su-login-link { text-align: center; margin-top: 20px; font-size: 15px; color: $muted; a { color: $primary; font-weight: 700; padding: 8px 4px; } }
+}
+
+.su-done {
+  @include flex-wrapper(10px); align-items: center; text-align: center; padding-top: 24px;
+  h1 { font-size: 26px; } .ur { color: $muted; font-size: 18px; }
+  .su-clock { width: 88px; height: 88px; border-radius: 50%; background: $warning-soft; color: $warning; @include flex-center(); }
+  .su-text { font-size: 16px; color: $muted; line-height: 1.5; margin: 6px 0 10px; }
+  .su-card { @include card(); width: 100%; text-align: left; @include flex-wrapper(10px); > div { @include flex-between(); font-size: 15px; color: $muted; b { color: $text; } } }
+  .su-login { @include flex-center(); width: 100%; min-height: 54px; margin-top: 8px; border-radius: 12px; background: $primary; color: $white; font-size: 16px; font-weight: 700; }
+}

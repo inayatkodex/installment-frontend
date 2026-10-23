@@ -1,0 +1,10 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.filter-chips {
+  @include flex(8px);
+  overflow-x: auto;
+  padding-bottom: 2px;
+  @include hide-scroll();
+  button { flex: none; min-height: 44px; padding: 0 16px; border-radius: 99px; background: $white; border: 1px solid $border; color: $muted; font-size: 14px; font-weight: 700; &.on { background: $primary; border-color: $primary; color: $white; } }
+}

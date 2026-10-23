@@ -1,0 +1,7 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.admin-dashboard {
+  .ad-body { @include flex-wrapper(22px); }
+  .ad-error { text-align: center; @include flex-wrapper(12px); align-items: center; padding: 24px 0; color: $muted; }
+}

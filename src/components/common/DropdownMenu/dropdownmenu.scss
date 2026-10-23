@@ -1,0 +1,11 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.dd { display: inline-flex; }
+.dd-trigger { @include flex(6px); min-height: 44px; padding: 0 14px; border-radius: 12px; border: 1.5px solid $primary; background: $white; color: $primary; font-size: 14px; font-weight: 700; white-space: nowrap;
+  &.icon-only { width: 44px; padding: 0; justify-content: center; border-color: transparent; background: #f3f4f6; color: $text; } }
+.dd-menu { position: fixed; z-index: 90; padding: 8px; background: $white; border: 1px solid #e5e7eb; border-radius: 14px; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18); @include flex-wrapper(2px); }
+.dd-item { @include flex-between(12px); min-height: 44px; padding: 0 14px; border: 0; border-radius: 10px; background: none; font-size: 14px; font-weight: 700; text-align: left; color: $text;
+  &:hover:not(:disabled) { background: #f3f4f6; } &:disabled { background: #f3f4f6; color: $muted; cursor: default; }
+  small { font-size: 12px; font-weight: 400; color: $muted; }
+  &.danger { color: $danger; } &.success { color: $success; } &.primary { color: $primary; } }
