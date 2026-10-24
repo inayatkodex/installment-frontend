@@ -12,12 +12,23 @@ interface Props {
   icon?: ReactNode;
 }
 
-const StatCard = ({ label, labelUr, value, hint, tone = "blue", icon }: Props) => (
+const StatCard = ({
+  label,
+  labelUr,
+  value,
+  hint,
+  tone = "blue",
+  icon,
+}: Props) => (
   <div className={`stat-card ${tone}`}>
     <p className="stat-label">
       {icon}
       <span>{label}</span>
-      {labelUr && <span className="ur" lang="ur">{labelUr}</span>}
+      {labelUr && (
+        <span className="ur" lang="ur">
+          {labelUr}
+        </span>
+      )}
     </p>
     <p className="stat-value">{value}</p>
     {hint && <p className="stat-hint">{hint}</p>}

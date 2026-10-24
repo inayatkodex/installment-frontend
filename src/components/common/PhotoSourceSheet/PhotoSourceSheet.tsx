@@ -39,14 +39,49 @@ const PhotoSourceSheet = ({ title, titleUr, onPick, onClose }: Props) => {
   return (
     <Modal title={title} titleUr={titleUr} onClose={onClose}>
       <p className="ps-ask">Photo kaise lena chahte hain?</p>
-      <input ref={cam} type="file" accept="image/*" capture="environment" className="visually-hidden" tabIndex={-1} onChange={handle} />
-      <input ref={gal} type="file" accept="image/*" className="visually-hidden" tabIndex={-1} onChange={handle} />
+      <input
+        ref={cam}
+        type="file"
+        accept="image/*"
+        capture="environment"
+        className="visually-hidden"
+        tabIndex={-1}
+        onChange={handle}
+      />
+      <input
+        ref={gal}
+        type="file"
+        accept="image/*"
+        className="visually-hidden"
+        tabIndex={-1}
+        onChange={handle}
+      />
       <div className="ps-actions">
-        <CommonBtn text="Camera se photo lein" icon={<Camera size={22} />} className="full-btn" onClick={() => cam.current?.click()} disabled={busy} />
-        <CommonBtn text="Gallery se chunein" icon={<ImageIcon size={22} />} className="outline-btn full-btn" onClick={() => gal.current?.click()} disabled={busy} />
-        <CommonBtn text={busy ? "Photo chhoti ho rahi hai…" : "Cancel"} className="gray-btn full-btn" onClick={onClose} disabled={busy} />
+        <CommonBtn
+          text="Camera se photo lein"
+          icon={<Camera size={22} />}
+          className="full-btn"
+          onClick={() => cam.current?.click()}
+          disabled={busy}
+        />
+        <CommonBtn
+          text="Gallery se chunein"
+          icon={<ImageIcon size={22} />}
+          className="outline-btn full-btn"
+          onClick={() => gal.current?.click()}
+          disabled={busy}
+        />
+        <CommonBtn
+          text={busy ? "Photo chhoti ho rahi hai…" : "Cancel"}
+          className="gray-btn full-btn"
+          onClick={onClose}
+          disabled={busy}
+        />
       </div>
-      <p className="ps-help">Camera ya Gallery na khule to phone ki Settings mein jaa kar browser ko Camera aur Photos ki ijazat dein.</p>
+      <p className="ps-help">
+        Camera ya Gallery na khule to phone ki Settings mein jaa kar browser ko
+        Camera aur Photos ki ijazat dein.
+      </p>
     </Modal>
   );
 };

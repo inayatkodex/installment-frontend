@@ -6,6 +6,7 @@ import { LogOut } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { shopLogout } from "@/store/slices/shop/auth/shopAuthSlice";
 import { ROUTES } from "@/constant/appRoutes";
+import BrandLogo from "@/components/common/BrandLogo";
 import ConfirmModal from "@/components/common/modal/confirm-modal/ConfirmModal";
 import "./navbar.scss";
 
@@ -22,17 +23,31 @@ const Navbar = () => {
 
   return (
     <header className="shop-navbar">
-      <div className="shop-navbar-name">
-        <strong>{user?.shopName ?? "Installment Pro"}</strong>
-        <span>Installment Pro</span>
+      <div className="shop-navbar-brand">
+        <BrandLogo size={22} />
+        <div className="shop-navbar-name">
+          <strong>{user?.shopName ?? "Installment Pro"}</strong>
+          <span>Shop account</span>
+        </div>
       </div>
-      <button type="button" className="shop-navbar-logout" onClick={() => setConfirm(true)} aria-label="Logout">
+      <button
+        type="button"
+        className="shop-navbar-logout"
+        onClick={() => setConfirm(true)}
+        aria-label="Logout"
+      >
         <LogOut size={20} />
         <span>Logout</span>
       </button>
 
       {confirm && (
-        <ConfirmModal title="Logout karna hai?" message="Aap dobara login karke wapas aa sakte hain." confirmText="Haan, Logout" onConfirm={logout} onCancel={() => setConfirm(false)} />
+        <ConfirmModal
+          title="Logout karna hai?"
+          message="Aap dobara login karke wapas aa sakte hain."
+          confirmText="Haan, Logout"
+          onConfirm={logout}
+          onCancel={() => setConfirm(false)}
+        />
       )}
     </header>
   );

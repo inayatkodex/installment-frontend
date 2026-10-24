@@ -3,7 +3,38 @@
 
 .collection-donut {
   @include flex(14px);
-  svg { flex: none; max-width: 42vw; height: auto; }
-  .donut-legend { flex: 1; min-width: 0; p { @include flex(8px); font-size: 14px; color: $muted; margin-top: 10px; } strong { font-size: 18px; font-variant-numeric: tabular-nums; } p:first-child { margin-top: 0; }
-    .dot { width: 12px; height: 12px; border-radius: 50%; display: inline-block; &.received { background: $primary; } &.remaining { background: #d6e4f5; } } }
+  svg {
+    flex: none;
+    max-width: 42vw;
+    height: auto;
+  }
+  .donut-legend {
+    flex: 1;
+    min-width: 0;
+    p {
+      @include flex(8px);
+      font-size: 14px;
+      color: $muted;
+      margin-top: 10px;
+    }
+    strong {
+      font-size: 18px;
+      font-variant-numeric: tabular-nums;
+    }
+    p:first-child {
+      margin-top: 0;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+      &.received {
+        background: $primary;
+      }
+      &.remaining {
+        background: $primary-soft;
+      }
+    }
+  }
 }

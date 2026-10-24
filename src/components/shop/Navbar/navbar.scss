@@ -2,10 +2,50 @@
 @use "../../../styles/variables.scss" as *;
 
 .shop-navbar {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 40;
-  height: $navbar-height; padding: 0 8px 0 16px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  height: $navbar-height;
+  padding: 0 8px 0 16px;
   @include flex-between();
-  background: $primary; color: $white;
-  .shop-navbar-name { min-width: 0; strong { display: block; font-size: 17px; @include eclipse(); } span { font-size: 12px; opacity: 0.85; } }
-  .shop-navbar-logout { @include flex(6px); min-height: 44px; padding: 0 12px; border: 0; background: rgba(255, 255, 255, 0.14); color: $white; border-radius: 10px; font-size: 14px; font-weight: 700; flex: none; }
+  background: rgba(255, 255, 255, 0.96);
+  color: $ink;
+  border-bottom: 1px solid $line;
+  box-shadow: 0 4px 16px rgba(16, 64, 128, 0.06);
+  backdrop-filter: blur(14px);
+  .shop-navbar-brand {
+    @include flex(10px);
+    min-width: 0;
+  }
+  .shop-navbar-brand > img {
+    width: 104px;
+    height: auto;
+    flex: none;
+  }
+  .shop-navbar-name {
+    min-width: 0;
+    strong {
+      display: block;
+      font-size: 17px;
+      @include eclipse();
+    }
+    span {
+      font-size: 12px;
+      opacity: 0.85;
+    }
+  }
+  .shop-navbar-logout {
+    @include flex(6px);
+    min-height: 44px;
+    padding: 0 12px;
+    border: 0;
+    background: $primary-soft;
+    color: $primary;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+    flex: none;
+  }
 }

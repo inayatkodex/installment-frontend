@@ -34,7 +34,7 @@
       width: 100px;
       height: 100px;
       border-radius: 50%;
-      background: #bbd6f5;
+      background: $primary-border;
       border: 4px solid $white;
       @include flex-center();
       margin-bottom: 6px;
@@ -63,7 +63,7 @@
       text-align: center;
       span {
         font-size: 13px;
-        color: #374151;
+        color: $text;
         display: block;
         .ur {
           display: inline;
@@ -100,7 +100,7 @@
   .cp-bar {
     height: 10px;
     margin: 14px 16px 6px;
-    background: #d6e4f5;
+    background: $primary-soft;
     border-radius: 99px;
     overflow: hidden;
     i {
@@ -168,7 +168,7 @@
   .cp-item {
     @include flex(12px);
     padding: 10px 0;
-    border-bottom: 1px solid #eef1f5;
+    border-bottom: 1px solid $line;
     &:last-child {
       border: 0;
     }
@@ -231,8 +231,8 @@
     margin-top: 6px;
   }
   .cp-doc-card {
-    background: #f8fafc;
-    border: 1px solid #e5eaf1;
+    background: $bg;
+    border: 1px solid $line;
     border-radius: 14px;
     padding: 8px;
     text-align: center;
@@ -248,13 +248,13 @@
     }
 
     &.has-photo {
-      background: #ffffff;
-      border-color: #d6e4f5;
+      background: $white;
+      border-color: $primary-border;
     }
 
     &.empty {
-      background: #fafcff;
-      border: 1.5px dashed #bbd6f5;
+      background: $primary-soft;
+      border: 1.5px dashed $primary-border;
     }
 
     .cp-doc-thumb {
@@ -263,7 +263,7 @@
       border-radius: 10px;
       overflow: hidden;
       position: relative;
-      background: #eef2f6;
+      background: $bg;
       img {
         width: 100%;
         height: 100%;
@@ -291,7 +291,7 @@
       width: 38px;
       height: 38px;
       border-radius: 50%;
-      background: #e0edfb;
+      background: $primary-soft;
       color: $primary;
       @include flex-center();
       margin-top: 4px;
@@ -301,7 +301,7 @@
     .cp-doc-name {
       font-size: 13px;
       font-weight: 700;
-      color: #1e293b;
+      color: $ink;
       margin-top: 4px;
       @include eclipse();
       max-width: 100%;
@@ -332,7 +332,7 @@
       top: 18px;
       bottom: 30px;
       width: 2px;
-      background: #d6e4f5;
+      background: $primary-soft;
     }
   }
   .cp-inst {
@@ -376,15 +376,15 @@
     min-width: 0;
     border-radius: 14px;
     padding: 10px 12px;
-    background: #f8fafc;
-    border: 1px solid #e5eaf1;
+    background: $bg;
+    border: 1px solid $line;
     @include flex-wrapper(4px);
     &.partial {
-      background: #fffbf0;
+      background: $warning-soft;
       border-color: #f5d88a;
     }
     &.late {
-      background: #fff6f5;
+      background: $danger-soft;
       border-color: #f4c2bd;
     }
     &.next {
@@ -406,7 +406,7 @@
   }
   .cp-mini {
     height: 6px;
-    background: #f3e3b3;
+    background: $warning-soft;
     border-radius: 99px;
     overflow: hidden;
     i {
@@ -424,7 +424,7 @@
   .cp-footer {
     padding: 16px 16px 20px;
     margin-top: 8px;
-    border-top: 1px solid #eef1f5;
+    border-top: 1px solid $line;
   }
   .cp-pay {
     width: 100%;
@@ -464,8 +464,8 @@
 
   .cp-docs-row {
     @include flex-between(12px);
-    background: #f8fafc;
-    border: 1px solid #e5eaf1;
+    background: $bg;
+    border: 1px solid $line;
     border-radius: 14px;
     padding: 12px 14px;
     margin-top: 6px;
@@ -474,7 +474,7 @@
     @include flex(10px);
     align-items: center;
     min-width: 0;
-    color: #1e293b;
+    color: $ink;
     font-size: 14px;
     font-weight: 600;
   }

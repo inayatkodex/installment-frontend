@@ -2,13 +2,57 @@
 @use "../../../styles/variables.scss" as *;
 
 .collection-row {
-  @include card(); @include flex(12px);
-  .cr-avatar { width: 44px; height: 44px; border-radius: 50%; background: #bbd6f5; color: $primary-dark; font-weight: 700; font-size: 14px; @include flex-center(); flex: none; &.cr-avatar-img { object-fit: cover; } }
-  .cr-info { flex: 1; min-width: 0; @include flex-wrapper(3px); align-items: flex-start; }
-  .cr-name { font-weight: 700; font-size: 16px; max-width: 100%; @include eclipse(); }
-  .cr-phone { font-size: 13px; color: $muted; }
-  .cr-end { @include flex-wrapper(6px); align-items: flex-end; flex: none; strong { font-size: 17px; font-variant-numeric: tabular-nums; } }
-  .cr-view { @include flex-center(); min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1.5px solid $primary; color: $primary; font-size: 14px; font-weight: 700; }
+  @include card();
+  @include flex(12px);
+  .cr-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: $primary-border;
+    color: $primary-dark;
+    font-weight: 700;
+    font-size: 14px;
+    @include flex-center();
+    flex: none;
+    &.cr-avatar-img {
+      object-fit: cover;
+    }
+  }
+  .cr-info {
+    flex: 1;
+    min-width: 0;
+    @include flex-wrapper(3px);
+    align-items: flex-start;
+  }
+  .cr-name {
+    font-weight: 700;
+    font-size: 16px;
+    max-width: 100%;
+    @include eclipse();
+  }
+  .cr-phone {
+    font-size: 13px;
+    color: $muted;
+  }
+  .cr-end {
+    @include flex-wrapper(6px);
+    align-items: flex-end;
+    flex: none;
+    strong {
+      font-size: 17px;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+  .cr-view {
+    @include flex-center();
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: 12px;
+    border: 1.5px solid $primary;
+    color: $primary;
+    font-size: 14px;
+    font-weight: 700;
+  }
   .cr-actions {
     display: flex;
     align-items: center;
@@ -23,7 +67,9 @@
     @include flex-center();
     flex: none;
     text-decoration: none;
-    transition: opacity 0.15s ease, transform 0.1s ease;
+    transition:
+      opacity 0.15s ease,
+      transform 0.1s ease;
     &:hover {
       opacity: 0.9;
     }

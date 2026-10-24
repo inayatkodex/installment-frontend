@@ -2,8 +2,41 @@
 @use "../../../styles/variables.scss" as *;
 
 .collection-page {
-  .cp-top { @include grid(3, 8px); margin-bottom: 12px; > div { @include card(); padding: 10px; @include flex-wrapper(2px); strong { font-size: 16px; font-variant-numeric: tabular-nums; word-break: break-word; &.ok { color: $success; } } span { font-size: 12px; color: $muted; } } }
-  .cp-list { @include flex-wrapper(8px); margin-top: 12px; }
-  .cp-empty { text-align: center; color: $muted; padding: 24px 0; }
-  .cp-error { text-align: center; @include flex-wrapper(12px); align-items: center; padding: 24px 0; color: $muted; }
+  .cp-top {
+    @include grid(3, 8px);
+    margin-bottom: 12px;
+    > div {
+      @include card();
+      padding: 10px;
+      @include flex-wrapper(2px);
+      strong {
+        font-size: 16px;
+        font-variant-numeric: tabular-nums;
+        word-break: break-word;
+        &.ok {
+          color: $success;
+        }
+      }
+      span {
+        font-size: 12px;
+        color: $muted;
+      }
+    }
+  }
+  .cp-list {
+    @include flex-wrapper(8px);
+    margin-top: 12px;
+  }
+  .cp-empty {
+    text-align: center;
+    color: $muted;
+    padding: 24px 0;
+  }
+  .cp-error {
+    text-align: center;
+    @include flex-wrapper(12px);
+    align-items: center;
+    padding: 24px 0;
+    color: $muted;
+  }
 }

@@ -2,17 +2,84 @@
 @use "../../../styles/variables.scss" as *;
 
 .customer-card {
-  @include card(); @include flex(12px); padding: 12px;
-  .cc-avatar { width: 52px; height: 52px; border-radius: 50%; background: #bbd6f5; color: $primary-dark; font-weight: 700; @include flex-center(); flex: none; &.cc-avatar-img { object-fit: cover; } }
-  .cc-body { flex: 1; min-width: 0; }
-  .cc-top { @include flex-between(8px); strong { font-size: 16px; @include eclipse(); } }
-  .cc-sub { font-size: 13px; color: $muted; margin-top: 2px; }
-  .cc-bottom { @include flex-between(8px); margin-top: 4px; font-size: 14px; b { font-size: 16px; font-variant-numeric: tabular-nums; } .cc-count { font-size: 12px; color: $muted; text-align: right; } }
-  .cc-progress { height: 6px; background: #d6e4f5; border-radius: 99px; margin-top: 8px; overflow: hidden; i { display: block; height: 100%; background: $primary; } }
-  .cc-arrow { color: $muted; flex: none; }
-  &:active { background: #f8fafc; }
+  @include card();
+  @include flex(12px);
+  padding: 12px;
+  .cc-avatar {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: $primary-border;
+    color: $primary-dark;
+    font-weight: 700;
+    @include flex-center();
+    flex: none;
+    &.cc-avatar-img {
+      object-fit: cover;
+    }
+  }
+  .cc-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .cc-top {
+    @include flex-between(8px);
+    strong {
+      font-size: 16px;
+      @include eclipse();
+    }
+  }
+  .cc-sub {
+    font-size: 13px;
+    color: $muted;
+    margin-top: 2px;
+  }
+  .cc-bottom {
+    @include flex-between(8px);
+    margin-top: 4px;
+    font-size: 14px;
+    b {
+      font-size: 16px;
+      font-variant-numeric: tabular-nums;
+    }
+    .cc-count {
+      font-size: 12px;
+      color: $muted;
+      text-align: right;
+    }
+  }
+  .cc-progress {
+    height: 6px;
+    background: $primary-soft;
+    border-radius: 99px;
+    margin-top: 8px;
+    overflow: hidden;
+    i {
+      display: block;
+      height: 100%;
+      background: $primary;
+    }
+  }
+  .cc-arrow {
+    color: $muted;
+    flex: none;
+  }
+  &:active {
+    background: $bg;
+  }
 }
 
-.cc-wrap { position: relative; }
-.cc-menu { position: absolute; right: 8px; top: 8px; }
-.customer-card.has-menu { padding-right: 64px; .cc-arrow { display: none; } }
+.cc-wrap {
+  position: relative;
+}
+.cc-menu {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+}
+.customer-card.has-menu {
+  padding-right: 64px;
+  .cc-arrow {
+    display: none;
+  }
+}

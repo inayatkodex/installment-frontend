@@ -1,11 +1,50 @@
 @use "../../../styles/mixin.scss" as *;
 @use "../../../styles/variables.scss" as *;
 
-.fee-card { @include card(); padding: 18px; @include flex-wrapper(12px);
-  .fc-head { @include flex-between(); h2 { font-size: 18px; } strong { font-size: 22px; color: $primary; } }
-  .fc-note { font-size: 14px; color: $muted; line-height: 1.5; }
-  ul { @include flex-wrapper(10px); }
-  li { @include flex-between(10px); flex-wrap: wrap; padding: 12px 14px; border-radius: 12px; &.paid { background: #f4faf5; } &.unpaid { background: #fff6f5; }
-    b { display: block; font-size: 15px; } span { font-size: 13px; color: $muted; } }
-  .fc-right { @include flex(10px); flex-wrap: wrap; }
+.fee-card {
+  @include card();
+  padding: 18px;
+  @include flex-wrapper(12px);
+  .fc-head {
+    @include flex-between();
+    h2 {
+      font-size: 18px;
+    }
+    strong {
+      font-size: 22px;
+      color: $primary;
+    }
+  }
+  .fc-note {
+    font-size: 14px;
+    color: $muted;
+    line-height: 1.5;
+  }
+  ul {
+    @include flex-wrapper(10px);
+  }
+  li {
+    @include flex-between(10px);
+    flex-wrap: wrap;
+    padding: 12px 14px;
+    border-radius: 12px;
+    &.paid {
+      background: #f4faf5;
+    }
+    &.unpaid {
+      background: #fff6f5;
+    }
+    b {
+      display: block;
+      font-size: 15px;
+    }
+    span {
+      font-size: 13px;
+      color: $muted;
+    }
+  }
+  .fc-right {
+    @include flex(10px);
+    flex-wrap: wrap;
+  }
 }

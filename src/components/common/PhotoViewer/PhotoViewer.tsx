@@ -21,15 +21,31 @@ const PhotoViewer = ({ src, title, onClose, onReplace, onDelete }: Props) => {
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = prev; };
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prev;
+    };
   }, [onClose]);
 
   return (
-    <div className="photo-viewer" role="dialog" aria-modal="true" aria-label={title}>
+    <div
+      className="photo-viewer"
+      role="dialog"
+      aria-modal="true"
+      aria-label={title}
+    >
       <header>
-        <button type="button" onClick={onClose} aria-label="Band karein"><X size={24} /></button>
+        <button type="button" onClick={onClose} aria-label="Band karein">
+          <X size={24} />
+        </button>
         <strong>{title}</strong>
-        <button type="button" onClick={() => setZoom((z) => !z)} aria-label={zoom ? "Chhota karein" : "Bara karein"}>{zoom ? <ZoomOut size={22} /> : <ZoomIn size={22} />}</button>
+        <button
+          type="button"
+          onClick={() => setZoom((z) => !z)}
+          aria-label={zoom ? "Chhota karein" : "Bara karein"}
+        >
+          {zoom ? <ZoomOut size={22} /> : <ZoomIn size={22} />}
+        </button>
       </header>
       <div className="pv-stage">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -38,13 +54,21 @@ const PhotoViewer = ({ src, title, onClose, onReplace, onDelete }: Props) => {
       {(onReplace || onDelete) && (
         <div className="pv-actions">
           {onReplace && (
-            <button type="button" className="pv-btn pv-replace" onClick={onReplace}>
+            <button
+              type="button"
+              className="pv-btn pv-replace"
+              onClick={onReplace}
+            >
               <Camera size={18} />
               <span>Badlein</span>
             </button>
           )}
           {onDelete && (
-            <button type="button" className="pv-btn pv-delete" onClick={onDelete}>
+            <button
+              type="button"
+              className="pv-btn pv-delete"
+              onClick={onDelete}
+            >
               <Trash2 size={18} />
               <span>Hata dein</span>
             </button>

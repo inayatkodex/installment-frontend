@@ -80,7 +80,8 @@ const CustomerForm = () => {
         !Number.isSafeInteger(Number(form.months)) ||
         Number(form.months) < 1
       )
-        e.months = "Mahino ki tadaad 1 ya us se zyada poora number honi chahiye";
+        e.months =
+          "Mahino ki tadaad 1 ya us se zyada poora number honi chahiye";
       if (toNumber(form.down) > total)
         e.down = "Advance kul qeemat se zyada nahi ho sakta";
       if (!form.firstDue) e.firstDue = "Pehli qist ki tareekh chunein";
@@ -115,9 +116,15 @@ const CustomerForm = () => {
         })),
       );
       const documents = {
-        cnicFront: form.docs.cnicFront ? await fileToDataUrl(form.docs.cnicFront) : undefined,
-        cnicBack: form.docs.cnicBack ? await fileToDataUrl(form.docs.cnicBack) : undefined,
-        other: form.docs.other ? await fileToDataUrl(form.docs.other) : undefined,
+        cnicFront: form.docs.cnicFront
+          ? await fileToDataUrl(form.docs.cnicFront)
+          : undefined,
+        cnicBack: form.docs.cnicBack
+          ? await fileToDataUrl(form.docs.cnicBack)
+          : undefined,
+        other: form.docs.other
+          ? await fileToDataUrl(form.docs.other)
+          : undefined,
       };
       const res = await dispatch(
         createCustomer({

@@ -15,15 +15,27 @@ interface Props {
 }
 
 const DOC_CONFIGS = [
-  { key: "cnicFront" as const, label: "CNIC front", labelUr: "شناختی کارڈ آگے" },
-  { key: "cnicBack" as const, label: "CNIC back", labelUr: "شناختی کارڈ پیچھے" },
+  {
+    key: "cnicFront" as const,
+    label: "CNIC front",
+    labelUr: "شناختی کارڈ آگے",
+  },
+  {
+    key: "cnicBack" as const,
+    label: "CNIC back",
+    labelUr: "شناختی کارڈ پیچھے",
+  },
   { key: "other" as const, label: "Other paper", labelUr: "دوسرا کاغذ" },
 ];
 
 const DocumentsModal = ({ customer, onClose }: Props) => {
-  const [viewer, setViewer] = useState<{ src: string; title: string } | null>(null);
+  const [viewer, setViewer] = useState<{ src: string; title: string } | null>(
+    null,
+  );
 
-  const cleanPhone = customer.phone ? customer.phone.replace(/[^\d+]/g, "") : "";
+  const cleanPhone = customer.phone
+    ? customer.phone.replace(/[^\d+]/g, "")
+    : "";
 
   return (
     <>
@@ -97,7 +109,9 @@ const DocumentsModal = ({ customer, onClose }: Props) => {
                       <span className="dm-tile-badge">Photo hai</span>
                     </div>
                     <strong className="dm-tile-title">{doc.label}</strong>
-                    <span className="dm-tile-sub ur" lang="ur">{doc.labelUr}</span>
+                    <span className="dm-tile-sub ur" lang="ur">
+                      {doc.labelUr}
+                    </span>
                   </button>
                 );
               }
@@ -108,7 +122,9 @@ const DocumentsModal = ({ customer, onClose }: Props) => {
                     <span>Photo nahi hai</span>
                   </div>
                   <strong className="dm-tile-title">{doc.label}</strong>
-                  <span className="dm-tile-sub ur" lang="ur">{doc.labelUr}</span>
+                  <span className="dm-tile-sub ur" lang="ur">
+                    {doc.labelUr}
+                  </span>
                 </div>
               );
             })}

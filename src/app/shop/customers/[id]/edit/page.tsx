@@ -40,7 +40,9 @@ const CustomerEditPage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
-  const { detail, detailLoading, error } = useAppSelector((s) => s.shopCustomers);
+  const { detail, detailLoading, error } = useAppSelector(
+    (s) => s.shopCustomers,
+  );
 
   const [formData, setFormData] = useState({
     name: "",
@@ -171,7 +173,7 @@ const CustomerEditPage = () => {
             phone: formData.phone.trim(),
             cnic: formData.cnic.trim(),
             address: formData.address.trim(),
-          })
+          }),
         ).unwrap();
       }
 
@@ -186,14 +188,14 @@ const CustomerEditPage = () => {
                   customerId: detail.id,
                   docKey: d.key,
                   photo: current,
-                })
+                }),
               ).unwrap();
             } else {
               await dispatch(
                 deleteCustomerDocument({
                   customerId: detail.id,
                   docKey: d.key,
-                })
+                }),
               ).unwrap();
             }
           }
@@ -205,7 +207,7 @@ const CustomerEditPage = () => {
     } catch (e) {
       showToast(
         typeof e === "string" ? e : "Tabdeeliyan save nahi ho sakeen",
-        "error"
+        "error",
       );
     } finally {
       setSaving(false);

@@ -1,7 +1,37 @@
 @use "../../../../styles/mixin.scss" as *;
 @use "../../../../styles/variables.scss" as *;
 
-.shop-signup { min-height: 100vh;
-  .shop-signup-head { height: $navbar-height; @include flex(8px); padding: 0 12px 0 4px; background: $primary; color: $white; strong { font-size: 17px; flex: 1; @include eclipse(); } .ur { font-size: 16px; } a { width: 48px; height: 48px; @include flex-center(); } }
-  .shop-signup-body { max-width: 520px; margin: 0 auto; padding: 20px 16px 40px; }
+.shop-signup {
+  min-height: 100vh;
+  .shop-signup-head {
+    height: $navbar-height;
+    @include flex(8px);
+    padding: 0 12px 0 4px;
+    background: $primary;
+    color: $white;
+    strong {
+      font-size: 17px;
+      flex: 1;
+      @include eclipse();
+    }
+    .ur {
+      font-size: 16px;
+    }
+    a {
+      width: 48px;
+      height: 48px;
+      @include flex-center();
+    }
+  }
+  .shop-signup-body {
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 20px 16px 40px;
+  }
+  .shop-signup-logo {
+    display: block;
+    width: 132px;
+    height: auto;
+    margin: 0 auto 20px;
+  }
 }

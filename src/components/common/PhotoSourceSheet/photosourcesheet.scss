@@ -1,6 +1,20 @@
 @use "../../../styles/mixin.scss" as *;
 @use "../../../styles/variables.scss" as *;
 
-.ps-ask { font-size: 15px; color: $muted; margin-bottom: 14px; }
-.ps-actions { @include flex-wrapper(10px); .common-btn { min-height: 58px; } }
-.ps-help { font-size: 13px; color: $muted; margin-top: 14px; line-height: 1.5; }
+.ps-ask {
+  font-size: 15px;
+  color: $muted;
+  margin-bottom: 14px;
+}
+.ps-actions {
+  @include flex-wrapper(10px);
+  .common-btn {
+    min-height: 58px;
+  }
+}
+.ps-help {
+  font-size: 13px;
+  color: $muted;
+  margin-top: 14px;
+  line-height: 1.5;
+}

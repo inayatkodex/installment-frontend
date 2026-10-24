@@ -9,6 +9,9 @@ $breakpoint-xxl: 1399px;
 $primary: #1565c0;
 $primary-dark: #0d47a1;
 $primary-soft: #e3eefb;
+$primary-border: #bbd6f5;
+$ink: #0b2545;
+$accent: #ffc233;
 $success: #1b5e20;
 $success-soft: #e8f5e9;
 $warning: #7a5200;
@@ -16,9 +19,10 @@ $warning-soft: #fff4dc;
 $danger: #b71c1c;
 $danger-soft: #fdecea;
 $bg: #f4f7fb;
-$text: #1f2937;
+$text: $ink;
 $muted: #4b5563;
-$border: #d1d5db;
+$border: #dce6f3;
+$line: #e5e9f0;
 $white: #ffffff;
 
 // Layout

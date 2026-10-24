@@ -8,7 +8,9 @@ export const metadata = { title: "Naya customer · Installment Pro" };
 
 const AddCustomerPage = () => (
   <div className="add-customer-page">
-    <Link href={ROUTES.SHOP.CUSTOMERS} className="ac-back"><ChevronLeft size={22} aria-hidden="true" /> Customers</Link>
+    <Link href={ROUTES.SHOP.CUSTOMERS} className="ac-back">
+      <ChevronLeft size={22} aria-hidden="true" /> Customers
+    </Link>
     <CustomerForm />
   </div>
 );

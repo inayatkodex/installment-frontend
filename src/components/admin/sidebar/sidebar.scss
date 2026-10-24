@@ -34,7 +34,7 @@
     width: $sidebar-width;
     z-index: 30;
     background: $white;
-    border-right: 1px solid #e5e7eb;
+    border-right: 1px solid $line;
     padding: 16px 12px;
     overflow-y: auto;
   }

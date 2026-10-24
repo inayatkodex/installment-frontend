@@ -17,13 +17,27 @@ const AdminShopDetailPage = () => {
   const dispatch = useAppDispatch();
   const { detail, detailLoading, error } = useAppSelector((s) => s.adminShops);
 
-  useEffect(() => { dispatch(fetchAdminShop(id)); }, [dispatch, id]);
+  useEffect(() => {
+    dispatch(fetchAdminShop(id));
+  }, [dispatch, id]);
 
   return (
     <div className="admin-shop-detail-page">
-      <Link href={ROUTES.ADMIN.SHOPS} className="asd-back"><ChevronLeft size={22} aria-hidden="true" /> Shops</Link>
-      {detail && detail.id === id ? <ShopDetail shop={detail} /> : detailLoading ? <Loader /> : error ? (
-        <div className="asd-error" role="alert"><p>{error}</p><CommonBtn text="Try again" onClick={() => dispatch(fetchAdminShop(id))} /></div>
+      <Link href={ROUTES.ADMIN.SHOPS} className="asd-back">
+        <ChevronLeft size={22} aria-hidden="true" /> Shops
+      </Link>
+      {detail && detail.id === id ? (
+        <ShopDetail shop={detail} />
+      ) : detailLoading ? (
+        <Loader />
+      ) : error ? (
+        <div className="asd-error" role="alert">
+          <p>{error}</p>
+          <CommonBtn
+            text="Try again"
+            onClick={() => dispatch(fetchAdminShop(id))}
+          />
+        </div>
       ) : null}
     </div>
   );

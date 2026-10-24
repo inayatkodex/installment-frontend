@@ -3,11 +3,72 @@
 
 .month-picker {
   @include flex(8px);
-  .mp-arrow { width: 52px; height: 52px; flex: none; border-radius: 12px; border: 1px solid $border; background: $white; color: $text; @include flex-center(); &:disabled { opacity: 0.4; cursor: not-allowed; } }
-  .mp-current { flex: 1; min-height: 52px; @include flex(8px); justify-content: center; border-radius: 12px; background: $white; border: 1.5px solid $primary; color: $primary-dark; font-size: 18px; font-weight: 700; }
+  .mp-arrow {
+    width: 52px;
+    height: 52px;
+    flex: none;
+    border-radius: 12px;
+    border: 1px solid $border;
+    background: $white;
+    color: $text;
+    @include flex-center();
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+  .mp-current {
+    flex: 1;
+    min-height: 52px;
+    @include flex(8px);
+    justify-content: center;
+    border-radius: 12px;
+    background: $white;
+    border: 1.5px solid $primary;
+    color: $primary-dark;
+    font-size: 18px;
+    font-weight: 700;
+  }
 }
-.mp-year { @include flex-between(); margin-bottom: 12px; strong { font-size: 22px; } button { width: 48px; height: 48px; border-radius: 12px; border: 1px solid $border; background: $white; @include flex-center(); &:disabled { opacity: 0.4; } } }
+.mp-year {
+  @include flex-between();
+  margin-bottom: 12px;
+  strong {
+    font-size: 22px;
+  }
+  button {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    border: 1px solid $border;
+    background: $white;
+    @include flex-center();
+    &:disabled {
+      opacity: 0.4;
+    }
+  }
+}
 .mp-grid {
-  @include grid(3, 10px); margin-bottom: 14px;
-  button { min-height: 56px; border-radius: 12px; border: 1.5px solid $border; background: $white; font-size: 16px; font-weight: 700; color: $text; &.on { background: $primary; border-color: $primary; color: $white; } &:disabled { background: #f3f4f6; border-color: #e5e7eb; color: #6b7280; cursor: not-allowed; } }
+  @include grid(3, 10px);
+  margin-bottom: 14px;
+  button {
+    min-height: 56px;
+    border-radius: 12px;
+    border: 1.5px solid $border;
+    background: $white;
+    font-size: 16px;
+    font-weight: 700;
+    color: $text;
+    &.on {
+      background: $primary;
+      border-color: $primary;
+      color: $white;
+    }
+    &:disabled {
+      background: $bg;
+      border-color: $line;
+      color: $muted;
+      cursor: not-allowed;
+    }
+  }
 }

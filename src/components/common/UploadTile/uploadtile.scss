@@ -5,13 +5,43 @@
   position: relative;
   .upload-pick {
     @include flex-wrapper(4px);
-    align-items: center; justify-content: center;
-    width: 100%; min-height: 152px; padding: 10px;
-    background: $white; color: $primary; border: 2px dashed #90b4e6; border-radius: 16px;
-    img { width: 100%; height: 84px; object-fit: cover; border-radius: 8px; }
-    b { font-size: 14px; color: $text; }
-    .ur { font-size: 15px; }
-    span { font-size: 12px; color: $muted; }
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 152px;
+    padding: 10px;
+    background: $white;
+    color: $primary;
+    border: 2px dashed $primary-border;
+    border-radius: 16px;
+    img {
+      width: 100%;
+      height: 84px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    b {
+      font-size: 14px;
+      color: $text;
+    }
+    .ur {
+      font-size: 15px;
+    }
+    span {
+      font-size: 12px;
+      color: $muted;
+    }
   }
-  .upload-remove { position: absolute; top: 6px; right: 6px; width: 40px; height: 40px; border-radius: 50%; border: 0; background: $danger; color: $white; @include flex-center(); }
+  .upload-remove {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 0;
+    background: $danger;
+    color: $white;
+    @include flex-center();
+  }
 }

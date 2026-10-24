@@ -13,9 +13,11 @@
   font-size: 13px;
   font-weight: 700;
   text-decoration: none;
-  transition: background 0.15s ease, transform 0.1s ease;
+  transition:
+    background 0.15s ease,
+    transform 0.1s ease;
   &:hover {
-    background: #d6e8fb;
+    background: $primary-soft;
   }
   &:active {
     transform: scale(0.97);
@@ -26,8 +28,8 @@
   @include flex-wrapper(14px);
 
   .dm-info-card {
-    background: #f8fafc;
-    border: 1px solid #e5eaf1;
+    background: $bg;
+    border: 1px solid $line;
     border-radius: 14px;
     padding: 10px 14px;
     @include flex-wrapper(8px);
@@ -42,7 +44,7 @@
       flex: none;
     }
     .dm-value {
-      color: #1e293b;
+      color: $ink;
       font-weight: 600;
       text-align: right;
       word-break: break-word;
@@ -64,7 +66,9 @@
     @include flex-center();
     flex: none;
     text-decoration: none;
-    transition: opacity 0.15s ease, transform 0.1s ease;
+    transition:
+      opacity 0.15s ease,
+      transform 0.1s ease;
     &:hover {
       opacity: 0.9;
     }
@@ -80,27 +84,29 @@
   }
 
   .dm-tile {
-    background: #ffffff;
-    border: 1px solid #e5eaf1;
+    background: $white;
+    border: 1px solid $line;
     border-radius: 14px;
     padding: 8px;
     text-align: center;
     @include flex-wrapper(4px);
     align-items: center;
     width: 100%;
-    transition: transform 0.15s ease, border-color 0.15s ease;
+    transition:
+      transform 0.15s ease,
+      border-color 0.15s ease;
 
     &.has-photo {
       cursor: pointer;
-      border-color: #d6e4f5;
+      border-color: $primary-border;
       &:active {
         transform: scale(0.98);
       }
     }
 
     &.empty {
-      background: #fafcff;
-      border: 1.5px dashed #bbd6f5;
+      background: $primary-soft;
+      border: 1.5px dashed $primary-border;
       cursor: default;
     }
 
@@ -110,7 +116,7 @@
       border-radius: 10px;
       overflow: hidden;
       position: relative;
-      background: #eef2f6;
+      background: $bg;
       img {
         width: 100%;
         height: 100%;
@@ -138,7 +144,7 @@
       width: 100%;
       height: 72px;
       border-radius: 10px;
-      background: #f1f5f9;
+      background: $bg;
       @include flex-wrapper(4px);
       align-items: center;
       justify-content: center;
@@ -148,14 +154,14 @@
         font-weight: 600;
       }
       .dm-empty-icon {
-        color: #94a3b8;
+        color: $muted;
       }
     }
 
     .dm-tile-title {
       font-size: 13px;
       font-weight: 700;
-      color: #1e293b;
+      color: $ink;
       margin-top: 2px;
       @include eclipse();
       max-width: 100%;

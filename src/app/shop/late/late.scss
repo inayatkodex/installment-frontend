@@ -2,7 +2,27 @@
 @use "../../../styles/variables.scss" as *;
 
 .late-page {
-  .lp-summary { background: $danger-soft; color: $danger; padding: 12px 14px; border-radius: 14px; font-size: 15px; margin-bottom: 12px; font-weight: 600; }
-  .lp-list { @include flex-wrapper(10px); @include from-tablet() { display: grid; grid-template-columns: 1fr 1fr; } }
-  .lp-error { text-align: center; @include flex-wrapper(12px); align-items: center; padding: 24px 0; color: $muted; }
+  .lp-summary {
+    background: $danger-soft;
+    color: $danger;
+    padding: 12px 14px;
+    border-radius: 14px;
+    font-size: 15px;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  .lp-list {
+    @include flex-wrapper(10px);
+    @include from-tablet() {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  .lp-error {
+    text-align: center;
+    @include flex-wrapper(12px);
+    align-items: center;
+    padding: 24px 0;
+    color: $muted;
+  }
 }

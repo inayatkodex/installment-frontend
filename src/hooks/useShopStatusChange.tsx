@@ -16,7 +16,10 @@ import { ShopStatus } from "@/types/common";
 export function useShopStatusChange(onDone?: () => void) {
   const dispatch = useAppDispatch();
   const updating = useAppSelector((s) => s.adminShops.updating);
-  const [pending, setPending] = useState<{ shop: AdminShop; status: ShopStatus } | null>(null);
+  const [pending, setPending] = useState<{
+    shop: AdminShop;
+    status: ShopStatus;
+  } | null>(null);
 
   const ask = (shop: AdminShop, status: ShopStatus) => {
     if (shop.status !== status) setPending({ shop, status });
@@ -25,12 +28,21 @@ export function useShopStatusChange(onDone?: () => void) {
   const confirm = async (reason?: string) => {
     if (!pending) return;
     try {
-      await dispatch(updateAdminShopStatus({ id: pending.shop.id, status: pending.status, reason })).unwrap();
+      await dispatch(
+        updateAdminShopStatus({
+          id: pending.shop.id,
+          status: pending.status,
+          reason,
+        }),
+      ).unwrap();
       showToast(STATUS_ACTIONS[pending.status].done, "success");
       setPending(null);
       onDone?.();
     } catch (e) {
-      showToast(typeof e === "string" ? e : "Failed to update shop status", "error");
+      showToast(
+        typeof e === "string" ? e : "Failed to update shop status",
+        "error",
+      );
     }
   };
 

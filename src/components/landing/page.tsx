@@ -18,7 +18,7 @@ import {
 import { ROUTES } from "@/constant/appRoutes";
 import Faq from "@/components/landing/Faq";
 import LandingNav from "@/components/landing/LandingNav";
-import LogoMark from "@/components/landing/LogoMark";
+import BrandLogo from "@/components/common/BrandLogo";
 import PhoneMockup from "@/components/landing/PhoneMockup";
 import "./landing.scss";
 
@@ -48,18 +48,57 @@ interface Card {
 }
 
 const FEATURES: Card[] = [
-  { icon: Wallet, tone: "blue", title: "Aaj ki wasooli", text: "Subah kholte hi dekhein aaj kis se kitni qist leni hai." },
-  { icon: Clock, tone: "orange", title: "Late customers", text: "Kaun kitne din se late hai, ek list mein. Sab se zyada late sab se upar." },
-  { icon: CircleCheck, tone: "green", title: "Qist receive karein", text: "Ek tap, amount likhein, ho gaya. Galti ho to aaj ke aaj undo." },
-  { icon: Users, tone: "purple", title: "Customer ka poora record", text: "Naam, CNIC, address, saman aur qiston ka poora schedule." },
-  { icon: IdCard, tone: "teal", title: "CNIC aur photo save", text: "Customer ke documents ki photo kheench kar mehfooz karein." },
-  { icon: ChartColumn, tone: "pink", title: "Mahine ki report", text: "Kitna lena tha, kitna mila, kitna baaki. Percent ke sath." },
+  {
+    icon: Wallet,
+    tone: "blue",
+    title: "Aaj ki wasooli",
+    text: "Subah kholte hi dekhein aaj kis se kitni qist leni hai.",
+  },
+  {
+    icon: Clock,
+    tone: "orange",
+    title: "Late customers",
+    text: "Kaun kitne din se late hai, ek list mein. Sab se zyada late sab se upar.",
+  },
+  {
+    icon: CircleCheck,
+    tone: "green",
+    title: "Qist receive karein",
+    text: "Ek tap, amount likhein, ho gaya. Galti ho to aaj ke aaj undo.",
+  },
+  {
+    icon: Users,
+    tone: "purple",
+    title: "Customer ka poora record",
+    text: "Naam, CNIC, address, saman aur qiston ka poora schedule.",
+  },
+  {
+    icon: IdCard,
+    tone: "teal",
+    title: "CNIC aur photo save",
+    text: "Customer ke documents ki photo kheench kar mehfooz karein.",
+  },
+  {
+    icon: ChartColumn,
+    tone: "pink",
+    title: "Mahine ki report",
+    text: "Kitna lena tha, kitna mila, kitna baaki. Percent ke sath.",
+  },
 ];
 
 const STEPS = [
-  { title: "Signup karein", text: "Dukaan ka naam, mobile aur CNIC likhein. Approval ke baad login shuru." },
-  { title: "Customer aur saman add karein", text: "Total, advance aur mahine likhein. Qiston ka schedule khud ban jata hai." },
-  { title: "Qist receive karein", text: "Jis din qist aaye, Receive dabayein. Baaqi hisaab app sambhal leti hai." },
+  {
+    title: "Signup karein",
+    text: "Dukaan ka naam, mobile aur CNIC likhein. Approval ke baad login shuru.",
+  },
+  {
+    title: "Customer aur saman add karein",
+    text: "Total, advance aur mahine likhein. Qiston ka schedule khud ban jata hai.",
+  },
+  {
+    title: "Qist receive karein",
+    text: "Jis din qist aaye, Receive dabayein. Baaqi hisaab app sambhal leti hai.",
+  },
 ];
 
 const REPORT_POINTS = [
@@ -69,20 +108,60 @@ const REPORT_POINTS = [
 ];
 
 const TRUST: Card[] = [
-  { icon: Store, tone: "blue", title: "Har dukaan ka alag record", text: "Koi doosri dukaan aap ka data nahi dekh sakti. Sirf aap ka account, aap ka hisaab." },
-  { icon: Lock, tone: "green", title: "Mehfooz login", text: "Mobile number aur password ke sath. Session khatam ho to dobara login zaroori." },
-  { icon: Undo2, tone: "orange", title: "Undo, delete nahi", text: "Payment galat likh di to wapas karein. Record barkarar rehta hai, hisaab saaf." },
+  {
+    icon: Store,
+    tone: "blue",
+    title: "Har dukaan ka alag record",
+    text: "Koi doosri dukaan aap ka data nahi dekh sakti. Sirf aap ka account, aap ka hisaab.",
+  },
+  {
+    icon: Lock,
+    tone: "green",
+    title: "Mehfooz login",
+    text: "Mobile number aur password ke sath. Session khatam ho to dobara login zaroori.",
+  },
+  {
+    icon: Undo2,
+    tone: "orange",
+    title: "Undo, delete nahi",
+    text: "Payment galat likh di to wapas karein. Record barkarar rehta hai, hisaab saaf.",
+  },
 ];
 
 const FAQS = [
-  { q: "Kya yeh free hai?", a: `Signup free hai. Dukaan active hone ke baad mahana fee ${MONTHLY_FEE} hai. Koi chhupa kharcha nahi.` },
-  { q: "Mujhe computer chahiye?", a: "Nahi. Sirf mobile aur internet. Saari screens mobile ke liye banai gayi hain." },
-  { q: "Signup ke baad kab shuru kar sakta hoon?", a: "Admin aap ki registration dekh kar approve karta hai. Approve hote hi aap login kar sakte hain." },
-  { q: "Agar payment galat likh di?", a: "Aaj ki payment ko “Wapas karein” se undo kar sakte hain. Record delete nahi hota." },
-  { q: "Customer ki photo aur CNIC safe hain?", a: "Documents sirf aap ki dukaan ke account mein nazar aate hain." },
+  {
+    q: "Kya yeh free hai?",
+    a: `Signup free hai. Dukaan active hone ke baad mahana fee ${MONTHLY_FEE} hai. Koi chhupa kharcha nahi.`,
+  },
+  {
+    q: "Mujhe computer chahiye?",
+    a: "Nahi. Sirf mobile aur internet. Saari screens mobile ke liye banai gayi hain.",
+  },
+  {
+    q: "Signup ke baad kab shuru kar sakta hoon?",
+    a: "Admin aap ki registration dekh kar approve karta hai. Approve hote hi aap login kar sakte hain.",
+  },
+  {
+    q: "Agar payment galat likh di?",
+    a: "Aaj ki payment ko “Wapas karein” se undo kar sakte hain. Record delete nahi hota.",
+  },
+  {
+    q: "Customer ki photo aur CNIC safe hain?",
+    a: "Documents sirf aap ki dukaan ke account mein nazar aate hain.",
+  },
 ];
 
-const SectionHead = ({ eyebrow, title, text, id }: { eyebrow: string; title: string; text?: string; id: string }) => (
+const SectionHead = ({
+  eyebrow,
+  title,
+  text,
+  id,
+}: {
+  eyebrow: string;
+  title: string;
+  text?: string;
+  id: string;
+}) => (
   <div className="lp-head">
     <p className="lp-eyebrow">{eyebrow}</p>
     <h2 id={id}>{title}</h2>
@@ -116,20 +195,33 @@ const LandingPage = () => (
               Installment ka hisaab, <span>ab mobile par.</span>
             </h1>
             <p className="lp-lead">
-              Aaj kis se qist leni hai, kaun late hai, kitna baaki hai. Sab kuch ek nazar mein. Na register, na bhool, na bahana.
+              Aaj kis se qist leni hai, kaun late hai, kitna baaki hai. Sab kuch
+              ek nazar mein. Na register, na bhool, na bahana.
             </p>
             <div className="lp-actions">
-              <Link href={ROUTES.SHOP.SIGNUP} className="lp-btn lp-btn-primary lp-btn-lg">
+              <Link
+                href={ROUTES.SHOP.SIGNUP}
+                className="lp-btn lp-btn-primary lp-btn-lg"
+              >
                 Free shuru karein <ArrowRight size={20} aria-hidden="true" />
               </Link>
-              <Link href={ROUTES.SHOP.LOGIN} className="lp-btn lp-btn-ghost lp-btn-lg">
+              <Link
+                href={ROUTES.SHOP.LOGIN}
+                className="lp-btn lp-btn-ghost lp-btn-lg"
+              >
                 Login karein
               </Link>
             </div>
             <ul className="lp-ticks">
-              {["Free signup", "2 minute mein shuru", "Sirf mobile chahiye"].map((t) => (
+              {[
+                "Free signup",
+                "2 minute mein shuru",
+                "Sirf mobile chahiye",
+              ].map((t) => (
                 <li key={t}>
-                  <span><Check size={12} strokeWidth={3} aria-hidden="true" /></span>
+                  <span>
+                    <Check size={12} strokeWidth={3} aria-hidden="true" />
+                  </span>
                   {t}
                 </li>
               ))}
@@ -140,14 +232,18 @@ const LandingPage = () => (
             <div className="lp-glow" aria-hidden="true" />
             <PhoneMockup />
             <div className="lp-float lp-float-paid" aria-hidden="true">
-              <span className="lp-float-icon green"><Check size={20} aria-hidden="true" /></span>
+              <span className="lp-float-icon green">
+                <Check size={20} aria-hidden="true" />
+              </span>
               <div>
                 <b>Rs. 6,000 mil gaye</b>
                 <span>Sana Ullah ne qist di</span>
               </div>
             </div>
             <div className="lp-float lp-float-late" aria-hidden="true">
-              <span className="lp-float-icon orange"><Clock size={20} aria-hidden="true" /></span>
+              <span className="lp-float-icon orange">
+                <Clock size={20} aria-hidden="true" />
+              </span>
               <div>
                 <b>2 customers late</b>
                 <span>Hina Bibi · 12 din se</span>
@@ -173,7 +269,9 @@ const LandingPage = () => (
               <ul>
                 {PROBLEMS.map((t) => (
                   <li key={t}>
-                    <span className="lp-mark"><X size={14} strokeWidth={3} aria-hidden="true" /></span>
+                    <span className="lp-mark">
+                      <X size={14} strokeWidth={3} aria-hidden="true" />
+                    </span>
                     {t}
                   </li>
                 ))}
@@ -185,7 +283,9 @@ const LandingPage = () => (
               <ul>
                 {SOLUTIONS.map((t) => (
                   <li key={t}>
-                    <span className="lp-mark"><Check size={14} strokeWidth={3} aria-hidden="true" /></span>
+                    <span className="lp-mark">
+                      <Check size={14} strokeWidth={3} aria-hidden="true" />
+                    </span>
                     {t}
                   </li>
                 ))}
@@ -196,7 +296,11 @@ const LandingPage = () => (
       </section>
 
       {/* ---------- FEATURES ---------- */}
-      <section id="features" className="lp-section lp-alt" aria-labelledby="lp-features-title">
+      <section
+        id="features"
+        className="lp-section lp-alt"
+        aria-labelledby="lp-features-title"
+      >
         <div className="lp-container">
           <SectionHead
             id="lp-features-title"
@@ -244,12 +348,15 @@ const LandingPage = () => (
             <p className="lp-eyebrow">Mahine ki report</p>
             <h2 id="lp-report-title">Poora hisaab, ek nazar mein.</h2>
             <p className="lp-sub">
-              Mahine ke ant ka intezaar nahi. Jab chahein dekh lein kitna wasool hua aur kitna baaki hai.
+              Mahine ke ant ka intezaar nahi. Jab chahein dekh lein kitna wasool
+              hua aur kitna baaki hai.
             </p>
             <ul>
               {REPORT_POINTS.map((t) => (
                 <li key={t}>
-                  <span><Check size={14} strokeWidth={3} aria-hidden="true" /></span>
+                  <span>
+                    <Check size={14} strokeWidth={3} aria-hidden="true" />
+                  </span>
                   {t}
                 </li>
               ))}
@@ -288,9 +395,17 @@ const LandingPage = () => (
       </section>
 
       {/* ---------- FAQ ---------- */}
-      <section id="faq" className="lp-section lp-alt" aria-labelledby="lp-faq-title">
+      <section
+        id="faq"
+        className="lp-section lp-alt"
+        aria-labelledby="lp-faq-title"
+      >
         <div className="lp-container">
-          <SectionHead id="lp-faq-title" eyebrow="Sawal jawab" title="Aksar poochay jane wale sawal" />
+          <SectionHead
+            id="lp-faq-title"
+            eyebrow="Sawal jawab"
+            title="Aksar poochay jane wale sawal"
+          />
           <Faq items={FAQS} />
         </div>
       </section>
@@ -302,10 +417,16 @@ const LandingPage = () => (
             <h2 id="lp-cta-title">Aaj hi purana register band karein.</h2>
             <p>Free signup. 2 minute. Sirf mobile chahiye.</p>
             <div className="lp-actions">
-              <Link href={ROUTES.SHOP.SIGNUP} className="lp-btn lp-btn-white lp-btn-lg">
+              <Link
+                href={ROUTES.SHOP.SIGNUP}
+                className="lp-btn lp-btn-white lp-btn-lg"
+              >
                 Free shuru karein <ArrowRight size={20} aria-hidden="true" />
               </Link>
-              <Link href={ROUTES.SHOP.LOGIN} className="lp-btn lp-btn-outline lp-btn-lg">
+              <Link
+                href={ROUTES.SHOP.LOGIN}
+                className="lp-btn lp-btn-outline lp-btn-lg"
+              >
                 Login karein
               </Link>
             </div>
@@ -319,8 +440,12 @@ const LandingPage = () => (
       <div className="lp-container">
         <div className="lp-footer-top">
           <div className="lp-footer-brand">
-            <Link href={ROUTES.HOME.INDEX} className="lp-logo" aria-label="Installment Pro, home">
-              <LogoMark size={34} variant="white" />
+            <Link
+              href={ROUTES.HOME.INDEX}
+              className="lp-logo"
+              aria-label="Installment Pro, home"
+            >
+              <BrandLogo size={34} variant="white" />
             </Link>
             <p>Dukaandaron ke liye installment ka hisaab.</p>
           </div>
@@ -332,7 +457,9 @@ const LandingPage = () => (
             <Link href={ROUTES.SHOP.SIGNUP}>Signup</Link>
           </nav>
         </div>
-        <p className="lp-copy">© {new Date().getFullYear()} Installment Pro. Saare haqooq mahfooz.</p>
+        <p className="lp-copy">
+          © {new Date().getFullYear()} Installment Pro. Saare haqooq mahfooz.
+        </p>
       </div>
     </footer>
   </div>

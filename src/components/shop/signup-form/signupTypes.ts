@@ -18,4 +18,17 @@ export interface SignupStepProps {
   update: (patch: Partial<SignupFormState>) => void;
 }
 
-export const CITIES = ["Lahore", "Karachi", "Islamabad", "Rawalpindi", "Faisalabad", "Multan", "Peshawar", "Quetta", "Gujranwala", "Sialkot", "Hyderabad", "Doosra shehar"];
+export const CITIES = [
+  "Lahore",
+  "Karachi",
+  "Islamabad",
+  "Rawalpindi",
+  "Faisalabad",
+  "Multan",
+  "Peshawar",
+  "Quetta",
+  "Gujranwala",
+  "Sialkot",
+  "Hyderabad",
+  "Doosra shehar",
+];

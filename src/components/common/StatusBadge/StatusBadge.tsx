@@ -1,8 +1,14 @@
 import "./statusbadge.scss";
 
 export type BadgeKind =
-  | "paid" | "pending" | "overdue" | "partial"      // installments
-  | "active" | "inactive" | "archived" | "completed" // shops & customers
+  | "paid"
+  | "pending"
+  | "overdue"
+  | "partial" // installments
+  | "active"
+  | "inactive"
+  | "archived"
+  | "completed" // shops & customers
   | "next";
 
 const LABEL: Record<BadgeKind, string> = {
@@ -18,7 +24,13 @@ const LABEL: Record<BadgeKind, string> = {
 };
 
 /** Always shows text, so status is never told by colour alone. */
-const StatusBadge = ({ status, label }: { status: BadgeKind; label?: string }) => (
+const StatusBadge = ({
+  status,
+  label,
+}: {
+  status: BadgeKind;
+  label?: string;
+}) => (
   <span className={`status-badge ${status}`}>{label ?? LABEL[status]}</span>
 );
 

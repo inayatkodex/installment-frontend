@@ -4,7 +4,9 @@ import React, { ReactNode, useId, useState } from "react";
 import { EyeHideIcon, EyeIcon } from "@/svgs";
 import "./formInput.scss";
 
-type ChangeEv = React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>;
+type ChangeEv = React.ChangeEvent<
+  HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+>;
 
 interface FormInputProps {
   label?: string;
@@ -31,16 +33,41 @@ interface FormInputProps {
 }
 
 const FormInput = ({
-  label, labelUr, optional = false, name, type = "text", value, placeholder, error, disabled = false,
-  autoFocus, autoComplete, inputMode, maxLength, min, max, Icon = null, options, multiline = false, rows = 3,
-  onChange, onKeyDown,
+  label,
+  labelUr,
+  optional = false,
+  name,
+  type = "text",
+  value,
+  placeholder,
+  error,
+  disabled = false,
+  autoFocus,
+  autoComplete,
+  inputMode,
+  maxLength,
+  min,
+  max,
+  Icon = null,
+  options,
+  multiline = false,
+  rows = 3,
+  onChange,
+  onKeyDown,
 }: FormInputProps) => {
   const id = useId();
   const [showPassword, setShowPassword] = useState(false);
   const isPassword = type === "password";
   const common = {
-    id, name, value, disabled, onChange, onKeyDown, autoFocus,
-    "aria-invalid": !!error, "aria-describedby": error ? `${id}-err` : undefined,
+    id,
+    name,
+    value,
+    disabled,
+    onChange,
+    onKeyDown,
+    autoFocus,
+    "aria-invalid": !!error,
+    "aria-describedby": error ? `${id}-err` : undefined,
   };
 
   return (
@@ -51,7 +78,11 @@ const FormInput = ({
             {label}
             {optional && <em className="form-optional"> (optional)</em>}
           </span>
-          {labelUr && <span className="ur" lang="ur">{labelUr}</span>}
+          {labelUr && (
+            <span className="ur" lang="ur">
+              {labelUr}
+            </span>
+          )}
         </label>
       )}
 
@@ -60,13 +91,23 @@ const FormInput = ({
 
         {options ? (
           <select className="form-control" {...common}>
-            <option value="" disabled hidden>{placeholder || "Chunein"}</option>
+            <option value="" disabled hidden>
+              {placeholder || "Chunein"}
+            </option>
             {options.map((o) => (
-              <option key={o.value} value={o.value}>{o.label}</option>
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
             ))}
           </select>
         ) : multiline ? (
-          <textarea className="form-control" rows={rows} placeholder={placeholder} maxLength={maxLength} {...common} />
+          <textarea
+            className="form-control"
+            rows={rows}
+            placeholder={placeholder}
+            maxLength={maxLength}
+            {...common}
+          />
         ) : (
           <input
             className="form-control"
@@ -86,14 +127,20 @@ const FormInput = ({
             type="button"
             className="form-eye"
             onClick={() => setShowPassword((p) => !p)}
-            aria-label={showPassword ? "Password chupayen" : "Password dikhayen"}
+            aria-label={
+              showPassword ? "Password chupayen" : "Password dikhayen"
+            }
           >
             {showPassword ? <EyeHideIcon /> : <EyeIcon />}
           </button>
         )}
       </div>
 
-      {error && <p id={`${id}-err`} className="form-error" role="alert">{error}</p>}
+      {error && (
+        <p id={`${id}-err`} className="form-error" role="alert">
+          {error}
+        </p>
+      )}
     </div>
   );
 };

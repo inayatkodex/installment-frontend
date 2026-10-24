@@ -18,7 +18,13 @@ const NavList = ({ onNavigate }: { onNavigate?: () => void }) => {
       {ADMIN_NAV.map(({ href, label, Icon }) => {
         const active = path === href || path.startsWith(href + "/");
         return (
-          <Link key={href} href={href} className={active ? "active" : ""} aria-current={active ? "page" : undefined} onClick={onNavigate}>
+          <Link
+            key={href}
+            href={href}
+            className={active ? "active" : ""}
+            aria-current={active ? "page" : undefined}
+            onClick={onNavigate}
+          >
             <Icon size={22} />
             <span>{label}</span>
           </Link>

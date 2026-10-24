@@ -4,7 +4,9 @@
 .customer-edit-page {
   @include flex-wrapper(16px);
   padding-bottom: 30px;
-  @include from-desktop() { max-width: 640px; }
+  @include from-desktop() {
+    max-width: 640px;
+  }
 
   .ce-back {
     @include flex(4px);
@@ -21,7 +23,7 @@
   .ce-title {
     font-size: 22px;
     font-weight: 700;
-    color: #1e293b;
+    color: $ink;
     margin-top: -6px;
   }
 
@@ -32,7 +34,7 @@
     h2 {
       font-size: 17px;
       font-weight: 700;
-      color: #1e293b;
+      color: $ink;
       @include flex-between();
       span.muted {
         font-size: 13px;
@@ -61,8 +63,8 @@
 
     .ce-info-item {
       @include flex-wrapper(2px);
-      background: #f8fafc;
-      border: 1px solid #e5eaf1;
+      background: $bg;
+      border: 1px solid $line;
       border-radius: 12px;
       padding: 10px 12px;
 
@@ -73,7 +75,7 @@
 
       strong {
         font-size: 14px;
-        color: #1e293b;
+        color: $ink;
         word-break: break-word;
       }
     }
@@ -85,8 +87,8 @@
 
   .ce-doc-row {
     @include flex-between(12px);
-    background: #f8fafc;
-    border: 1px solid #e5eaf1;
+    background: $bg;
+    border: 1px solid $line;
     border-radius: 14px;
     padding: 10px 12px;
     flex-wrap: wrap;
@@ -102,7 +104,7 @@
       height: 52px;
       border-radius: 10px;
       overflow: hidden;
-      background: #eef2f6;
+      background: $bg;
       flex: none;
       position: relative;
       img {
@@ -117,10 +119,10 @@
       width: 52px;
       height: 52px;
       border-radius: 10px;
-      background: #f1f5f9;
-      border: 1.5px dashed #cbd5e1;
+      background: $bg;
+      border: 1.5px dashed $border;
       @include flex-center();
-      color: #94a3b8;
+      color: $muted;
       flex: none;
     }
 
@@ -128,7 +130,7 @@
       @include flex-wrapper(2px);
       strong {
         font-size: 14px;
-        color: #1e293b;
+        color: $ink;
       }
       .ce-has-photo-badge {
         font-size: 11px;
@@ -164,21 +166,27 @@
         background: $primary-soft;
         color: $primary;
         border-color: rgba(21, 101, 192, 0.2);
-        &:hover { background: #d6e8fb; }
+        &:hover {
+          background: $primary-soft;
+        }
       }
 
       &.remove-btn {
         background: $danger-soft;
         color: $danger;
         border-color: rgba(211, 47, 47, 0.2);
-        &:hover { background: #fcdad7; }
+        &:hover {
+          background: #fcdad7;
+        }
       }
 
       &.add-btn {
         background: $primary;
         color: $white;
         border-color: $primary;
-        &:hover { background: $primary-dark; }
+        &:hover {
+          background: $primary-dark;
+        }
       }
     }
   }

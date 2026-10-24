@@ -2,7 +2,20 @@
 @use "../../../styles/variables.scss" as *;
 
 .status-page {
-  .st-body { margin-top: 14px; }
-  .st-download { margin-top: 16px; @include from-desktop() { max-width: 320px; } }
-  .st-error { text-align: center; @include flex-wrapper(12px); align-items: center; padding: 24px 0; color: $muted; }
+  .st-body {
+    margin-top: 14px;
+  }
+  .st-download {
+    margin-top: 16px;
+    @include from-desktop() {
+      max-width: 320px;
+    }
+  }
+  .st-error {
+    text-align: center;
+    @include flex-wrapper(12px);
+    align-items: center;
+    padding: 24px 0;
+    color: $muted;
+  }
 }

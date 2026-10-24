@@ -8,7 +8,10 @@ import { formatRs, initials } from "@/shared/formatUtils";
 import { CollectionItem } from "@/types/payment";
 import "./collection-row.scss";
 
-interface Props { item: CollectionItem; onReceive: (item: CollectionItem) => void }
+interface Props {
+  item: CollectionItem;
+  onReceive: (item: CollectionItem) => void;
+}
 
 const CollectionRow = ({ item, onReceive }: Props) => {
   const pathname = usePathname();
@@ -19,15 +22,24 @@ const CollectionRow = ({ item, onReceive }: Props) => {
       {item.photo ? (
         <img src={item.photo} alt="" className="cr-avatar cr-avatar-img" />
       ) : (
-        <span className="cr-avatar" aria-hidden="true">{initials(item.name)}</span>
+        <span className="cr-avatar" aria-hidden="true">
+          {initials(item.name)}
+        </span>
       )}
       <div className="cr-info">
-        <Link href={ROUTES.SHOP.CUSTOMER_DETAIL(item.customerId)} className="cr-name">{item.name}</Link>
+        <Link
+          href={ROUTES.SHOP.CUSTOMER_DETAIL(item.customerId)}
+          className="cr-name"
+        >
+          {item.name}
+        </Link>
         <span className="cr-phone">{item.phone}</span>
         <StatusBadge status={item.status} />
       </div>
       <div className="cr-end">
-        <strong>{formatRs(item.status === "paid" ? item.expected : left)}</strong>
+        <strong>
+          {formatRs(item.status === "paid" ? item.expected : left)}
+        </strong>
         <div className="cr-actions">
           {isCollection && (
             <a
@@ -39,9 +51,20 @@ const CollectionRow = ({ item, onReceive }: Props) => {
             </a>
           )}
           {item.status === "paid" ? (
-            <Link href={ROUTES.SHOP.CUSTOMER_DETAIL(item.customerId)} className="cr-view" aria-label={`${item.name} dekhein`}>View</Link>
+            <Link
+              href={ROUTES.SHOP.CUSTOMER_DETAIL(item.customerId)}
+              className="cr-view"
+              aria-label={`${item.name} dekhein`}
+            >
+              View
+            </Link>
           ) : (
-            <CommonBtn text="Receive" className="sm-btn" onClick={() => onReceive(item)} ariaLabel={`${item.name} se raqam lein`} />
+            <CommonBtn
+              text="Receive"
+              className="sm-btn"
+              onClick={() => onReceive(item)}
+              ariaLabel={`${item.name} se raqam lein`}
+            />
           )}
         </div>
       </div>

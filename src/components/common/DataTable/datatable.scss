@@ -2,17 +2,71 @@
 @use "../../../styles/variables.scss" as *;
 
 .data-table {
-  .dt-scroll { display: none; }
-  .dt-cards { @include flex-wrapper(10px); li { @include card(); @include flex-wrapper(8px); &.clickable { cursor: pointer; } } }
-  .dt-card-title { font-weight: 700; font-size: 16px; }
-  .dt-card-row { @include flex-between(12px); font-size: 14px; > :first-child { color: $muted; flex: none; } > :last-child { text-align: right; font-weight: 600; } }
+  .dt-scroll {
+    display: none;
+  }
+  .dt-cards {
+    @include flex-wrapper(10px);
+    li {
+      @include card();
+      @include flex-wrapper(8px);
+      &.clickable {
+        cursor: pointer;
+      }
+    }
+  }
+  .dt-card-title {
+    font-weight: 700;
+    font-size: 16px;
+  }
+  .dt-card-row {
+    @include flex-between(12px);
+    font-size: 14px;
+    > :first-child {
+      color: $muted;
+      flex: none;
+    }
+    > :last-child {
+      text-align: right;
+      font-weight: 600;
+    }
+  }
 
   @include from-tablet() {
-    .dt-cards { display: none; }
-    .dt-scroll { display: block; background: $white; border-radius: 16px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08); overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; }
-    th { text-align: left; font-size: 13px; color: $muted; font-weight: 700; padding: 14px 16px; background: #f8fafc; white-space: nowrap; }
-    td { padding: 14px 16px; font-size: 14px; border-top: 1px solid #eef1f5; vertical-align: middle; }
-    tr.clickable { cursor: pointer; &:hover td { background: #f8fafc; } }
+    .dt-cards {
+      display: none;
+    }
+    .dt-scroll {
+      display: block;
+      background: $white;
+      border-radius: 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      overflow-x: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th {
+      text-align: left;
+      font-size: 13px;
+      color: $muted;
+      font-weight: 700;
+      padding: 14px 16px;
+      background: $bg;
+      white-space: nowrap;
+    }
+    td {
+      padding: 14px 16px;
+      font-size: 14px;
+      border-top: 1px solid $line;
+      vertical-align: middle;
+    }
+    tr.clickable {
+      cursor: pointer;
+      &:hover td {
+        background: $bg;
+      }
+    }
   }
 }

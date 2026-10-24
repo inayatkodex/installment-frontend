@@ -17,7 +17,11 @@ function RehydrateAuth() {
   return null;
 }
 
-export default function ClientProviders({ children }: { children: React.ReactNode }) {
+export default function ClientProviders({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <ReduxProvider>
       <RehydrateAuth />

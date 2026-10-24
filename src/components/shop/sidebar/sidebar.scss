@@ -15,7 +15,7 @@
   padding-bottom: env(safe-area-inset-bottom);
   display: flex;
   background: $white;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid $line;
   a {
     flex: 1;
     @include flex-wrapper(2px);
@@ -44,7 +44,7 @@
     width: $sidebar-width;
     z-index: 30;
     background: $white;
-    border-right: 1px solid #e5e7eb;
+    border-right: 1px solid $line;
     padding: 16px 12px;
     nav {
       @include flex-wrapper(4px);

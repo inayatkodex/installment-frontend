@@ -50,7 +50,11 @@ const Modal = ({
           <div className="modal-title-wrap">
             <h2>
               {title}
-              {titleUr && <span className="ur" lang="ur">{titleUr}</span>}
+              {titleUr && (
+                <span className="ur" lang="ur">
+                  {titleUr}
+                </span>
+              )}
             </h2>
             {headerAction}
           </div>

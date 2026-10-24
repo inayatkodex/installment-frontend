@@ -1,7 +1,12 @@
 import { ReactNode } from "react";
 import "./emptystate.scss";
 
-interface Props { icon?: ReactNode; title: string; text?: string; action?: ReactNode }
+interface Props {
+  icon?: ReactNode;
+  title: string;
+  text?: string;
+  action?: ReactNode;
+}
 
 const EmptyState = ({ icon, title, text, action }: Props) => (
   <div className="empty-state">

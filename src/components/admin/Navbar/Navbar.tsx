@@ -9,6 +9,7 @@ import ConfirmModal from "@/components/common/modal/confirm-modal/ConfirmModal";
 import { ROUTES } from "@/constant/appRoutes";
 import { adminLogout } from "@/store/slices/admin/auth/adminAuthSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
+import BrandLogo from "@/components/common/BrandLogo";
 import "./navbar.scss";
 
 const Navbar = () => {
@@ -25,14 +26,36 @@ const Navbar = () => {
 
   return (
     <header className="admin-navbar">
-      <button type="button" className="an-menu" onClick={() => setMenu(true)} aria-label="Open navigation menu"><Menu size={24} /></button>
-      <div className="an-brand"><strong>Installment Pro</strong><span>Admin</span></div>
+      <button
+        type="button"
+        className="an-menu"
+        onClick={() => setMenu(true)}
+        aria-label="Open navigation menu"
+      >
+        <Menu size={24} />
+      </button>
+      <div className="an-brand">
+        <BrandLogo size={28} />
+        <span>Admin</span>
+      </div>
       <div className="an-right">
         <span className="an-user">{user?.name ?? "Admin"}</span>
-        <button type="button" className="an-logout" onClick={() => setConfirm(true)} aria-label="Sign Out"><LogOut size={20} /><span>Sign Out</span></button>
+        <button
+          type="button"
+          className="an-logout"
+          onClick={() => setConfirm(true)}
+          aria-label="Sign Out"
+        >
+          <LogOut size={20} />
+          <span>Sign Out</span>
+        </button>
       </div>
 
-      <Drawer open={menu} title="Installment Pro · Admin" onClose={() => setMenu(false)}>
+      <Drawer
+        open={menu}
+        title="Installment Pro · Admin"
+        onClose={() => setMenu(false)}
+      >
         <NavList onNavigate={() => setMenu(false)} />
       </Drawer>
       {confirm && (

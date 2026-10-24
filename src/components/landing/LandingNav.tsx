@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { ROUTES } from "@/constant/appRoutes";
 import { TOKEN_KEY } from "@/store/ApiServices/config";
-import LogoMark from "./LogoMark";
+import BrandLogo from "@/components/common/BrandLogo";
 
 const LINKS = [
   { href: "#features", label: "Features" },
@@ -29,8 +29,12 @@ const LandingNav = () => {
   return (
     <header className={`lp-nav ${scrolled ? "is-scrolled" : ""}`}>
       <div className="lp-container lp-nav-inner">
-        <Link href={ROUTES.HOME.INDEX} className="lp-logo" aria-label="Installment Pro, home">
-          <LogoMark size={34} />
+        <Link
+          href={ROUTES.HOME.INDEX}
+          className="lp-logo"
+          aria-label="Installment Pro, home"
+        >
+          <BrandLogo size={34} />
         </Link>
 
         <nav className="lp-nav-links" aria-label="Page sections">
@@ -43,7 +47,10 @@ const LandingNav = () => {
 
         <div className="lp-nav-actions">
           {loggedIn ? (
-            <Link href={ROUTES.SHOP.DASHBOARD} className="lp-btn lp-btn-primary">
+            <Link
+              href={ROUTES.SHOP.DASHBOARD}
+              className="lp-btn lp-btn-primary"
+            >
               Dashboard kholein <ArrowRight size={18} />
             </Link>
           ) : (
@@ -51,7 +58,10 @@ const LandingNav = () => {
               <Link href={ROUTES.SHOP.LOGIN} className="lp-btn lp-btn-ghost">
                 Login
               </Link>
-              <Link href={ROUTES.SHOP.SIGNUP} className="lp-btn lp-btn-primary lp-nav-signup">
+              <Link
+                href={ROUTES.SHOP.SIGNUP}
+                className="lp-btn lp-btn-primary lp-nav-signup"
+              >
                 Free shuru karein
               </Link>
             </>

@@ -2,9 +2,36 @@
 @use "../../../styles/variables.scss" as *;
 
 .step-wrapper {
-  .step-top { @include flex-between(); font-size: 13px; font-weight: 600; color: $muted; }
-  .step-bar { @include flex(6px); margin: 8px 0 14px; i { flex: 1; height: 8px; border-radius: 99px; background: #d6e4f5; &.on { background: $primary; } } }
-  .step-title { font-size: 24px; line-height: 1.2; }
-  .step-title-ur { font-size: 20px; color: $muted; margin-top: 2px; }
-  .step-body { @include flex-wrapper(16px); margin-top: 18px; }
+  .step-top {
+    @include flex-between();
+    font-size: 13px;
+    font-weight: 600;
+    color: $muted;
+  }
+  .step-bar {
+    @include flex(6px);
+    margin: 8px 0 14px;
+    i {
+      flex: 1;
+      height: 8px;
+      border-radius: 99px;
+      background: $primary-soft;
+      &.on {
+        background: $primary;
+      }
+    }
+  }
+  .step-title {
+    font-size: 24px;
+    line-height: 1.2;
+  }
+  .step-title-ur {
+    font-size: 20px;
+    color: $muted;
+    margin-top: 2px;
+  }
+  .step-body {
+    @include flex-wrapper(16px);
+    margin-top: 18px;
+  }
 }

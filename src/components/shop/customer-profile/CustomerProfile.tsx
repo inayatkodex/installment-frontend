@@ -324,7 +324,11 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
         </div>
         <div className="cp-docs-row">
           <div className="cp-docs-row-info">
-            <FileText size={20} className="cp-docs-row-icon" aria-hidden="true" />
+            <FileText
+              size={20}
+              className="cp-docs-row-icon"
+              aria-hidden="true"
+            />
             <span>CNIC front, CNIC back aur dosra kaghaz</span>
           </div>
           <CommonBtn
@@ -410,10 +414,7 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
       </div>
 
       {showDocsModal && (
-        <DocumentsModal
-          customer={c}
-          onClose={() => setShowDocsModal(false)}
-        />
+        <DocumentsModal customer={c} onClose={() => setShowDocsModal(false)} />
       )}
       {viewer && (
         <PhotoViewer

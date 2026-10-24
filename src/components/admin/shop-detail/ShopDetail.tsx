@@ -14,7 +14,12 @@ import { showToast } from "@/shared/toastUtils";
 import { AdminShop, FeeStatus } from "@/types/adminShop";
 import "./shop-detail.scss";
 
-const Row = ({ k, v }: { k: string; v: string }) => <div className="sd-row"><span>{k}</span><b>{v}</b></div>;
+const Row = ({ k, v }: { k: string; v: string }) => (
+  <div className="sd-row">
+    <span>{k}</span>
+    <b>{v}</b>
+  </div>
+);
 
 const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
   const dispatch = useAppDispatch();
@@ -25,9 +30,17 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
   const changeFee = async (month: string, status: FeeStatus) => {
     try {
       await dispatch(setAdminShopFee({ id: s.id, month, status })).unwrap();
-      showToast(status === "paid" ? "Platform fee marked as paid" : "Platform fee marked as unpaid", "success");
+      showToast(
+        status === "paid"
+          ? "Platform fee marked as paid"
+          : "Platform fee marked as unpaid",
+        "success",
+      );
     } catch (e) {
-      showToast(typeof e === "string" ? e : "Failed to update fee status", "error");
+      showToast(
+        typeof e === "string" ? e : "Failed to update fee status",
+        "error",
+      );
     }
   };
 
@@ -36,8 +49,17 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
       <div className="sd-head">
         <div className="sd-head-main">
           {s.profilePic ? (
-            <button type="button" className="sd-avatar-btn" onClick={() => setPhotoSrc(s.profilePic!)} title="Click to enlarge profile photo">
-              <img src={s.profilePic} alt={s.ownerName} className="sd-head-avatar" />
+            <button
+              type="button"
+              className="sd-avatar-btn"
+              onClick={() => setPhotoSrc(s.profilePic!)}
+              title="Click to enlarge profile photo"
+            >
+              <img
+                src={s.profilePic}
+                alt={s.ownerName}
+                className="sd-head-avatar"
+              />
             </button>
           ) : (
             <div className="sd-head-avatar-fallback">
@@ -45,14 +67,24 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
             </div>
           )}
           <div>
-            <div className="sd-title"><h1>{s.shopName}</h1><StatusBadge status={s.status} /></div>
-            <p>{s.shopCode} · {s.city} · Registered on {formatDate(s.registeredAt)}</p>
+            <div className="sd-title">
+              <h1>{s.shopName}</h1>
+              <StatusBadge status={s.status} />
+            </div>
+            <p>
+              {s.shopCode} · {s.city} · Registered on{" "}
+              {formatDate(s.registeredAt)}
+            </p>
           </div>
         </div>
         <StatusControl value={s.status} onSelect={(st) => ask(s, st)} />
       </div>
 
-      {s.statusNote && <p className="sd-note" role="note">Reason: {s.statusNote}</p>}
+      {s.statusNote && (
+        <p className="sd-note" role="note">
+          Reason: {s.statusNote}
+        </p>
+      )}
 
       <div className="sd-two">
         <section className="sd-card" aria-label="Shop Details">
@@ -71,9 +103,15 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
         <h2>Owner Profile Picture</h2>
         {s.profilePic ? (
           <div className="sd-profile-card">
-            <button type="button" className="sd-profile-preview" onClick={() => setPhotoSrc(s.profilePic!)}>
+            <button
+              type="button"
+              className="sd-profile-preview"
+              onClick={() => setPhotoSrc(s.profilePic!)}
+            >
               <img src={s.profilePic} alt={`${s.ownerName} profile`} />
-              <span className="sd-preview-overlay"><Maximize2 size={20} /> View Full Photo</span>
+              <span className="sd-preview-overlay">
+                <Maximize2 size={20} /> View Full Photo
+              </span>
             </button>
             <div className="sd-profile-meta">
               <strong>{s.ownerName}</strong>
@@ -81,12 +119,18 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
             </div>
           </div>
         ) : (
-          <p className="sd-no-photo">No profile picture uploaded by this shop.</p>
+          <p className="sd-no-photo">
+            No profile picture uploaded by this shop.
+          </p>
         )}
       </section>
 
       {photoSrc && (
-        <PhotoViewer src={photoSrc} title={`${s.ownerName} · Profile Photo`} onClose={() => setPhotoSrc(null)} />
+        <PhotoViewer
+          src={photoSrc}
+          title={`${s.ownerName} · Profile Photo`}
+          onClose={() => setPhotoSrc(null)}
+        />
       )}
       {dialog}
     </div>

@@ -13,18 +13,30 @@ const AdminDashboardPage = () => {
   const dispatch = useAppDispatch();
   const { stats, loading, error } = useAppSelector((s) => s.adminDashboard);
 
-  useEffect(() => { dispatch(fetchAdminDashboard()); }, [dispatch]);
+  useEffect(() => {
+    dispatch(fetchAdminDashboard());
+  }, [dispatch]);
 
   return (
     <div className="admin-dashboard">
       <h1 className="page-title">Dashboard</h1>
       {error ? (
-        <div className="ad-error" role="alert"><p>{error}</p><CommonBtn text="Try again" onClick={() => dispatch(fetchAdminDashboard())} /></div>
-      ) : !stats && loading ? <Loader /> : stats && (
-        <div className="ad-body">
-          <PendingRequests />
-          <DashboardStats stats={stats} />
+        <div className="ad-error" role="alert">
+          <p>{error}</p>
+          <CommonBtn
+            text="Try again"
+            onClick={() => dispatch(fetchAdminDashboard())}
+          />
         </div>
+      ) : !stats && loading ? (
+        <Loader />
+      ) : (
+        stats && (
+          <div className="ad-body">
+            <PendingRequests />
+            <DashboardStats stats={stats} />
+          </div>
+        )
       )}
     </div>
   );

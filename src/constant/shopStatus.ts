@@ -31,7 +31,8 @@ export const STATUS_ACTIONS: Record<ShopStatus, StatusAction> = {
   inactive: {
     menuLabel: "Deactivate",
     title: (n) => `Deactivate ${n}?`,
-    message: "The shop account will be deactivated and the shopkeeper will not be able to log in. You can reactivate it at any time.",
+    message:
+      "The shop account will be deactivated and the shopkeeper will not be able to log in. You can reactivate it at any time.",
     confirm: "Yes, Deactivate",
     tone: "danger",
     askReason: true,
@@ -40,7 +41,8 @@ export const STATUS_ACTIONS: Record<ShopStatus, StatusAction> = {
   archived: {
     menuLabel: "Archive",
     title: (n) => `Archive ${n}?`,
-    message: "The shop will be archived and the shopkeeper will not be able to log in. You can restore it at any time.",
+    message:
+      "The shop will be archived and the shopkeeper will not be able to log in. You can restore it at any time.",
     confirm: "Yes, Archive",
     tone: "danger",
     askReason: true,
@@ -49,7 +51,8 @@ export const STATUS_ACTIONS: Record<ShopStatus, StatusAction> = {
   pending: {
     menuLabel: "Move to Pending",
     title: (n) => `Move ${n} to Pending?`,
-    message: "The shop will require administrative review before the shopkeeper can log in.",
+    message:
+      "The shop will require administrative review before the shopkeeper can log in.",
     confirm: "Yes, Move to Pending",
     tone: "primary",
     askReason: false,
