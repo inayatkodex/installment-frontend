@@ -320,7 +320,7 @@ const LandingPage = () => (
         <div className="lp-footer-top">
           <div className="lp-footer-brand">
             <Link href={ROUTES.HOME.INDEX} className="lp-logo" aria-label="Installment Pro, home">
-              <LogoMark size={36} variant="white" />
+              <LogoMark size={34} variant="white" />
             </Link>
             <p>Dukaandaron ke liye installment ka hisaab.</p>
           </div>

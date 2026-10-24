@@ -30,7 +30,7 @@ const LandingNav = () => {
     <header className={`lp-nav ${scrolled ? "is-scrolled" : ""}`}>
       <div className="lp-container lp-nav-inner">
         <Link href={ROUTES.HOME.INDEX} className="lp-logo" aria-label="Installment Pro, home">
-          <LogoMark size={38} />
+          <LogoMark size={34} />
         </Link>
 
         <nav className="lp-nav-links" aria-label="Page sections">
