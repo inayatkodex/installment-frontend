@@ -2,67 +2,185 @@
 @use "../../../styles/variables.scss" as *;
 
 .shop-dashboard {
+  .sd-welcome {
+    @include flex-between(24px);
+    position: relative;
+    overflow: hidden;
+    min-height: 150px;
+    margin-bottom: 20px;
+    padding: 26px 30px;
+    border-radius: 22px;
+    background:
+      radial-gradient(circle at 90% 5%, rgba(255, 255, 255, 0.16), transparent 30%),
+      linear-gradient(120deg, $primary-dark, $primary 72%, #3987d7);
+    color: $white;
+    box-shadow: 0 12px 28px rgba(13, 71, 161, 0.18);
+  }
+  .sd-welcome-copy {
+    position: relative;
+    z-index: 1;
+    .sd-eyebrow {
+      display: block;
+      margin-bottom: 8px;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.13em;
+    }
+    h1 {
+      font-size: clamp(22px, 2.4vw, 30px);
+      line-height: 1.2;
+      letter-spacing: -0.025em;
+    }
+    p {
+      margin-top: 7px;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 14px;
+    }
+  }
+  .sd-welcome-badge {
+    position: relative;
+    z-index: 1;
+    flex: none;
+    padding: 9px 13px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    border-radius: 99px;
+    background: rgba(255, 255, 255, 0.12);
+    color: $white;
+    font-size: 12px;
+    font-weight: 700;
+  }
   .sd-grid {
-    @include grid(2, 10px);
-    margin-bottom: 14px;
-    @include from-desktop() {
-      grid-template-columns: repeat(4, 1fr);
+    @include grid(2, 12px);
+    margin-bottom: 18px;
+    .stat-card {
+      min-height: 116px;
+      padding: 17px;
+      border: 1px solid $line;
+      border-top: 3px solid transparent;
+      border-radius: 16px;
+      box-shadow: 0 3px 12px rgba(18, 48, 84, 0.04);
+    }
+    .stat-card.yellow {
+      border-top-color: #e4a900;
+    }
+    .stat-card.blue {
+      border-top-color: $primary;
+    }
+    .stat-card.green {
+      border-top-color: $success;
+    }
+    .stat-card.red {
+      border-top-color: $danger;
+    }
+    .stat-label {
+      color: $muted;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .stat-value {
+      margin-top: 8px;
+      font-size: clamp(20px, 2.1vw, 25px);
+      letter-spacing: -0.02em;
+    }
+  }
+  .sd-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+  .sd-cta,
+  .sd-add {
+    @include flex-center();
+    gap: 8px;
+    min-height: 52px;
+    padding: 0 18px;
+    border-radius: 13px;
+    font-size: 15px;
+    font-weight: 700;
+    transition:
+      background 0.15s ease,
+      border-color 0.15s ease,
+      transform 0.15s ease;
+    &:active {
+      transform: translateY(1px);
     }
   }
   .sd-cta {
-    @include flex-center();
-    gap: 6px;
-    min-height: 56px;
-    border-radius: 14px;
     background: $primary;
     color: $white;
-    font-size: 17px;
-    font-weight: 700;
+    box-shadow: 0 5px 12px rgba(21, 101, 192, 0.16);
     &:hover {
       background: $primary-dark;
     }
   }
   .sd-add {
-    @include flex-center();
-    gap: 8px;
-    min-height: 52px;
-    margin-top: 10px;
-    border-radius: 14px;
-    border: 1.5px solid $primary;
+    border: 1px solid $border;
     background: $white;
     color: $primary;
-    font-size: 16px;
-    font-weight: 700;
+    &:hover {
+      border-color: $primary-border;
+      background: $primary-soft;
+    }
+  }
+  .sd-dashboard-grid {
+    display: grid;
+    gap: 16px;
+  }
+  .sd-panel {
+    min-width: 0;
+    padding: 18px;
+    border: 1px solid $line;
+    border-radius: 18px;
+    background: $white;
+    box-shadow: 0 3px 14px rgba(18, 48, 84, 0.045);
   }
   .sd-head {
-    @include flex-between();
-    margin: 22px 0 10px;
+    @include flex-between(12px);
+    margin-bottom: 14px;
     h2 {
       font-size: 17px;
+      letter-spacing: -0.01em;
     }
-    a {
+    p {
+      margin-top: 3px;
+      color: $muted;
+      font-size: 13px;
+    }
+    > a {
+      flex: none;
+      padding: 8px 0 8px 8px;
       color: $primary;
+      font-size: 13px;
       font-weight: 700;
-      font-size: 14px;
-      padding: 10px 4px;
     }
   }
   .sd-list {
-    @include flex-wrapper(8px);
+    @include flex-wrapper(9px);
+  }
+  .sd-side {
+    @include flex-wrapper(14px);
+    min-width: 0;
   }
   .sd-late {
     @include flex(12px);
-    margin-top: 16px;
-    padding: 14px;
-    border-radius: 16px;
-    background: $danger-soft;
+    min-width: 0;
+    padding: 16px;
+    border: 1px solid #f4d1ce;
+    border-radius: 17px;
+    background: linear-gradient(135deg, #fff8f7, $danger-soft);
     color: $danger;
+    transition: transform 0.15s ease;
+    &:hover {
+      transform: translateY(-1px);
+    }
     > span {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: $danger;
-      color: $white;
+      width: 40px;
+      height: 40px;
+      border-radius: 13px;
+      background: $white;
+      color: $danger;
       @include flex-center();
       flex: none;
     }
@@ -70,42 +188,105 @@
       flex: 1;
       min-width: 0;
       strong {
-        font-size: 16px;
+        font-size: 15px;
       }
       p {
-        font-size: 13px;
+        margin-top: 3px;
         color: $muted;
+        font-size: 12px;
       }
     }
     b {
-      font-size: 18px;
+      flex: none;
+      font-size: 15px;
       font-variant-numeric: tabular-nums;
     }
   }
+  .sd-month {
+    .sd-head {
+      align-items: flex-start;
+      > strong {
+        color: $primary;
+        font-size: 20px;
+      }
+    }
+  }
   .sd-bar {
-    height: 10px;
-    background: $primary-soft;
-    border-radius: 99px;
+    height: 9px;
     overflow: hidden;
+    border-radius: 99px;
+    background: $primary-soft;
     i {
       display: block;
       height: 100%;
-      background: $primary;
+      border-radius: inherit;
+      background: linear-gradient(90deg, $primary, #4c95df);
+      transition: width 0.3s ease;
     }
   }
   .sd-meta {
-    @include flex-between();
-    font-size: 13px;
+    @include flex-between(8px);
+    margin-top: 10px;
     color: $muted;
-    margin-top: 8px;
+    font-size: 12px;
+    span:last-child {
+      text-align: right;
+    }
+  }
+  .sd-all-done {
+    border: 1px solid #cde7d1;
+    border-radius: 13px;
+    background: $success-soft;
+    color: $success;
+    padding: 15px;
+    font-weight: 700;
+    text-align: center;
   }
 }
 
-.shop-dashboard .sd-all-done {
-  background: $success-soft;
-  color: $success;
-  border-radius: 14px;
-  padding: 14px;
-  font-weight: 700;
-  text-align: center;
+@include from-tablet() {
+  .shop-dashboard {
+    .sd-actions {
+      grid-template-columns: 1.2fr 1fr;
+    }
+    .sd-dashboard-grid {
+      grid-template-columns: minmax(0, 1.6fr) minmax(290px, 0.9fr);
+      align-items: start;
+    }
+  }
+}
+
+@include from-desktop() {
+  .shop-dashboard {
+    .sd-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .sd-welcome {
+      min-height: 168px;
+      padding: 32px 36px;
+    }
+  }
+}
+
+@include mobile() {
+  .shop-dashboard {
+    .sd-welcome {
+      align-items: flex-start;
+      min-height: 0;
+      padding: 22px 20px;
+    }
+    .sd-welcome-badge {
+      display: none;
+    }
+    .sd-panel {
+      padding: 15px;
+    }
+    .sd-late {
+      gap: 9px;
+      padding: 13px;
+      b {
+        font-size: 13px;
+      }
+    }
+  }
 }

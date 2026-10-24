@@ -4,11 +4,22 @@
 .collection-row {
   @include card();
   @include flex(12px);
+  min-height: 90px;
+  padding: 14px;
+  border: 1px solid $line;
+  box-shadow: 0 2px 10px rgba(18, 48, 84, 0.04);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
+  &:hover {
+    border-color: $primary-border;
+    box-shadow: 0 6px 16px rgba(18, 48, 84, 0.07);
+  }
   .cr-avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: $primary-border;
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: $primary-soft;
     color: $primary-dark;
     font-weight: 700;
     font-size: 14px;
@@ -26,7 +37,7 @@
   }
   .cr-name {
     font-weight: 700;
-    font-size: 16px;
+    font-size: 15px;
     max-width: 100%;
     @include eclipse();
   }
@@ -39,7 +50,7 @@
     align-items: flex-end;
     flex: none;
     strong {
-      font-size: 17px;
+      font-size: 16px;
       font-variant-numeric: tabular-nums;
     }
   }
@@ -62,7 +73,7 @@
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    background: #1b5e20;
+    background: $success;
     color: #ffffff;
     @include flex-center();
     flex: none;
@@ -75,6 +86,23 @@
     }
     &:active {
       transform: scale(0.96);
+    }
+  }
+
+  @media only screen and (max-width: 380px) {
+    .collection-row {
+      gap: 9px;
+      padding: 11px;
+      .cr-avatar {
+        width: 40px;
+        height: 40px;
+      }
+      .cr-end strong {
+        font-size: 14px;
+      }
+      .cr-actions {
+        gap: 5px;
+      }
     }
   }
 }

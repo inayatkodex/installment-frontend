@@ -69,13 +69,16 @@
 }
 
 .modal-backdrop.modal-centered {
-  align-items: center;
+  display: grid;
+  place-items: center;
   padding: 16px;
 
   .modal-sheet {
+    width: min(100%, 480px);
     max-width: 480px;
     border-radius: 20px;
     padding: 20px 24px 24px;
+    margin: auto;
 
     .modal-handle {
       display: none;

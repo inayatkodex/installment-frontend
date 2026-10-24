@@ -7,20 +7,20 @@
   left: 0;
   right: 0;
   z-index: 40;
-  height: $navbar-height;
-  padding: 0 8px 0 16px;
+  height: $shop-navbar-height;
+  padding: 0 18px 0 24px;
   @include flex-between();
   background: rgba(255, 255, 255, 0.96);
   color: $ink;
   border-bottom: 1px solid $line;
-  box-shadow: 0 4px 16px rgba(16, 64, 128, 0.06);
+  box-shadow: 0 4px 18px rgba(16, 64, 128, 0.055);
   backdrop-filter: blur(14px);
   .shop-navbar-brand {
-    @include flex(10px);
+    @include flex(14px);
     min-width: 0;
   }
   .shop-navbar-brand > img {
-    width: 104px;
+    width: 108px;
     height: auto;
     flex: none;
   }
@@ -28,24 +28,56 @@
     min-width: 0;
     strong {
       display: block;
-      font-size: 17px;
+      font-size: 15px;
       @include eclipse();
     }
     span {
-      font-size: 12px;
-      opacity: 0.85;
+      color: $muted;
+      font-size: 11px;
     }
   }
   .shop-navbar-logout {
     @include flex(6px);
-    min-height: 44px;
-    padding: 0 12px;
-    border: 0;
-    background: $primary-soft;
+    min-height: 42px;
+    padding: 0 13px;
+    border: 1px solid $primary-border;
+    background: $white;
     color: $primary;
     border-radius: 10px;
     font-size: 14px;
     font-weight: 700;
     flex: none;
+    transition: background 0.15s ease;
+    &:hover {
+      background: $primary-soft;
+    }
+  }
+}
+
+@include mobile() {
+  .shop-navbar {
+    padding-right: 12px;
+    padding-left: 14px;
+    .shop-navbar-brand {
+      gap: 9px;
+    }
+    .shop-navbar-brand > img {
+      width: 96px;
+    }
+    .shop-navbar-name strong {
+      font-size: 14px;
+    }
+    .shop-navbar-logout {
+      gap: 5px;
+      min-height: 40px;
+      padding: 0 10px;
+      font-size: 13px;
+    }
+  }
+}
+
+@media only screen and (max-width: 360px) {
+  .shop-navbar .shop-navbar-name {
+    display: none;
   }
 }

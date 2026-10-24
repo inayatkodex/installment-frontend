@@ -45,6 +45,7 @@ const Navbar = () => {
           title="Logout karna hai?"
           message="Aap dobara login karke wapas aa sakte hain."
           confirmText="Haan, Logout"
+          centered
           onConfirm={logout}
           onCancel={() => setConfirm(false)}
         />

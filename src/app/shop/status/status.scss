@@ -2,6 +2,9 @@
 @use "../../../styles/variables.scss" as *;
 
 .status-page {
+  > .month-picker {
+    max-width: 520px;
+  }
   .st-body {
     margin-top: 14px;
   }

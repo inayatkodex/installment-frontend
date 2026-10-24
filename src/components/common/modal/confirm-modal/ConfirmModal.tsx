@@ -14,6 +14,7 @@ interface Props {
   loadingText?: string;
   tone?: "primary" | "danger" | "success";
   loading?: boolean;
+  centered?: boolean;
   askReason?: boolean; // shows a "reason" box (used for Reject)
   reasonLabel?: string;
   reasonPlaceholder?: string;
@@ -29,6 +30,7 @@ const ConfirmModal = ({
   loadingText,
   tone = "primary",
   loading = false,
+  centered = false,
   askReason = false,
   reasonLabel = "Wajah likhein",
   reasonPlaceholder = "Jaise: CNIC ki tasveer saaf nahi hai",
@@ -40,7 +42,7 @@ const ConfirmModal = ({
     tone === "danger" ? "danger-btn" : tone === "success" ? "success-btn" : "";
 
   return (
-    <Modal title={title} onClose={onCancel}>
+    <Modal title={title} onClose={onCancel} centered={centered}>
       <p className="confirm-message">{message}</p>
       {askReason && (
         <FormInput
