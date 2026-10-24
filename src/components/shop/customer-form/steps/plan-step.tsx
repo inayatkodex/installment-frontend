@@ -3,24 +3,27 @@ import { formatRs, maskMobile, maskMoney, toNumber } from "@/shared/formatUtils"
 import { calcPlan } from "@/shared/planUtils";
 import { StepProps } from "../formTypes";
 
-const MONTH_CHOICES = [3, 6, 9, 12, 18, 24];
-
 const PlanStep = ({ form, errors, update }: StepProps) => {
   const total = form.items.reduce((a, i) => a + toNumber(i.price), 0);
-  const plan = calcPlan(total, toNumber(form.down), form.months);
+  const months = Number(form.months);
+  const plan = calcPlan(total, toNumber(form.down), months);
 
   return (
     <>
       <FormInput label="Advance paid today (Rs.)" labelUr="ایڈوانس" optional inputMode="numeric" value={form.down} onChange={(e) => update({ down: maskMoney(e.target.value) })} placeholder="0" error={errors.down} />
 
-      <fieldset className="cf-months">
-        <legend>Kitne mahine? <span className="ur" lang="ur">کتنے مہینے؟</span></legend>
-        <div role="radiogroup" className="cf-chips">
-          {MONTH_CHOICES.map((m) => (
-            <button key={m} type="button" role="radio" aria-checked={form.months === m} className={form.months === m ? "on" : ""} onClick={() => update({ months: m })}>{m}</button>
-          ))}
-        </div>
-      </fieldset>
+      <FormInput
+        label="Number of installments (months)"
+        labelUr="قسطوں کے مہینے"
+        type="number"
+        inputMode="numeric"
+        min="1"
+        value={form.months}
+        onChange={(e) => update({ months: e.target.value })}
+        placeholder="e.g. 15"
+        autoFocus
+        error={errors.months}
+      />
 
       <FormInput label="First installment date" labelUr="پہلی قسط کی تاریخ" type="date" value={form.firstDue} onChange={(e) => update({ firstDue: e.target.value })} error={errors.firstDue} />
 

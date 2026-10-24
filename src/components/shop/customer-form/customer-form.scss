@@ -10,9 +10,6 @@
   .cf-trash { width: 44px; height: 44px; border: 0; border-radius: 50%; background: $danger-soft; color: $danger; @include flex-center(); }
   .cf-total { @include flex-between(); padding: 14px; background: $primary-soft; border-radius: 14px; font-weight: 700; strong { font-size: 22px; color: $primary-dark; } .ur { font-size: 15px; color: $muted; margin-left: 6px; } }
 
-  .cf-months { border: 0; legend { font-size: 14px; font-weight: 700; margin-bottom: 8px; .ur { font-size: 15px; color: $muted; margin-left: 8px; } } }
-  .cf-chips { @include grid(3, 10px); button { min-height: 56px; border-radius: 12px; border: 1.5px solid $border; background: $white; font-size: 20px; font-weight: 700; color: $text; &.on { background: $primary; border-color: $primary; color: $white; } } }
-
   .cf-summary { @include card(); @include flex-wrapper(6px);
     > div { @include flex-between(); font-size: 15px; color: $muted; b { color: $text; font-variant-numeric: tabular-nums; } }
     .cf-monthly { margin-top: 6px; padding: 12px; background: $success-soft; border-radius: 12px; font-weight: 700; color: $text; strong { font-size: 24px; color: $success; } .ur { font-size: 15px; color: $muted; margin-left: 6px; } }

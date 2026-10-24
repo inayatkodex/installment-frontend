@@ -41,7 +41,7 @@ const emptyForm = (): CustomerFormState => ({
   docs: {},
   items: [{ key: 1, name: "", price: "" }],
   down: "",
-  months: 12,
+  months: "12",
   firstDue: defaultFirstDue(),
 });
 
@@ -75,6 +75,12 @@ const CustomerForm = () => {
       });
     }
     if (step === 4) {
+      if (
+        !/^\d+$/.test(form.months) ||
+        !Number.isSafeInteger(Number(form.months)) ||
+        Number(form.months) < 1
+      )
+        e.months = "Mahino ki tadaad 1 ya us se zyada poora number honi chahiye";
       if (toNumber(form.down) > total)
         e.down = "Advance kul qeemat se zyada nahi ho sakta";
       if (!form.firstDue) e.firstDue = "Pehli qist ki tareekh chunein";
@@ -123,7 +129,7 @@ const CustomerForm = () => {
           address: form.address.trim() || undefined,
           items,
           downPayment: toNumber(form.down),
-          months: form.months,
+          months: Number(form.months),
           firstDueDate: form.firstDue,
           documents,
         }),
@@ -140,7 +146,7 @@ const CustomerForm = () => {
   };
 
   if (savedId) {
-    const plan = calcPlan(total, toNumber(form.down), form.months);
+    const plan = calcPlan(total, toNumber(form.down), Number(form.months));
     return (
       <div className="cf-done" role="status">
         <span className="cf-tick">

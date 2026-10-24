@@ -17,7 +17,7 @@ export interface CustomerFormState {
   docs: Partial<Record<DocKey, File>>;
   items: ItemRow[];
   down: string;
-  months: number;
+  months: string;
   firstDue: string;
 }
 
