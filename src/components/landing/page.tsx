@@ -1,6 +1,5 @@
-import type { CSSProperties } from "react";
-import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowRight,
   Check,
@@ -22,16 +21,6 @@ import LandingNav from "@/components/landing/LandingNav";
 import LogoMark from "@/components/landing/LogoMark";
 import PhoneMockup from "@/components/landing/PhoneMockup";
 import "./landing.scss";
-
-const TITLE = "Installment Pro | Installment ka hisaab, ab mobile par";
-const DESCRIPTION =
-  "Aaj kis se qist leni hai, kaun late hai, kitna baaki hai. Dukaandaron ke liye installment ka hisaab, sab kuch ek nazar mein. Na register, na bhool, na bahana.";
-
-export const metadata: Metadata = {
-  title: TITLE,
-  description: DESCRIPTION,
-  openGraph: { title: TITLE, description: DESCRIPTION, type: "website", locale: "en_PK", siteName: "Installment Pro" },
-};
 
 /** Keep in sync with the monthly fee on the backend (Shop.monthlyFee). */
 const MONTHLY_FEE = "Rs. 2,500";
@@ -267,27 +256,13 @@ const LandingPage = () => (
             </ul>
           </div>
 
-          {/* Sample numbers, for illustration only */}
-          <div className="lp-report lp-reveal" role="img" aria-label="Sample report: Rs. 1,86,000 mila, Rs. 2,40,000 lena tha, 78 percent collect ho chuka">
-            <div className="lp-report-top">
-              <b>Is mahine ki wasooli</b>
-              <span className="lp-pill">Sample</span>
-            </div>
-            <div className="lp-report-amount">
-              <strong>Rs. 1,86,000</strong>
-              <span>Rs. 2,40,000 lena tha</span>
-            </div>
-            <div className="lp-progress"><span style={{ "--p": "78%" } as CSSProperties} /></div>
-            <div className="lp-report-meta">
-              <b>78% collect ho chuka</b>
-              <span>22% baaki</span>
-            </div>
-            <div className="lp-report-stats">
-              <div className="green"><strong>42</strong><span>Paid qistein</span></div>
-              <div className="yellow"><strong>18</strong><span>Pending</span></div>
-              <div className="red"><strong>5</strong><span>Overdue customers</span></div>
-            </div>
-          </div>
+          <Image
+            src="/images/Report%20card.svg"
+            alt="Sample monthly collection report showing collected, pending, and overdue installments"
+            width={350}
+            height={303}
+            className="lp-report-image lp-reveal"
+          />
         </div>
       </section>
 
@@ -345,10 +320,7 @@ const LandingPage = () => (
         <div className="lp-footer-top">
           <div className="lp-footer-brand">
             <Link href={ROUTES.HOME.INDEX} className="lp-logo" aria-label="Installment Pro, home">
-              <LogoMark size={36} />
-              <span>
-                Installment <b>Pro</b>
-              </span>
+              <LogoMark size={36} variant="white" />
             </Link>
             <p>Dukaandaron ke liye installment ka hisaab.</p>
           </div>

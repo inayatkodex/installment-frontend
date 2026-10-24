@@ -31,9 +31,6 @@ const LandingNav = () => {
       <div className="lp-container lp-nav-inner">
         <Link href={ROUTES.HOME.INDEX} className="lp-logo" aria-label="Installment Pro, home">
           <LogoMark size={38} />
-          <span>
-            Installment <b>Pro</b>
-          </span>
         </Link>
 
         <nav className="lp-nav-links" aria-label="Page sections">

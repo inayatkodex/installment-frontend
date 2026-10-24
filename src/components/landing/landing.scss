@@ -137,21 +137,14 @@ $lift-shadow: 0 18px 44px rgba(16, 64, 128, 0.14);
   }
 }
 .lp-logo {
-  @include flex(10px);
-  font-size: 21px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: $ink;
-  b {
-    color: $primary;
-    font-weight: 800;
-  }
-  svg {
+  display: inline-flex;
+  align-items: center;
+  img {
     flex: none;
-  }
-  @include tablet {
-    font-size: 18px;
-    gap: 8px;
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
   }
 }
 .lp-nav-links {
@@ -419,165 +412,13 @@ $lift-shadow: 0 18px 44px rgba(16, 64, 128, 0.14);
   &.orange { background: #e65100; }
 }
 
-// ---- phone mockup ----
 .lp-phone {
   position: relative;
   z-index: 1;
-  width: 300px;
-  padding: 10px;
-  border-radius: 46px;
-  background: #0f172a;
-  box-shadow: 0 30px 60px -10px rgba(13, 40, 100, 0.35);
-  @include tablet {
-    width: 280px;
-  }
-}
-.lp-phone-screen {
-  overflow: hidden;
-  border-radius: 36px;
-  background: $bg;
-  user-select: none;
-}
-.lp-app-bar {
-  @include flex-between(8px);
-  padding: 22px 16px 14px;
-  background: $primary;
-  color: $white;
-  font-size: 13px;
-  font-weight: 700;
-  span {
-    white-space: nowrap;
-  }
-  span:last-child {
-    font-size: 10px;
-    font-weight: 500;
-    color: #d6e6fa;
-  }
-}
-.lp-app-title {
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  padding: 14px 14px 6px;
-  b {
-    font-size: 17px;
-    color: $ink;
-  }
-  .ur {
-    font-size: 14px;
-    color: $muted;
-  }
-}
-.lp-app-stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 6px;
-  padding: 6px 10px 10px;
-}
-.lp-app-stat {
-  display: flex;
-  flex-direction: column;
-  gap: 1px;
-  padding: 8px 7px;
-  border-radius: 12px;
-  background: $white;
-  white-space: nowrap;
-  b {
-    font-size: 11px;
-  }
-  span {
-    font-size: 8px;
-    color: $muted;
-  }
-  &.green b {
-    color: $success;
-  }
-}
-.lp-app-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding: 0 12px;
-}
-.lp-app-row {
-  @include flex(9px);
-  padding: 10px;
-  border-radius: 14px;
-  background: $white;
-}
-.lp-app-avatar {
-  display: grid;
-  place-items: center;
-  flex: none;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: #bbd6f5;
-  color: $primary-dark;
-  font-size: 11px;
-  font-weight: 700;
-}
-.lp-app-info {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-  b {
-    font-size: 13px;
-  }
-  span {
-    font-size: 10px;
-    color: $muted;
-  }
-  em {
-    align-self: flex-start;
-    padding: 3px 9px;
-    border-radius: 99px;
-    background: $warning-soft;
-    color: $warning;
-    font-size: 9px;
-    font-style: normal;
-    font-weight: 600;
-  }
-}
-.lp-app-amount {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 6px;
-  b {
-    font-size: 13px;
-  }
-}
-.lp-app-receive {
-  padding: 6px 13px;
-  border-radius: 8px;
-  background: $primary;
-  color: $white;
-  font-size: 11px;
-  font-weight: 700;
-}
-.lp-app-done {
-  @include flex-between(8px);
-  margin: 10px 12px 12px;
-  padding: 12px 14px;
-  border-radius: 12px;
-  background: $success-soft;
-  color: $success;
-  font-size: 11px;
-  font-weight: 700;
-}
-.lp-app-tabs {
-  @include flex-between(4px);
-  padding: 13px 10px 15px;
-  background: $white;
-  font-size: 9px;
-  color: $muted;
-  .active {
-    color: $primary;
-    font-weight: 700;
-  }
+  display: block;
+  width: min(270px, 100%);
+  height: auto;
+  filter: drop-shadow(0 30px 30px rgba(13, 40, 100, 0.22));
 }
 
 // ================= Problem vs solution =================
@@ -840,107 +681,13 @@ $lift-shadow: 0 18px 44px rgba(16, 64, 128, 0.14);
     }
   }
 }
-.lp-report {
-  display: flex;
-  flex-direction: column;
-  gap: 22px;
-  padding: 32px;
-  border-radius: 28px;
-  background: $white;
-  color: $text;
+.lp-report-image {
+  display: block;
+  width: min(100%, 420px);
+  height: auto;
+  justify-self: center;
+  border-radius: 24px;
   box-shadow: 0 30px 60px -10px rgba(0, 10, 60, 0.4);
-  @include tablet {
-    padding: 22px;
-    gap: 18px;
-    border-radius: 24px;
-  }
-}
-.lp-report-top {
-  @include flex-between(12px);
-  font-size: 16px;
-  color: $ink;
-}
-.lp-pill {
-  padding: 3px 12px;
-  border-radius: 99px;
-  background: $primary-soft;
-  color: $primary;
-  font-size: 12px;
-  font-weight: 600;
-}
-.lp-report-amount {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  strong {
-    font-size: clamp(32px, 5vw, 44px);
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    color: $primary;
-    font-variant-numeric: tabular-nums;
-  }
-  span {
-    font-size: 15px;
-    font-weight: 500;
-    color: $muted;
-  }
-}
-.lp-progress {
-  height: 14px;
-  border-radius: 99px;
-  background: $primary-soft;
-  overflow: hidden;
-  span {
-    display: block;
-    width: var(--p, 0%);
-    height: 100%;
-    border-radius: inherit;
-    background: linear-gradient(90deg, #1e88e5, $primary);
-    transform-origin: left;
-  }
-}
-.lp-report-meta {
-  @include flex-between(8px);
-  font-size: 14px;
-  b {
-    color: $success;
-  }
-  span {
-    color: $muted;
-    font-weight: 500;
-  }
-}
-.lp-report-stats {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  div {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    padding: 16px;
-    border-radius: 16px;
-    strong {
-      font-size: 28px;
-      font-weight: 800;
-    }
-    span {
-      font-size: 13px;
-      font-weight: 600;
-    }
-    @include tablet {
-      padding: 12px;
-      strong {
-        font-size: 22px;
-      }
-      span {
-        font-size: 12px;
-      }
-    }
-  }
-  .green { background: $success-soft; color: $success; }
-  .yellow { background: $warning-soft; color: $warning; }
-  .red { background: $danger-soft; color: $danger; }
 }
 
 // ================= FAQ =================
@@ -1091,10 +838,7 @@ $lift-shadow: 0 18px 44px rgba(16, 64, 128, 0.14);
   }
 
   .lp-logo {
-    color: $white;
-    b {
-      color: #bbd6f5;
-    }
+    opacity: 0.96;
   }
 }
 .lp-footer-top {
@@ -1159,11 +903,6 @@ $lift-shadow: 0 18px 44px rgba(16, 64, 128, 0.14);
   from { opacity: 0; transform: translateY(28px); }
   to { opacity: 1; transform: none; }
 }
-@keyframes lp-grow {
-  from { transform: scaleX(0); }
-  to { transform: scaleX(1); }
-}
-
 // Scroll-driven reveal: pure CSS progressive enhancement.
 // Browsers without `animation-timeline` simply show everything normally.
 @supports (animation-timeline: view()) {
@@ -1172,11 +911,6 @@ $lift-shadow: 0 18px 44px rgba(16, 64, 128, 0.14);
       animation: lp-rise linear both;
       animation-timeline: view();
       animation-range: entry 0% entry 40%;
-    }
-    .lp-progress span {
-      animation: lp-grow linear both;
-      animation-timeline: view();
-      animation-range: entry 20% cover 45%;
     }
   }
 }
@@ -1192,9 +926,6 @@ $lift-shadow: 0 18px 44px rgba(16, 64, 128, 0.14);
 
 @media print {
   .lp-reveal,
-  .lp-progress span {
-    animation: none !important;
-  }
   .lp-nav {
     position: static;
   }
