@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { AlertCircle, ChevronRight, Plus } from "lucide-react";
+import { AlertCircle, ChevronRight, Plus, Store } from "lucide-react";
 import CollectionRow from "@/components/shop/collection-row/CollectionRow";
 import ReceivePaymentForm, {
   ReceiveTarget,
@@ -52,11 +52,19 @@ const ShopDashboardPage = () => {
     <div className="shop-dashboard">
       <header className="sd-welcome">
         <div className="sd-welcome-copy">
-          <span className="sd-eyebrow">SHOP OVERVIEW</span>
-          <h1>Assalam o Alaikum, {user?.ownerName}</h1>
-          <p>Here is your installment collection at a glance.</p>
+          <span className="sd-eyebrow">WELCOME TO YOUR DASHBOARD</span>
+          <p className="sd-greeting">Assalam o Alaikum, {user?.ownerName}</p>
+          <h1>{user?.shopName || "Your Shop"}</h1>
+          <p className="sd-welcome-description">
+            Your business at a glance. Let&apos;s make today productive.
+          </p>
         </div>
-        <span className="sd-welcome-badge">Installment Pro</span>
+        <div className="sd-welcome-mark" aria-hidden="true">
+          <span className="sd-welcome-mark-icon">
+            <Store size={28} strokeWidth={1.8} />
+          </span>
+          <span className="sd-welcome-mark-label">BUSINESS DASHBOARD</span>
+        </div>
       </header>
 
       <div className="sd-grid">
