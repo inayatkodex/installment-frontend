@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { LogOut } from "lucide-react";
-import { useAppDispatch, useAppSelector } from "@/store/store";
+import { useAppDispatch } from "@/store/store";
 import { shopLogout } from "@/store/slices/shop/auth/shopAuthSlice";
 import { ROUTES } from "@/constant/appRoutes";
 import BrandLogo from "@/components/common/BrandLogo";
@@ -13,7 +13,6 @@ import "./navbar.scss";
 const Navbar = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
-  const user = useAppSelector((s) => s.shopAuth.user);
   const [confirm, setConfirm] = useState(false);
 
   const logout = () => {
@@ -24,11 +23,7 @@ const Navbar = () => {
   return (
     <header className="shop-navbar">
       <div className="shop-navbar-brand">
-        <BrandLogo size={22} />
-        <div className="shop-navbar-name">
-          <strong>{user?.shopName ?? "Installment Pro"}</strong>
-          <span>Shop account</span>
-        </div>
+        <BrandLogo size={34} />
       </div>
       <button
         type="button"

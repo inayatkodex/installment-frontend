@@ -7,7 +7,7 @@
   left: 0;
   right: 0;
   z-index: 40;
-  height: $shop-navbar-height;
+  height: 72px;
   padding: 0 18px 0 24px;
   @include flex-between();
   background: rgba(255, 255, 255, 0.96);
@@ -16,25 +16,15 @@
   box-shadow: 0 4px 18px rgba(16, 64, 128, 0.055);
   backdrop-filter: blur(14px);
   .shop-navbar-brand {
-    @include flex(14px);
-    min-width: 0;
+    display: inline-flex;
+    align-items: center;
   }
   .shop-navbar-brand > img {
-    width: 108px;
-    height: auto;
+    display: block;
+    width: auto;
+    height: 34px;
+    max-width: 100%;
     flex: none;
-  }
-  .shop-navbar-name {
-    min-width: 0;
-    strong {
-      display: block;
-      font-size: 15px;
-      @include eclipse();
-    }
-    span {
-      color: $muted;
-      font-size: 11px;
-    }
   }
   .shop-navbar-logout {
     @include flex(6px);
@@ -56,16 +46,11 @@
 
 @include mobile() {
   .shop-navbar {
-    padding-right: 12px;
-    padding-left: 14px;
-    .shop-navbar-brand {
-      gap: 9px;
-    }
+    height: 64px;
+    padding-right: 16px;
+    padding-left: 16px;
     .shop-navbar-brand > img {
-      width: 96px;
-    }
-    .shop-navbar-name strong {
-      font-size: 14px;
+      height: 30px;
     }
     .shop-navbar-logout {
       gap: 5px;
@@ -76,8 +61,11 @@
   }
 }
 
-@media only screen and (max-width: 360px) {
-  .shop-navbar .shop-navbar-name {
-    display: none;
+@media only screen and (min-width: 577px) and (max-width: 767px) {
+  .shop-navbar {
+    height: 64px;
+    .shop-navbar-brand > img {
+      height: 32px;
+    }
   }
 }

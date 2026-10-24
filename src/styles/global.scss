@@ -100,6 +100,11 @@ ul {
     }
   }
 }
+@media (max-width: 767px) {
+  .shop-layout-content {
+    padding-top: calc(64px + 18px);
+  }
+}
 @media (min-width: 1025px) {
   .shop-layout-content {
     max-width: none;
