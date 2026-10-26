@@ -87,7 +87,7 @@ const SignupForm = () => {
       const profilePic = form.profilePic
         ? await fileToDataUrl(form.profilePic)
         : undefined;
-      await dispatch(
+      const res = await dispatch(
         shopSignup({
           shopName: form.shopName.trim(),
           city: form.city,
@@ -100,6 +100,12 @@ const SignupForm = () => {
           profilePic,
         }),
       ).unwrap();
+      showToast(
+        typeof res === "string"
+          ? res
+          : "Registration ho gayi. Admin approve karega to login ho jayega.",
+        "success",
+      );
       setSubmitted(true);
     } catch (err) {
       showToast(

@@ -1,17 +1,27 @@
-import { AxiosAdapter, AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import axios, { AxiosAdapter, AxiosError, AxiosResponse, InternalAxiosRequestConfig } from "axios";
 import * as db from "./mockData";
 
 type Params = Record<string, string | number | undefined>;
+
+/**
+ * Routes that bypass the mock adapter and go to the real backend.
+ * Remove entries as backend modules get built.
+ */
+export const REAL_ROUTES: string[] = [
+  "api/shop-auth/login",
+  "api/shop-auth/signup",
+  "api/admin-auth/login",
+];
+
+const isRealRoute = (url: string = ""): boolean => {
+  const clean = url.replace(/^\//, "");
+  return REAL_ROUTES.some((route) => clean === route || clean.endsWith(`/${route}`));
+};
 
 /** Routes a request to the demo data. Mirrors the URLs in apiUrls.ts. */
 function route(method: string, url: string, params: Params, body: Record<string, any>): unknown {
   const u = url.replace(/^\//, "");
   let m: RegExpMatchArray | null;
-
-  // auth
-  if (u === "api/shop-auth/login") return db.shopLogin(body.mobile, body.password);
-  if (u === "api/shop-auth/signup") return db.shopSignup(body as never);
-  if (u === "api/admin-auth/login") return db.adminLogin(body.email, body.password);
 
   // shop
   if (u === "api/shop/dashboard") return db.getShopDashboard();
@@ -45,6 +55,11 @@ function route(method: string, url: string, params: Params, body: Record<string,
 }
 
 export const mockAdapter: AxiosAdapter = async (config: InternalAxiosRequestConfig) => {
+  if (isRealRoute(config.url)) {
+    const defaultAdapter = axios.getAdapter(axios.defaults.adapter);
+    return defaultAdapter(config);
+  }
+
   await new Promise((r) => setTimeout(r, 250));
   const method = (config.method || "get").toLowerCase();
   const body = typeof config.data === "string" ? JSON.parse(config.data) : config.data || {};

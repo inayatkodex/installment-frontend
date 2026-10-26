@@ -16,8 +16,8 @@ export const shopLogin = createAsyncThunk(
       const response = await api.post(API_URLS.SHOP_AUTH.LOGIN, payload);
       const { user, access_token } = response.data.data;
       const days = payload.rememberMe ? 7 : 1;
-      Cookies.set(TOKEN_KEY, access_token, { expires: days });
-      Cookies.set(SHOP_USER_KEY, JSON.stringify(user), { expires: days });
+      Cookies.set(TOKEN_KEY, access_token, { expires: days, path: "/" });
+      Cookies.set(SHOP_USER_KEY, JSON.stringify(user), { expires: days, path: "/" });
       return { user, access_token } as { user: ShopUser; access_token: string };
     } catch (error) {
       return rejectWithValue(getErrorMessage(error, "Login nahi ho saka"));
@@ -30,8 +30,11 @@ export const shopSignup = createAsyncThunk(
   "shopAuth/signup",
   async (payload: ShopSignupPayload, { rejectWithValue }) => {
     try {
-      await api.post(API_URLS.SHOP_AUTH.SIGNUP, payload);
-      return true;
+      const response = await api.post(API_URLS.SHOP_AUTH.SIGNUP, payload);
+      return (
+        response.data?.message ||
+        "Registration ho gayi. Admin approve karega to login ho jayega."
+      );
     } catch (error) {
       return rejectWithValue(getErrorMessage(error, "Registration nahi ho saki"));
     }
@@ -45,15 +48,20 @@ const shopAuthSlice = createSlice({
     shopLogout: (state) => {
       state.user = null;
       state.access_token = null;
-      Cookies.remove(TOKEN_KEY);
-      Cookies.remove(SHOP_USER_KEY);
+      Cookies.remove(TOKEN_KEY, { path: "/" });
+      Cookies.remove(SHOP_USER_KEY, { path: "/" });
     },
     rehydrateShopFromCookies: (state) => {
       const token = Cookies.get(TOKEN_KEY);
       const user = Cookies.get(SHOP_USER_KEY);
       if (token && user) {
-        state.access_token = token;
-        state.user = JSON.parse(user);
+        try {
+          state.access_token = token;
+          state.user = JSON.parse(user);
+        } catch {
+          Cookies.remove(TOKEN_KEY, { path: "/" });
+          Cookies.remove(SHOP_USER_KEY, { path: "/" });
+        }
       }
     },
   },

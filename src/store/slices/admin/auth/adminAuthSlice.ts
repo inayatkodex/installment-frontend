@@ -24,8 +24,8 @@ export const adminLogin = createAsyncThunk(
       const response = await api.post(API_URLS.ADMIN_AUTH.LOGIN, payload);
       const { user, access_token } = response.data.data;
       const days = payload.rememberMe ? 7 : 1;
-      Cookies.set(ADMIN_TOKEN_KEY, access_token, { expires: days });
-      Cookies.set(ADMIN_USER_KEY, JSON.stringify(user), { expires: days });
+      Cookies.set(ADMIN_TOKEN_KEY, access_token, { expires: days, path: "/" });
+      Cookies.set(ADMIN_USER_KEY, JSON.stringify(user), { expires: days, path: "/" });
       return { user, access_token } as {
         user: AdminUser;
         access_token: string;
@@ -45,15 +45,20 @@ const adminAuthSlice = createSlice({
     adminLogout: (state) => {
       state.user = null;
       state.access_token = null;
-      Cookies.remove(ADMIN_TOKEN_KEY);
-      Cookies.remove(ADMIN_USER_KEY);
+      Cookies.remove(ADMIN_TOKEN_KEY, { path: "/" });
+      Cookies.remove(ADMIN_USER_KEY, { path: "/" });
     },
     rehydrateAdminFromCookies: (state) => {
       const token = Cookies.get(ADMIN_TOKEN_KEY);
       const user = Cookies.get(ADMIN_USER_KEY);
       if (token && user) {
-        state.access_token = token;
-        state.user = JSON.parse(user);
+        try {
+          state.access_token = token;
+          state.user = JSON.parse(user);
+        } catch {
+          Cookies.remove(ADMIN_TOKEN_KEY, { path: "/" });
+          Cookies.remove(ADMIN_USER_KEY, { path: "/" });
+        }
       }
     },
   },
