@@ -2,11 +2,20 @@ import api from "@/store/ApiServices/api";
 import API_URLS from "@/store/ApiServices/apiUrls";
 import { ADMIN_TOKEN_KEY, ADMIN_USER_KEY } from "@/store/ApiServices/config";
 import { getErrorMessage } from "@/shared/apiError";
-import { AdminAuthState, AdminLoginPayload, AdminUser } from "@/types/adminAuth";
+import {
+  AdminAuthState,
+  AdminLoginPayload,
+  AdminUser,
+} from "@/types/adminAuth";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 
-const initialState: AdminAuthState = { user: null, access_token: null, loading: false, error: null };
+const initialState: AdminAuthState = {
+  user: null,
+  access_token: null,
+  loading: false,
+  error: null,
+};
 
 export const adminLogin = createAsyncThunk(
   "adminAuth/login",
@@ -17,9 +26,14 @@ export const adminLogin = createAsyncThunk(
       const days = payload.rememberMe ? 7 : 1;
       Cookies.set(ADMIN_TOKEN_KEY, access_token, { expires: days });
       Cookies.set(ADMIN_USER_KEY, JSON.stringify(user), { expires: days });
-      return { user, access_token } as { user: AdminUser; access_token: string };
+      return { user, access_token } as {
+        user: AdminUser;
+        access_token: string;
+      };
     } catch (error) {
-      return rejectWithValue(getErrorMessage(error, "Failed to sign in as admin"));
+      return rejectWithValue(
+        getErrorMessage(error, "Failed to sign in as admin"),
+      );
     }
   },
 );
@@ -45,15 +59,22 @@ const adminAuthSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      .addCase(adminLogin.pending, (state) => { state.loading = true; state.error = null; })
+      .addCase(adminLogin.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
       .addCase(adminLogin.fulfilled, (state, action) => {
         state.loading = false;
         state.user = action.payload.user;
         state.access_token = action.payload.access_token;
       })
-      .addCase(adminLogin.rejected, (state, action) => { state.loading = false; state.error = action.payload as string; });
+      .addCase(adminLogin.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
   },
 });
 
-export const { adminLogout, rehydrateAdminFromCookies } = adminAuthSlice.actions;
+export const { adminLogout, rehydrateAdminFromCookies } =
+  adminAuthSlice.actions;
 export default adminAuthSlice.reducer;
