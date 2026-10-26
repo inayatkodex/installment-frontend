@@ -73,10 +73,28 @@ const adminShopsSlice = createSlice({
       .addCase(fetchAdminShop.fulfilled, (s, a) => { s.detailLoading = false; s.detail = a.payload; })
       .addCase(fetchAdminShop.rejected, (s, a) => { s.detailLoading = false; s.error = a.payload as string; })
       .addCase(updateAdminShopStatus.pending, (s) => { s.updating = true; })
-      .addCase(updateAdminShopStatus.fulfilled, (s, a) => { s.updating = false; s.detail = a.payload; })
+      .addCase(updateAdminShopStatus.fulfilled, (s, a) => {
+        s.updating = false;
+        s.detail = a.payload;
+        if (s.list?.items) {
+          const idx = s.list.items.findIndex((item) => item.id === a.payload.id);
+          if (idx !== -1) {
+            s.list.items[idx] = a.payload;
+          }
+        }
+      })
       .addCase(updateAdminShopStatus.rejected, (s) => { s.updating = false; })
       .addCase(setAdminShopFee.pending, (s) => { s.updating = true; })
-      .addCase(setAdminShopFee.fulfilled, (s, a) => { s.updating = false; s.detail = a.payload; })
+      .addCase(setAdminShopFee.fulfilled, (s, a) => {
+        s.updating = false;
+        s.detail = a.payload;
+        if (s.list?.items) {
+          const idx = s.list.items.findIndex((item) => item.id === a.payload.id);
+          if (idx !== -1) {
+            s.list.items[idx] = a.payload;
+          }
+        }
+      })
       .addCase(setAdminShopFee.rejected, (s) => { s.updating = false; });
   },
 });

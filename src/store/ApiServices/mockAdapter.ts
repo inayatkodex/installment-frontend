@@ -7,20 +7,30 @@ type Params = Record<string, string | number | undefined>;
  * Routes that bypass the mock adapter and go to the real backend.
  * Remove entries as backend modules get built.
  */
-export const REAL_ROUTES: string[] = [
+export const REAL_ROUTES: (string | RegExp)[] = [
+  // Auth APIs
   "api/shop-auth/login",
   "api/shop-auth/signup",
   "api/admin-auth/login",
+
+  // Admin APIs (Dashboard, Shops list, Detail, Status, Fee)
+  "api/admin/dashboard",
+  "api/admin/shops",
+  /^api\/admin\/shops\//,
 ];
 
 const isRealRoute = (url: string = ""): boolean => {
-  const clean = url.replace(/^\//, "");
-  return REAL_ROUTES.some((route) => clean === route || clean.endsWith(`/${route}`));
+  const clean = url.replace(/^\//, "").split("?")[0];
+  return REAL_ROUTES.some((route) =>
+    typeof route === "string"
+      ? clean === route || clean.endsWith(`/${route}`)
+      : route.test(clean)
+  );
 };
 
 /** Routes a request to the demo data. Mirrors the URLs in apiUrls.ts. */
 function route(method: string, url: string, params: Params, body: Record<string, any>): unknown {
-  const u = url.replace(/^\//, "");
+  const u = url.replace(/^\//, "").split("?")[0];
   let m: RegExpMatchArray | null;
 
   // shop
@@ -44,12 +54,12 @@ function route(method: string, url: string, params: Params, body: Record<string,
     return db.getCustomerDetail(m[1]);
   }
 
-  // admin
-  if (u === "api/admin/dashboard") return db.getAdminDashboard();
-  if (u === "api/admin/shops") return db.getAdminShops(params as never);
-  if ((m = u.match(/^api\/admin\/shops\/([^/]+)\/status$/))) return db.setAdminShopStatus(m[1], body.status, body.reason);
-  if ((m = u.match(/^api\/admin\/shops\/([^/]+)\/fee$/))) return db.setAdminShopFee(m[1], body.month, body.status);
-  if ((m = u.match(/^api\/admin\/shops\/([^/]+)$/))) return db.getAdminShop(m[1]);
+  // admin routes are handled by real backend via REAL_ROUTES passthrough
+  // if (u === "api/admin/dashboard") return db.getAdminDashboard();
+  // if (u === "api/admin/shops") return db.getAdminShops(params as never);
+  // if ((m = u.match(/^api\/admin\/shops\/([^/]+)\/status$/))) return db.setAdminShopStatus(m[1], body.status, body.reason);
+  // if ((m = u.match(/^api\/admin\/shops\/([^/]+)\/fee$/))) return db.setAdminShopFee(m[1], body.month, body.status);
+  // if ((m = u.match(/^api\/admin\/shops\/([^/]+)$/))) return db.getAdminShop(m[1]);
 
   throw new db.MockError("Yeh page nahi mila", 404);
 }
