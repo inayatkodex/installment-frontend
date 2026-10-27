@@ -50,9 +50,13 @@ export const updateAdminShopStatus = createAsyncThunk(
 
 export const setAdminShopFee = createAsyncThunk(
   "adminShops/setFee",
-  async (payload: { id: string; month: string; status: "paid" | "unpaid" }, { rejectWithValue }) => {
+  async (payload: { id: string; month: string; status: "paid" | "unpaid"; method?: string }, { rejectWithValue }) => {
     try {
-      const res = await api.patch(API_URLS.ADMIN.SHOP_FEE(payload.id), { month: payload.month, status: payload.status });
+      const res = await api.patch(API_URLS.ADMIN.SHOP_FEE(payload.id), {
+        month: payload.month,
+        status: payload.status,
+        method: payload.method,
+      });
       return res.data.data as AdminShop;
     } catch (error) {
       return rejectWithValue(getErrorMessage(error, "Failed to update fee status"));

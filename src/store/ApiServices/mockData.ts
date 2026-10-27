@@ -414,13 +414,22 @@ export function setAdminShopStatus(id: string, status: ShopStatus, reason?: stri
   s.feeStatus = thisMonthFee(s);
   return { ...s };
 }
-export function setAdminShopFee(id: string, month: string, status: "paid" | "unpaid"): AdminShop {
+export function setAdminShopFee(id: string, month: string, status: "paid" | "unpaid", method?: string): AdminShop {
   const s = shops.find((x) => x.id === id);
   if (!s) throw new MockError("Shop not found", 404);
-  const h = s.feeHistory.find((x) => x.month === month);
-  if (!h) throw new MockError("Fee record not found for this month", 404);
+  let h = s.feeHistory.find((x) => x.month === month);
+  if (!h) {
+    h = { month, status: "unpaid" };
+    s.feeHistory.unshift(h);
+  }
   h.status = status;
-  if (status === "paid") { h.paidOn = today(); h.method = "Cash"; } else { delete h.paidOn; delete h.method; }
+  if (status === "paid") {
+    h.paidOn = today();
+    h.method = method || "Cash";
+  } else {
+    delete h.paidOn;
+    delete h.method;
+  }
   s.feeStatus = thisMonthFee(s);
   return { ...s };
 }

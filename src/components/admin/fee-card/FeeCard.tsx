@@ -1,4 +1,6 @@
-import CommonBtn from "@/components/common/CommonButton/Button";
+"use client";
+
+import { Check, CheckCircle2 } from "lucide-react";
 import StatusBadge from "@/components/common/StatusBadge/StatusBadge";
 import { formatDate, formatMonth, formatRs } from "@/shared/formatUtils";
 import { AdminShop, FeeStatus } from "@/types/adminShop";
@@ -15,12 +17,15 @@ const FeeCard = ({ shop, busy, onChange }: Props) => {
   return (
     <section className="fee-card" aria-label="Monthly Platform Fee">
       <div className="fc-head">
-        <h2>Monthly Platform Fee</h2>
+        <div>
+          <h2>Monthly Platform Fee</h2>
+          <span className="fc-sub">Tracking month-by-month platform fee</span>
+        </div>
         <strong>{formatRs(shop.monthlyFee)}</strong>
       </div>
       {!hasFee ? (
         <p className="fc-note">
-          Platform fees apply to Active shops only. Once activated, monthly fee
+          Platform fees apply to Active and Inactive shops. Once activated, monthly fee
           records will appear here.
         </p>
       ) : (
@@ -31,23 +36,36 @@ const FeeCard = ({ shop, busy, onChange }: Props) => {
                 <b>{formatMonth(h.month)}</b>
                 <span>
                   {h.status === "paid"
-                    ? `${formatDate(h.paidOn!)} · ${h.method}`
+                    ? `${formatDate(h.paidOn!)} · ${h.method || "Cash"}`
                     : "Unpaid"}
                 </span>
               </div>
               <div className="fc-right">
-                <StatusBadge
-                  status={h.status === "paid" ? "paid" : "overdue"}
-                  label={h.status === "paid" ? "Paid" : "Unpaid"}
-                />
-                <CommonBtn
-                  text={h.status === "paid" ? "Mark as Unpaid" : "Mark as Paid"}
-                  className={`sm-btn ${h.status === "paid" ? "gray-btn" : ""}`}
-                  disabled={busy}
-                  onClick={() =>
-                    onChange(h.month, h.status === "paid" ? "unpaid" : "paid")
-                  }
-                />
+                {h.status === "paid" ? (
+                  <>
+                    <span className="fc-paid-badge">
+                      <Check size={14} aria-hidden="true" /> Paid
+                    </span>
+                    <button
+                      type="button"
+                      className="fc-undo-btn"
+                      disabled={busy}
+                      onClick={() => onChange(h.month, "unpaid")}
+                      title="Mark as Unpaid"
+                    >
+                      Undo
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    className="fc-receive-btn"
+                    disabled={busy}
+                    onClick={() => onChange(h.month, "paid")}
+                  >
+                    <CheckCircle2 size={15} aria-hidden="true" /> Receive Fee
+                  </button>
+                )}
               </div>
             </li>
           ))}

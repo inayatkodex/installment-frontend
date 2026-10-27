@@ -60,8 +60,8 @@ const AdminShopsPage = () => {
       ).unwrap();
       showToast(
         next === "paid"
-          ? "Platform fee marked as paid"
-          : "Platform fee marked as unpaid",
+          ? `Rs. ${shop.monthlyFee.toLocaleString()} fee received for ${shop.shopName}`
+          : `Fee marked as unpaid for ${shop.shopName}`,
         "success",
       );
       load();

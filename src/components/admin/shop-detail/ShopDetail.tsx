@@ -32,8 +32,8 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
       await dispatch(setAdminShopFee({ id: s.id, month, status })).unwrap();
       showToast(
         status === "paid"
-          ? "Platform fee marked as paid"
-          : "Platform fee marked as unpaid",
+          ? `Rs. ${s.monthlyFee.toLocaleString()} fee received for ${s.shopName}`
+          : `Fee marked as unpaid for ${s.shopName}`,
         "success",
       );
     } catch (e) {

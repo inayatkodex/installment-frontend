@@ -69,7 +69,7 @@ function route(method: string, url: string, params: Params, body: Record<string,
   if (u === "api/admin/dashboard") return db.getAdminDashboard();
   if (u === "api/admin/shops") return db.getAdminShops(params as never);
   if ((m = u.match(/^api\/admin\/shops\/([^/]+)\/status$/))) return db.setAdminShopStatus(m[1], body.status, body.reason);
-  if ((m = u.match(/^api\/admin\/shops\/([^/]+)\/fee$/))) return db.setAdminShopFee(m[1], body.month, body.status);
+  if ((m = u.match(/^api\/admin\/shops\/([^/]+)\/fee$/))) return db.setAdminShopFee(m[1], body.month, body.status, body.method);
   if ((m = u.match(/^api\/admin\/shops\/([^/]+)$/))) return db.getAdminShop(m[1]);
 
   throw new db.MockError("Yeh page nahi mila", 404);

@@ -7,15 +7,27 @@ import { ROUTES } from "@/constant/appRoutes";
 import "./sidebar.scss";
 
 export const ADMIN_NAV = [
-  { href: ROUTES.ADMIN.DASHBOARD, label: "Dashboard", Icon: LayoutDashboard },
-  { href: ROUTES.ADMIN.SHOPS, label: "Shops", Icon: Store },
+  {
+    href: ROUTES.ADMIN.DASHBOARD,
+    label: "Dashboard",
+    short: "Dashboard",
+    ur: "ڈیش بورڈ",
+    Icon: LayoutDashboard,
+  },
+  {
+    href: ROUTES.ADMIN.SHOPS,
+    label: "Shops",
+    short: "Shops",
+    ur: "دکانیں",
+    Icon: Store,
+  },
 ];
 
 const NavList = ({ onNavigate }: { onNavigate?: () => void }) => {
   const path = usePathname();
   return (
     <nav className="admin-nav" aria-label="Admin menu">
-      {ADMIN_NAV.map(({ href, label, Icon }) => {
+      {ADMIN_NAV.map(({ href, label, ur, Icon }) => {
         const active = path === href || path.startsWith(href + "/");
         return (
           <Link
@@ -27,6 +39,11 @@ const NavList = ({ onNavigate }: { onNavigate?: () => void }) => {
           >
             <Icon size={22} />
             <span>{label}</span>
+            {ur && (
+              <span className="ur" lang="ur">
+                {ur}
+              </span>
+            )}
           </Link>
         );
       })}

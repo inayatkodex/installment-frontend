@@ -2,9 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut, Menu } from "lucide-react";
-import Drawer from "@/common/Drawer";
-import NavList from "../sidebar/NavList";
+import { LogOut } from "lucide-react";
 import ConfirmModal from "@/components/common/modal/confirm-modal/ConfirmModal";
 import { ROUTES } from "@/constant/appRoutes";
 import { adminLogout } from "@/store/slices/admin/auth/adminAuthSlice";
@@ -16,7 +14,6 @@ const Navbar = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const user = useAppSelector((s) => s.adminAuth.user);
-  const [menu, setMenu] = useState(false);
   const [confirm, setConfirm] = useState(false);
 
   const logout = () => {
@@ -26,14 +23,6 @@ const Navbar = () => {
 
   return (
     <header className="admin-navbar">
-      <button
-        type="button"
-        className="an-menu"
-        onClick={() => setMenu(true)}
-        aria-label="Open navigation menu"
-      >
-        <Menu size={24} />
-      </button>
       <div className="an-brand">
         <BrandLogo size={28} />
         <span>Admin</span>
@@ -51,13 +40,6 @@ const Navbar = () => {
         </button>
       </div>
 
-      <Drawer
-        open={menu}
-        title="Installment Pro · Admin"
-        onClose={() => setMenu(false)}
-      >
-        <NavList onNavigate={() => setMenu(false)} />
-      </Drawer>
       {confirm && (
         <ConfirmModal
           title="Sign Out"

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronDown } from "lucide-react";
+import { Check, CheckCircle2, ChevronDown } from "lucide-react";
 import DataTable, { Column } from "@/components/common/DataTable/DataTable";
 import DropdownMenu, {
   MenuItem,
@@ -24,7 +24,6 @@ interface Props {
 const menuFor = (
   s: AdminShop,
   onStatus: Props["onStatus"],
-  onFee: Props["onFee"],
 ): MenuItem[] => {
   const now = STATUS_LIST.find((x) => x.value === s.status)!.label;
   const items: MenuItem[] = [
@@ -47,12 +46,6 @@ const menuFor = (
             : "danger",
     });
   }
-  if (s.feeStatus)
-    items.push({
-      label: s.feeStatus === "paid" ? "Mark fee as Unpaid" : "Mark fee as Paid",
-      tone: "primary",
-      onClick: () => onFee(s, s.feeStatus === "paid" ? "unpaid" : "paid"),
-    });
   return items;
 };
 
@@ -94,15 +87,50 @@ const ShopsTable = ({ shops, onStatus, onFee }: Props) => {
     {
       key: "fee",
       header: "Fee (This Month)",
-      render: (s) =>
-        s.feeStatus ? (
-          <StatusBadge
-            status={s.feeStatus === "paid" ? "paid" : "overdue"}
-            label={s.feeStatus === "paid" ? "Paid" : "Unpaid"}
-          />
-        ) : (
-          "—"
-        ),
+      render: (s) => {
+        if (!s.feeStatus || s.status === "archived") {
+          return <span className="st-fee-na">—</span>;
+        }
+
+        if (s.feeStatus === "paid") {
+          return (
+            <div className="st-fee-cell">
+              <span className="st-fee-paid-badge">
+                <Check size={14} aria-hidden="true" />
+                <span>Paid</span>
+              </span>
+              <button
+                type="button"
+                className="st-fee-undo-btn"
+                title="Mark as Unpaid"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onFee(s, "unpaid");
+                }}
+              >
+                Undo
+              </button>
+            </div>
+          );
+        }
+
+        return (
+          <div className="st-fee-cell">
+            <button
+              type="button"
+              className="st-fee-receive-btn"
+              title={`Click to receive Rs. ${s.monthlyFee.toLocaleString()} fee`}
+              onClick={(e) => {
+                e.stopPropagation();
+                onFee(s, "paid");
+              }}
+            >
+              <CheckCircle2 size={15} aria-hidden="true" />
+              <span>Receive Fee</span>
+            </button>
+          </div>
+        );
+      },
     },
     {
       key: "action",
@@ -116,7 +144,7 @@ const ShopsTable = ({ shops, onStatus, onFee }: Props) => {
                 Change Status <ChevronDown size={16} aria-hidden="true" />
               </>
             }
-            items={menuFor(s, onStatus, onFee)}
+            items={menuFor(s, onStatus)}
           />
           <Link
             href={ROUTES.ADMIN.SHOP_DETAIL(s.id)}
