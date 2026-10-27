@@ -17,6 +17,17 @@ export const REAL_ROUTES: (string | RegExp)[] = [
   "api/admin/dashboard",
   "api/admin/shops",
   /^api\/admin\/shops\//,
+
+  // Shop APIs (Dashboard, Collection, Payments, Customers, Late, Status)
+  "api/shop/dashboard",
+  "api/shop/collection/today",
+  "api/shop/payments/today",
+  "api/shop/payments/receive",
+  /^api\/shop\/payments\//,
+  "api/shop/customers",
+  /^api\/shop\/customers\//,
+  "api/shop/late",
+  "api/shop/status",
 ];
 
 const isRealRoute = (url: string = ""): boolean => {
