@@ -156,6 +156,7 @@ export function getCustomerDetail(id: string): CustomerDetail {
   return {
     ...toListItem(c), fatherName: c.fatherName, cnic: c.cnic, address: c.address, photo: c.photo, documents: c.documents,
     total: total(c), paid: paidTotal(c), downPayment: c.downPayment, monthly: Math.ceil(remaining / c.months),
+    firstDueDate: c.firstDue,
     items: c.items, installments: rows,
     late: lateRows.length
       ? { amount: lateRows.reduce((s, r) => s + r.expected - r.paid, 0), days: lateRows[0].daysLate, installmentNo: lateRows[0].no }
@@ -262,6 +263,7 @@ export function updateCustomer(
     phone?: string;
     cnic?: string;
     address?: string;
+    firstDueDate?: string;
   }
 ): CustomerDetail {
   const c = customers.find((x) => x.id === id);
@@ -271,6 +273,7 @@ export function updateCustomer(
   if (data.phone !== undefined) c.phone = data.phone;
   if (data.cnic !== undefined) c.cnic = data.cnic;
   if (data.address !== undefined) c.address = data.address;
+  if (data.firstDueDate !== undefined) c.firstDue = data.firstDueDate;
   return getCustomerDetail(id);
 }
 

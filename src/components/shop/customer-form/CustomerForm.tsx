@@ -41,7 +41,7 @@ const emptyForm = (): CustomerFormState => ({
   docs: {},
   items: [{ key: 1, name: "", price: "" }],
   down: "",
-  months: "12",
+  months: "",
   firstDue: defaultFirstDue(),
 });
 
@@ -75,6 +75,8 @@ const CustomerForm = () => {
       });
     }
     if (step === 4) {
+      if (!form.down.trim())
+        e.down = "Advance ki raqam likhein; advance na ho to 0 likhein";
       if (
         !/^\d+$/.test(form.months) ||
         !Number.isSafeInteger(Number(form.months)) ||

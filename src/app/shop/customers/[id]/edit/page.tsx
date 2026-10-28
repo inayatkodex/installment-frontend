@@ -50,6 +50,7 @@ const CustomerEditPage = () => {
     cnic: "",
     phone: "",
     address: "",
+    firstDueDate: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -79,6 +80,7 @@ const CustomerEditPage = () => {
         cnic: detail.cnic || "",
         phone: detail.phone || "",
         address: detail.address || "",
+        firstDueDate: detail.firstDueDate,
       });
       setDocs({
         cnicFront: detail.documents?.cnicFront ?? null,
@@ -107,7 +109,8 @@ const CustomerEditPage = () => {
       formData.fatherName.trim() !== (detail.fatherName || "").trim() ||
       formData.cnic.trim() !== (detail.cnic || "").trim() ||
       formData.phone.trim() !== (detail.phone || "").trim() ||
-      formData.address.trim() !== (detail.address || "").trim()
+      formData.address.trim() !== (detail.address || "").trim() ||
+      formData.firstDueDate !== detail.firstDueDate
     );
   }, [detail, id, formData]);
 
@@ -151,6 +154,9 @@ const CustomerEditPage = () => {
     if (!formData.phone.trim()) {
       errs.phone = "Mobile number likhein";
     }
+    if (!formData.firstDueDate) {
+      errs.firstDueDate = "Pehli qist ki tareekh chunein";
+    }
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -173,6 +179,7 @@ const CustomerEditPage = () => {
             phone: formData.phone.trim(),
             cnic: formData.cnic.trim(),
             address: formData.address.trim(),
+            firstDueDate: formData.firstDueDate,
           }),
         ).unwrap();
       }
@@ -319,6 +326,27 @@ const CustomerEditPage = () => {
             />
           </div>
         </div>
+      </section>
+
+      <section className="ce-card">
+        <h2>
+          <span>Qist ki tareekh</span>
+          <span className="muted">Pehli qist ki date</span>
+        </h2>
+        <FormInput
+          label="First installment date"
+          labelUr="پہلی قسط کی تاریخ"
+          type="date"
+          value={formData.firstDueDate}
+          onChange={(e) =>
+            setFormData((p) => ({ ...p, firstDueDate: e.target.value }))
+          }
+          error={errors.firstDueDate}
+        />
+        <p className="muted">
+          Is date ko badalne se customer ka poora qiston ka schedule update ho
+          jayega.
+        </p>
       </section>
 
       <section className="ce-card">

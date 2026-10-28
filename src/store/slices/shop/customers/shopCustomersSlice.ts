@@ -64,6 +64,7 @@ export const updateCustomer = createAsyncThunk(
       phone,
       cnic,
       address,
+      firstDueDate,
     }: {
       id: string;
       name?: string;
@@ -71,6 +72,7 @@ export const updateCustomer = createAsyncThunk(
       phone?: string;
       cnic?: string;
       address?: string;
+      firstDueDate?: string;
     },
     { rejectWithValue }
   ) => {
@@ -81,6 +83,7 @@ export const updateCustomer = createAsyncThunk(
         phone,
         cnic,
         address,
+        firstDueDate,
       });
       return res.data.data as CustomerDetail;
     } catch (error) {

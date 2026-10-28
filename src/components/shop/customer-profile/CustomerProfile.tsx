@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import {
   AlertTriangle,
@@ -20,6 +21,7 @@ import ReceivePaymentForm, {
 } from "../receive-payment-form/ReceivePaymentForm";
 import DocumentsModal from "../documents-modal/DocumentsModal";
 import { PersonIcon } from "@/svgs";
+import { ROUTES } from "@/constant/appRoutes";
 import { formatDate, formatRs } from "@/shared/formatUtils";
 import { CustomerDetail, InstallmentRow } from "@/types/customer";
 import "./customer-profile.scss";
@@ -349,7 +351,15 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
               قسطیں
             </span>
           </h2>
-          <span>{formatRs(c.monthly)} / month</span>
+          <div className="cp-installment-actions">
+            <span>{formatRs(c.monthly)} / month</span>
+            <Link
+              href={ROUTES.SHOP.CUSTOMER_EDIT(c.id)}
+              className="cp-edit-link"
+            >
+              Date badlein
+            </Link>
+          </div>
         </div>
         <ol className="cp-timeline">
           <li className="cp-inst">

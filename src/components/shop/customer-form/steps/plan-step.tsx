@@ -18,13 +18,15 @@ const PlanStep = ({ form, errors, update }: StepProps) => {
       <FormInput
         label="Advance paid today (Rs.)"
         labelUr="ایڈوانس"
-        optional
         inputMode="numeric"
         value={form.down}
         onChange={(e) => update({ down: maskMoney(e.target.value) })}
         placeholder="0"
         error={errors.down}
       />
+      <p className="cf-help">
+        Advance na diya ho to 0 likhein, warna di hui raqam likhein.
+      </p>
 
       <FormInput
         label="Number of installments (months)"
@@ -34,7 +36,7 @@ const PlanStep = ({ form, errors, update }: StepProps) => {
         min="1"
         value={form.months}
         onChange={(e) => update({ months: e.target.value })}
-        placeholder="e.g. 15"
+        placeholder="Mahine likhein, misal: 12"
         autoFocus
         error={errors.months}
       />
@@ -68,7 +70,9 @@ const PlanStep = ({ form, errors, update }: StepProps) => {
               ماہانہ قسط
             </span>
           </span>
-          <strong>{formatRs(plan.monthly)}</strong>
+          <strong>
+            {months > 0 && plan.monthly > 0 ? formatRs(plan.monthly) : "—"}
+          </strong>
         </div>
         {plan.monthly > 0 && plan.last !== plan.monthly && (
           <p>Aakhri qist: {formatRs(plan.last)}</p>

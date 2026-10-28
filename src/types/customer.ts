@@ -42,6 +42,7 @@ export interface CustomerDetail extends CustomerListItem {
   paid: number;
   downPayment: number;
   monthly: number;
+  firstDueDate: string;
   items: CustomerItem[];
   installments: InstallmentRow[];
   documents?: { cnicFront?: string; cnicBack?: string; other?: string };
