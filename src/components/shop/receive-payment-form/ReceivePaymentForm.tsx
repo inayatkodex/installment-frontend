@@ -20,7 +20,8 @@ export interface ReceiveTarget {
   customerId: string;
   name: string;
   installmentNo: number;
-  dueDate: string;
+  dueDate?: string;
+  planLabel?: string;
   amount: number; // amount still due on this installment
   daysLate?: number;
 }
@@ -87,7 +88,9 @@ const ReceivePaymentForm = ({ target, onClose, onDone }: Props) => {
       <div className="rp-who">
         <strong>{target.name}</strong>
         <span>
-          Qist {target.installmentNo} · due {formatDate(target.dueDate)}
+          {target.planLabel ? `${target.planLabel} · ` : ""}
+          Qist {target.installmentNo}
+          {target.dueDate ? ` · due ${formatDate(target.dueDate)}` : ""}
         </span>
         {!!target.daysLate && (
           <span className="rp-late">{target.daysLate} din late</span>
@@ -108,7 +111,9 @@ const ReceivePaymentForm = ({ target, onClose, onDone }: Props) => {
           autoFocus
         />
         <p className="rp-help">
-          Zyada raqam di to baaqi raqam agli qist mein lag jayegi.
+          {target.planLabel
+            ? "Pehle puranay plan ki qist poori hogi, phir baqi raqam aglay plan mein lagegi."
+            : "Zyada raqam di to baaqi raqam agli qist mein lag jayegi."}
         </p>
         <FormInput
           label="Note"

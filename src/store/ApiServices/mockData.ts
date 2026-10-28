@@ -6,7 +6,8 @@
 import { AdminDashboardStats, AdminShop, AdminShopsResponse, FeeMonth } from "@/types/adminShop";
 import { ShopStatus } from "@/types/common";
 import {
-  CustomerDetail, CustomerItem, CustomerListItem, InstallmentRow, NewCustomerPayload,
+  CustomerDetail, CustomerItem, CustomerListItem, CustomerPurchasePlan, InstallmentRow,
+  NewCustomerPayload, NewCustomerPurchasePayload,
 } from "@/types/customer";
 import {
   CollectionItem, LateItem, ReceivedItem, ReceivePaymentPayload, ShopDashboardData, StatusReport,
@@ -48,6 +49,17 @@ interface MockCustomer {
   id: string; code: string; name: string; fatherName?: string; phone: string; cnic?: string; address?: string;
   items: CustomerItem[]; downPayment: number; initialMonthlyPayment: number;
   monthlyPayment: number; firstDue: string; payments: MockPayment[];
+  monthlyCollectionTarget?: number;
+  purchases: {
+    id: string;
+    items: CustomerItem[];
+    downPayment: number;
+    initialMonthlyPayment: number;
+    monthlyPayment: number;
+    allocationStartInstallmentNo: number;
+    createdAt: string;
+    rateChanges: { fromInstallmentNo: number; monthlyPayment: number }[];
+  }[];
   rateChanges: { fromInstallmentNo: number; monthlyPayment: number }[];
   photo?: string;
   documents?: { cnicFront?: string; cnicBack?: string; other?: string };
@@ -56,7 +68,13 @@ interface Seed {
   name: string; phone: string; items: [string, number][]; down: number; months: number;
   k: number; shift: number; full: number; extra?: number; extraAgo?: number;
 }
-const total = (c: MockCustomer) => c.items.reduce((s, i) => s + i.price, 0);
+const baseTotal = (c: MockCustomer) => c.items.reduce((s, i) => s + i.price, 0);
+const total = (c: MockCustomer) =>
+  baseTotal(c) +
+  c.purchases.reduce(
+    (sum, purchase) => sum + purchase.items.reduce((itemSum, item) => itemSum + item.price, 0),
+    0,
+  );
 
 function makeCustomer(i: number, s: Seed): MockCustomer {
   const firstDue = addDays(addMonths(now(), -s.k), s.shift);
@@ -75,7 +93,7 @@ function makeCustomer(i: number, s: Seed): MockCustomer {
     cnic: `35201-${String(1000000 + i * 111111).slice(0, 7)}-${(i % 9) + 1}`,
     address: "Main Bazaar, Lahore", items, downPayment: s.down,
     initialMonthlyPayment: monthly, monthlyPayment: monthly,
-    firstDue: toIsoDate(firstDue), payments, rateChanges: [],
+    firstDue: toIsoDate(firstDue), payments, purchases: [], rateChanges: [],
   };
 }
 
@@ -97,9 +115,9 @@ customers[0].documents = {
   cnicBack: "https://images.unsplash.com/photo-1554224155-8d04cb21cd6c?w=600&auto=format&fit=crop&q=80",
 };
 
-function buildSchedule(c: MockCustomer): InstallmentRow[] {
+function buildSchedule(c: MockCustomer, includePayments = true): InstallmentRow[] {
   const t = today();
-  const remaining = total(c) - c.downPayment;
+  const remaining = baseTotal(c) - c.downPayment;
   const rows: InstallmentRow[] = [];
   let scheduled = 0;
   let installmentNo = 1;
@@ -124,7 +142,7 @@ function buildSchedule(c: MockCustomer): InstallmentRow[] {
     installmentNo += 1;
   }
   let idx = 0;
-  for (const p of c.payments.filter((x) => !x.reversed)) {
+  for (const p of (includePayments ? c.payments : []).filter((x) => !x.reversed)) {
     let amt = p.amount;
     while (amt > 0 && idx < rows.length) {
       const use = Math.min(rows[idx].expected - rows[idx].paid, amt);
@@ -144,11 +162,145 @@ function buildSchedule(c: MockCustomer): InstallmentRow[] {
   return rows;
 }
 
+function buildPlanSchedules(c: MockCustomer) {
+  const plans = [
+    {
+      id: "base",
+      label: "Plan A",
+      items: c.items,
+      downPayment: c.downPayment,
+      monthlyPayment: c.monthlyPayment,
+      firstDueDate: c.firstDue,
+      createdAt: "",
+      rows: buildSchedule(c, false),
+    },
+    ...c.purchases.map((purchase, index) => {
+      const firstDueDate = toIsoDate(
+        addMonths(new Date(c.firstDue), purchase.allocationStartInstallmentNo - 1),
+      );
+      const planCustomer = {
+        ...c,
+        items: purchase.items,
+        downPayment: purchase.downPayment,
+        initialMonthlyPayment: purchase.initialMonthlyPayment,
+        monthlyPayment: purchase.monthlyPayment,
+        firstDue: firstDueDate,
+        rateChanges: purchase.rateChanges,
+        payments: [],
+      };
+      return {
+        id: purchase.id,
+        label: `Plan ${String.fromCharCode(66 + index)}`,
+        items: purchase.items,
+        downPayment: purchase.downPayment,
+        monthlyPayment: purchase.monthlyPayment,
+        firstDueDate,
+        createdAt: purchase.createdAt,
+        rows: buildSchedule(planCustomer, false),
+      };
+    }),
+  ];
+
+  const cursors = plans.map(() => 0);
+  const payments = c.payments
+    .filter((payment) => !payment.reversed)
+    .sort((a, b) => a.date.localeCompare(b.date));
+  for (const payment of payments) {
+    let remaining = payment.amount;
+    while (remaining > 0) {
+      let selectedPlan = -1;
+      let selectedDueDate = "";
+      for (let index = 0; index < plans.length; index += 1) {
+        const plan = plans[index];
+        if (plan.createdAt && payment.date < plan.createdAt.slice(0, 10)) continue;
+        const row = plan.rows[cursors[index]];
+        if (!row) continue;
+        if (selectedPlan < 0 || row.dueDate < selectedDueDate) {
+          selectedPlan = index;
+          selectedDueDate = row.dueDate;
+        }
+      }
+      if (selectedPlan < 0) break;
+      const row = plans[selectedPlan].rows[cursors[selectedPlan]];
+      const used = Math.min(row.expected - row.paid, remaining);
+      row.paid += used;
+      row.paidOn = payment.date;
+      row.method = payment.method;
+      if (payment.note) row.note = payment.note;
+      remaining -= used;
+      if (row.paid >= row.expected) cursors[selectedPlan] += 1;
+    }
+  }
+
+  plans.forEach((plan) =>
+    plan.rows.forEach((row) => {
+      const late = row.dueDate < today() && row.paid < row.expected;
+      row.daysLate = late ? diffDays(row.dueDate, today()) : 0;
+      row.status =
+        row.paid >= row.expected
+          ? "paid"
+          : row.paid > 0
+            ? "partial"
+            : late
+              ? "overdue"
+              : "pending";
+    }),
+  );
+  return plans;
+}
+
+function combineInstallmentSchedules(
+  schedules: InstallmentRow[][],
+): InstallmentRow[] {
+  const rowsByDate = new Map<string, InstallmentRow[]>();
+  schedules.forEach((schedule) =>
+    schedule.forEach((row) => {
+      const rows = rowsByDate.get(row.dueDate) ?? [];
+      rows.push(row);
+      rowsByDate.set(row.dueDate, rows);
+    }),
+  );
+  return [...rowsByDate.entries()]
+    .sort(([dateA], [dateB]) => dateA.localeCompare(dateB))
+    .map(([dueDate, rows], index) => {
+      const expected = rows.reduce((sum, row) => sum + row.expected, 0);
+      const paid = rows.reduce((sum, row) => sum + row.paid, 0);
+      const daysLate =
+        paid < expected ? Math.max(...rows.map((row) => row.daysLate)) : 0;
+      const latestPayment = rows
+        .filter((row) => row.paidOn)
+        .sort((a, b) => (a.paidOn ?? "").localeCompare(b.paidOn ?? ""))
+        .at(-1);
+      return {
+        no: index + 1,
+        dueDate,
+        expected,
+        paid,
+        status:
+          paid >= expected
+            ? "paid"
+            : paid > 0
+              ? "partial"
+              : daysLate > 0
+                ? "overdue"
+                : "pending",
+        daysLate,
+        paidOn: latestPayment?.paidOn,
+        method: latestPayment?.method,
+        note: latestPayment?.note,
+      };
+    });
+}
+
 const livePayments = (c: MockCustomer) => c.payments.filter((p) => !p.reversed);
-const paidTotal = (c: MockCustomer) => c.downPayment + livePayments(c).reduce((s, p) => s + p.amount, 0);
+const paidTotal = (c: MockCustomer) =>
+  c.downPayment +
+  c.purchases.reduce((sum, purchase) => sum + purchase.downPayment, 0) +
+  livePayments(c).reduce((sum, payment) => sum + payment.amount, 0);
 
 function toListItem(c: MockCustomer): CustomerListItem {
-  const rows = buildSchedule(c);
+  const plans = buildPlanSchedules(c);
+  const rows = combineInstallmentSchedules(plans.map((plan) => plan.rows));
   const remaining = total(c) - paidTotal(c);
   return {
     id: c.id, code: c.code, name: c.name, phone: c.phone, photo: c.photo,
@@ -169,19 +321,74 @@ export function getCustomers(params: { search?: string; status?: string }): Cust
 export function getCustomerDetail(id: string): CustomerDetail {
   const c = customers.find((x) => x.id === id);
   if (!c) throw new MockError("Customer nahi mila", 404);
-  const rows = buildSchedule(c);
-  const lateRows = rows.filter((r) => r.daysLate > 0);
-  const next = rows.find((r) => r.status !== "paid" && r.daysLate === 0 && r.dueDate >= today());
-  const remaining = total(c) - c.downPayment;
+  const planSchedules = buildPlanSchedules(c);
+  const rows =
+    planSchedules.length > 1
+      ? combineInstallmentSchedules(
+          planSchedules.map((plan) => plan.rows),
+        ).map((row) => ({
+          ...row,
+          planId: "combined",
+          planLabel: "Tamam plans",
+        }))
+      : planSchedules.flatMap((plan) =>
+          plan.rows.map((row) => ({ ...row, planId: plan.id })),
+        );
+  const lateRows = rows.filter((row) => row.daysLate > 0);
+  const plans: CustomerPurchasePlan[] = planSchedules.map((plan) => {
+    const planTotal = plan.items.reduce((sum, item) => sum + item.price, 0);
+    const paid =
+      plan.downPayment + plan.rows.reduce((sum, row) => sum + row.paid, 0);
+    return {
+      id: plan.id,
+      label: plan.label,
+      total: planTotal,
+      paid,
+      remaining: planTotal - paid,
+      downPayment: plan.downPayment,
+      monthly: plan.monthlyPayment,
+      firstDueDate: plan.id === "base" ? plan.firstDueDate : undefined,
+      receivedInstallments: plan.rows.filter((row) => row.status === "paid").length,
+      totalInstallments: plan.rows.length,
+      items: plan.items,
+      installments: plan.rows,
+    };
+  });
+  const next =
+    planSchedules.length === 1
+      ? rows.find(
+          (row) =>
+            row.status !== "paid" &&
+            row.daysLate === 0 &&
+            row.dueDate >= today(),
+        ) ?? rows.find((row) => row.status !== "paid")
+      : rows.find((row) => row.status !== "paid");
+  const monthlyTotal =
+    c.monthlyCollectionTarget ??
+    plans
+      .filter((plan) => plan.remaining > 0)
+      .reduce((sum, plan) => sum + plan.monthly, 0);
   return {
     ...toListItem(c), fatherName: c.fatherName, cnic: c.cnic, address: c.address, photo: c.photo, documents: c.documents,
     total: total(c), paid: paidTotal(c), downPayment: c.downPayment, monthly: c.monthlyPayment,
+    monthlyTotal,
     firstDueDate: c.firstDue,
-    items: c.items, installments: rows,
+    items: c.items, plans, installments: rows,
     late: lateRows.length
       ? { amount: lateRows.reduce((s, r) => s + r.expected - r.paid, 0), days: lateRows[0].daysLate, installmentNo: lateRows[0].no }
       : undefined,
-    next: next ? { no: next.no, dueDate: next.dueDate, amount: next.expected - next.paid } : undefined,
+    next: next
+      ? {
+          no: next.no,
+          planId: next.planId!,
+          planLabel: planSchedules.length > 1 ? next.planLabel : undefined,
+          dueDate: next.dueDate,
+          amount: plans.length > 1
+            ? Math.min(monthlyTotal, total(c) - paidTotal(c))
+            : next.expected - next.paid,
+          daysLate: next.daysLate,
+        }
+      : undefined,
   };
 }
 
@@ -193,24 +400,81 @@ export function createCustomer(p: NewCustomerPayload): { id: string } {
     phone: p.mobile, cnic: p.cnic, address: p.address,
     items: p.items.map((i) => ({ ...i, boughtOn })), downPayment: p.downPayment,
     initialMonthlyPayment: p.monthlyPayment, monthlyPayment: p.monthlyPayment,
-    firstDue: p.firstDueDate, payments: [], rateChanges: [],
+    firstDue: p.firstDueDate, payments: [], purchases: [], rateChanges: [],
     photo: p.photo,
     documents: p.documents ? { ...p.documents } : undefined,
   });
   return { id };
 }
 
+export function addCustomerPurchase(
+  customerId: string,
+  payload: NewCustomerPurchasePayload,
+): CustomerDetail {
+  const c = customers.find((customer) => customer.id === customerId);
+  if (!c) throw new MockError("Customer nahi mila", 404);
+  if (
+    payload.items.length < 1 ||
+    payload.items.length > 2 ||
+    payload.items.some((item) => !item.name.trim() || !Number.isSafeInteger(item.price) || item.price < 1) ||
+    !Number.isSafeInteger(payload.monthlyPayment) ||
+    payload.monthlyPayment < 1
+  ) {
+    throw new MockError("Cheez aur mahana qist ki raqam sahi likhein");
+  }
+  const purchaseTotal = payload.items.reduce((sum, item) => sum + item.price, 0);
+  const downPayment = payload.downPayment ?? 0;
+  if (
+    !Number.isSafeInteger(downPayment) ||
+    downPayment < 0 ||
+    downPayment >= purchaseTotal
+  ) {
+    throw new MockError("Advance kul qeemat se kam hona chahiye");
+  }
+  const basePlan = buildPlanSchedules(c)[0];
+  const nextBaseRow = basePlan.rows.find((row) => row.status !== "paid");
+  const allocationStartInstallmentNo =
+    nextBaseRow?.no ?? basePlan.rows.length + 1;
+  c.purchases.push({
+    id: `purchase-${Date.now()}-${c.purchases.length + 1}`,
+    items: payload.items.map((item) => ({ ...item, boughtOn: today() })),
+    downPayment,
+    initialMonthlyPayment: payload.monthlyPayment,
+    monthlyPayment: payload.monthlyPayment,
+    createdAt: new Date().toISOString(),
+    allocationStartInstallmentNo,
+    rateChanges: [],
+  });
+  c.monthlyCollectionTarget =
+    (c.monthlyCollectionTarget ??
+      c.monthlyPayment +
+        c.purchases
+          .slice(0, -1)
+          .reduce((sum, purchase) => sum + purchase.monthlyPayment, 0)) +
+    payload.monthlyPayment;
+  return getCustomerDetail(customerId);
+}
+
 export function getTodayCollection(): CollectionItem[] {
   const t = today();
   const out: CollectionItem[] = [];
   customers.forEach((c) =>
-    buildSchedule(c).forEach((r) => {
-      if (r.dueDate === t) {
-        out.push({
-          id: `${c.id}-${r.no}`, customerId: c.id, name: c.name, phone: c.phone, photo: c.photo, installmentNo: r.no,
-          dueDate: r.dueDate, expected: r.expected, paid: r.paid, status: r.status === "overdue" ? "pending" : r.status,
-        });
-      }
+    combineInstallmentSchedules(
+      buildPlanSchedules(c).map((plan) => plan.rows),
+    ).forEach((row) => {
+      if (row.dueDate !== t) return;
+      out.push({
+        id: `${c.id}-${row.no}`,
+        customerId: c.id,
+        name: c.name,
+        phone: c.phone,
+        photo: c.photo,
+        installmentNo: row.no,
+        dueDate: row.dueDate,
+        expected: row.expected,
+        paid: row.paid,
+        status: row.status === "overdue" ? "pending" : row.status,
+      });
     }),
   );
   return out;
@@ -219,7 +483,11 @@ export function getTodayCollection(): CollectionItem[] {
 export function getLate(): LateItem[] {
   const out: LateItem[] = [];
   customers.forEach((c) => {
-    const rows = buildSchedule(c).filter((r) => r.daysLate > 0);
+    const rows = combineInstallmentSchedules(
+      buildPlanSchedules(c).map((plan) => plan.rows),
+    )
+      .filter((r) => r.daysLate > 0)
+      .sort((a, b) => a.dueDate.localeCompare(b.dueDate));
     if (!rows.length) return;
     const lp = livePayments(c);
     const last = lp.length ? lp[lp.length - 1].date : toIsoDate(new Date(c.firstDue));
@@ -291,7 +559,11 @@ export function updateCustomer(
   const c = customers.find((x) => x.id === id);
   if (!c) throw new MockError("Customer nahi mila", 404);
   let newRateChanges = c.rateChanges;
-  if (data.monthlyPayment !== undefined && data.monthlyPayment !== c.monthlyPayment) {
+  if (
+    data.monthlyPayment !== undefined &&
+    c.purchases.length === 0 &&
+    data.monthlyPayment !== c.monthlyPayment
+  ) {
     if (!Number.isSafeInteger(data.monthlyPayment) || data.monthlyPayment < 1)
       throw new MockError("Mahine ki qist ki raqam sahi likhein");
     const currentSchedule = buildSchedule(c);
@@ -312,7 +584,7 @@ export function updateCustomer(
     const scheduledBalance = proposedSchedule.reduce((sum, row) => sum + row.expected, 0);
     if (
       proposedSchedule.length >= 1200 &&
-      scheduledBalance < total(c) - c.downPayment
+      scheduledBalance < baseTotal(c) - c.downPayment
     )
       throw new MockError("Qiston ka schedule bohat lamba hai");
   }
@@ -323,8 +595,12 @@ export function updateCustomer(
   if (data.address !== undefined) c.address = data.address;
   if (data.firstDueDate !== undefined) c.firstDue = data.firstDueDate;
   if (data.monthlyPayment !== undefined) {
-    c.rateChanges = newRateChanges;
-    c.monthlyPayment = data.monthlyPayment;
+    if (c.purchases.length) {
+      c.monthlyCollectionTarget = data.monthlyPayment;
+    } else {
+      c.rateChanges = newRateChanges;
+      c.monthlyPayment = data.monthlyPayment;
+    }
   }
   return getCustomerDetail(id);
 }
@@ -347,7 +623,13 @@ export function deleteCustomerDocument(customerId: string, docKey: string): { ok
 }
 
 export function getStatus(month: string): StatusReport {
-  const rows = customers.flatMap((c) => buildSchedule(c)).filter((r) => r.dueDate.startsWith(month));
+  const rows = customers
+    .flatMap((c) =>
+      combineInstallmentSchedules(
+        buildPlanSchedules(c).map((plan) => plan.rows),
+      ),
+    )
+    .filter((r) => r.dueDate.startsWith(month));
   const expected = rows.reduce((s, r) => s + r.expected, 0);
   const received = rows.reduce((s, r) => s + r.paid, 0);
   const late = getLate();

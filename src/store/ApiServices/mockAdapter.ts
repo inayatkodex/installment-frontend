@@ -55,6 +55,9 @@ function route(method: string, url: string, params: Params, body: Record<string,
   if (u === "api/shop/customers") {
     return method === "post" ? db.createCustomer(body as never) : db.getCustomers({ search: String(params.search ?? ""), status: String(params.status ?? "") });
   }
+  if ((m = u.match(/^api\/shop\/customers\/([^/]+)\/purchases$/))) {
+    return db.addCustomerPurchase(m[1], body as never);
+  }
   if ((m = u.match(/^api\/shop\/customers\/([^/]+)\/documents\/([^/]+)$/))) {
     if (method === "delete") return db.deleteCustomerDocument(m[1], m[2]);
     return db.updateCustomerDocument(m[1], m[2], String(body.photo || ""));

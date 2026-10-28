@@ -14,6 +14,7 @@ const API_URLS = {
     REVERSE_PAYMENT: (id: string) => `api/shop/payments/${id}/reverse`,
     CUSTOMERS: "api/shop/customers",
     CUSTOMER_DETAIL: (id: string) => `api/shop/customers/${id}`,
+    CUSTOMER_PURCHASES: (id: string) => `api/shop/customers/${id}/purchases`,
     CUSTOMER_DOCUMENT: (id: string, docKey: string) => `api/shop/customers/${id}/documents/${docKey}`,
     LATE: "api/shop/late",
     STATUS: "api/shop/status",

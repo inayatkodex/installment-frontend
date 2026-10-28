@@ -88,7 +88,7 @@ const CustomerEditPage = () => {
         phone: detail.phone || "",
         address: detail.address || "",
         firstDueDate: detail.firstDueDate,
-        monthlyPayment: String(detail.monthly),
+        monthlyPayment: String(detail.monthlyTotal),
       });
       setDocs({
         cnicFront: detail.documents?.cnicFront ?? null,
@@ -119,7 +119,7 @@ const CustomerEditPage = () => {
       formData.phone.trim() !== (detail.phone || "").trim() ||
       formData.address.trim() !== (detail.address || "").trim() ||
       formData.firstDueDate !== detail.firstDueDate ||
-      toNumber(formData.monthlyPayment) !== detail.monthly
+      toNumber(formData.monthlyPayment) !== detail.monthlyTotal
     );
   }, [detail, id, formData]);
 
@@ -367,7 +367,11 @@ const CustomerEditPage = () => {
           jayega.
         </p>
         <FormInput
-          label="Monthly installment amount (Rs.)"
+          label={
+            detail && detail.plans.length > 1
+              ? "Total monthly installment (Rs.)"
+              : "Monthly installment amount (Rs.)"
+          }
           labelUr="ماہانہ قسط"
           inputMode="numeric"
           value={formData.monthlyPayment}
@@ -383,8 +387,9 @@ const CustomerEditPage = () => {
           error={errors.monthlyPayment}
         />
         <p className="muted">
-          Current adhoori qist apni raqam par rahegi; nayi raqam agli poori qist
-          se lagu hogi.
+          {detail && detail.plans.length > 1
+            ? "Yeh tamam khareedariyon ki mahana raqam hai. Wasooli pehle purani khareedari par lagegi."
+            : "Current adhoori qist apni raqam par rahegi; nayi raqam agli poori qist se lagu hogi."}
         </p>
       </section>
 

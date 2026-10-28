@@ -19,6 +19,8 @@ export interface InstallmentRow {
   paidOn?: string;
   method?: string;
   note?: string;
+  planId?: string;
+  planLabel?: string;
 }
 
 export interface CustomerListItem {
@@ -42,12 +44,42 @@ export interface CustomerDetail extends CustomerListItem {
   paid: number;
   downPayment: number;
   monthly: number;
+  monthlyTotal: number;
   firstDueDate: string;
   items: CustomerItem[];
+  plans: CustomerPurchasePlan[];
   installments: InstallmentRow[];
   documents?: { cnicFront?: string; cnicBack?: string; other?: string };
   late?: { amount: number; days: number; installmentNo: number };
-  next?: { no: number; dueDate: string; amount: number };
+  next?: {
+    no: number;
+    planId: string;
+    planLabel?: string;
+    dueDate?: string;
+    amount: number;
+    daysLate: number;
+  };
+}
+
+export interface CustomerPurchasePlan {
+  id: string;
+  label: string;
+  total: number;
+  paid: number;
+  remaining: number;
+  downPayment: number;
+  monthly: number;
+  firstDueDate?: string;
+  receivedInstallments: number;
+  totalInstallments: number;
+  items: CustomerItem[];
+  installments: InstallmentRow[];
+}
+
+export interface NewCustomerPurchasePayload {
+  items: { name: string; price: number; photo?: string }[];
+  downPayment: number;
+  monthlyPayment: number;
 }
 
 export interface NewCustomerPayload {

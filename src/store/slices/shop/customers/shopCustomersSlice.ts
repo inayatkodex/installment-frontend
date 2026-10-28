@@ -1,7 +1,12 @@
 import api from "@/store/ApiServices/api";
 import API_URLS from "@/store/ApiServices/apiUrls";
 import { getErrorMessage } from "@/shared/apiError";
-import { CustomerDetail, CustomerListItem, NewCustomerPayload } from "@/types/customer";
+import {
+  CustomerDetail,
+  CustomerListItem,
+  NewCustomerPayload,
+  NewCustomerPurchasePayload,
+} from "@/types/customer";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface State {
@@ -43,6 +48,26 @@ export const createCustomer = createAsyncThunk("shopCustomers/create", async (pa
     return rejectWithValue(getErrorMessage(error, "Customer save nahi ho saka"));
   }
 });
+
+export const addCustomerPurchase = createAsyncThunk(
+  "shopCustomers/addPurchase",
+  async (
+    { customerId, ...payload }: NewCustomerPurchasePayload & { customerId: string },
+    { rejectWithValue },
+  ) => {
+    try {
+      const res = await api.post(
+        API_URLS.SHOP.CUSTOMER_PURCHASES(customerId),
+        payload,
+      );
+      return res.data.data as CustomerDetail;
+    } catch (error) {
+      return rejectWithValue(
+        getErrorMessage(error, "Nayi khareedari save nahi ho saki"),
+      );
+    }
+  },
+);
 
 /** Only customers whose installments are all paid can be deleted. */
 export const deleteCustomer = createAsyncThunk("shopCustomers/delete", async (id: string, { rejectWithValue }) => {
@@ -148,6 +173,9 @@ const shopCustomersSlice = createSlice({
       .addCase(createCustomer.pending, (s) => { s.creating = true; })
       .addCase(createCustomer.fulfilled, (s) => { s.creating = false; })
       .addCase(createCustomer.rejected, (s) => { s.creating = false; })
+      .addCase(addCustomerPurchase.fulfilled, (s, a) => {
+        if (s.detail?.id === a.payload.id) s.detail = a.payload;
+      })
       .addCase(updateCustomer.fulfilled, (s, a) => {
         if (s.detail && s.detail.id === a.payload.id) {
           s.detail = { ...s.detail, ...a.payload };

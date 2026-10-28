@@ -21,6 +21,7 @@ const BrandLogo = ({
     }
     width={Math.round(size * 4.711)}
     height={size}
+    loading="eager"
     className={className}
     alt={title ?? ""}
     aria-hidden={title ? undefined : true}

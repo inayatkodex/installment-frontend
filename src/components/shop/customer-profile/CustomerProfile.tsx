@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import type { FormEvent } from "react";
 import {
   AlertTriangle,
   Check,
@@ -9,6 +10,8 @@ import {
   FileText,
   MoreVertical,
   Package,
+  Plus,
+  X,
 } from "lucide-react";
 import DropdownMenu from "@/components/common/DropdownMenu/DropdownMenu";
 import PhotoViewer from "@/components/common/PhotoViewer/PhotoViewer";
@@ -23,8 +26,16 @@ import DocumentsModal from "../documents-modal/DocumentsModal";
 import { PersonIcon } from "@/svgs";
 import { ROUTES } from "@/constant/appRoutes";
 import { formatDate, formatRs } from "@/shared/formatUtils";
-import { resolveMediaUrl } from "@/shared/imageUtils";
-import { CustomerDetail, InstallmentRow } from "@/types/customer";
+import { fileToDataUrl, resolveMediaUrl } from "@/shared/imageUtils";
+import { MAX_SCHEDULE_INSTALLMENTS } from "@/shared/planUtils";
+import {
+  CustomerDetail,
+  InstallmentRow,
+} from "@/types/customer";
+import { addCustomerPurchase } from "@/store/slices/shop/customers/shopCustomersSlice";
+import { useAppDispatch } from "@/store/store";
+import { showToast } from "@/shared/toastUtils";
+import ItemPhoto from "@/components/shop/customer-form/steps/item-photo";
 import "./customer-profile.scss";
 
 interface Props {
@@ -34,6 +45,12 @@ interface Props {
 }
 
 const VISIBLE = 6;
+
+type PurchaseError = {
+  field: "name" | "price" | "downPayment" | "monthlyPayment";
+  itemIndex?: number;
+  message: string;
+};
 
 const DOC_CONFIGS = [
   {
@@ -89,7 +106,11 @@ const InstallmentItem = ({
       </span>
       <div className={`cp-inst-box ${dot}`}>
         <div className="cp-row">
-          <strong>Installment {row.no}</strong>
+          <strong>
+            {row.planLabel
+              ? `${row.planLabel} · Qist ${row.no}`
+              : `Installment ${row.no}`}
+          </strong>
           {row.status === "pending" && !isNext ? (
             <span className="cp-due">Due {formatDate(row.dueDate)}</span>
           ) : (
@@ -144,6 +165,7 @@ const InstallmentItem = ({
 };
 
 const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
+  const dispatch = useAppDispatch();
   const [showAll, setShowAll] = useState(false);
   const [viewer, setViewer] = useState<{
     src: string;
@@ -151,17 +173,154 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
   } | null>(null);
   const [target, setTarget] = useState<ReceiveTarget | null>(null);
   const [showDocsModal, setShowDocsModal] = useState(false);
+  const [showPurchaseForm, setShowPurchaseForm] = useState(false);
+  const [savingPurchase, setSavingPurchase] = useState(false);
+  const [purchaseItems, setPurchaseItems] = useState<
+    { name: string; price: string; photo?: File }[]
+  >([{ name: "", price: "" }]);
+  const [purchaseDownPayment, setPurchaseDownPayment] = useState("0");
+  const [purchaseMonthly, setPurchaseMonthly] = useState("");
+  const [purchaseError, setPurchaseError] = useState<PurchaseError | null>(
+    null,
+  );
 
-  // Which installment will the "Receive" button collect? Oldest late one, otherwise the next due one.
-  const pay =
-    c.installments.find((r) => r.daysLate > 0) ??
-    c.installments.find(
-      (r) =>
-        r.status !== "paid" &&
-        r.dueDate >= new Date().toISOString().slice(0, 10) &&
-        r.paid < r.expected,
-    ) ??
-    c.installments.find((r) => r.status !== "paid");
+  const savePurchase = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setPurchaseError(null);
+    setSavingPurchase(true);
+    try {
+      const cleanItems = purchaseItems.map((item) => ({
+        name: item.name.trim(),
+        price: Number(item.price),
+      }));
+      const downPayment = Number(purchaseDownPayment || "0");
+      const monthlyPayment = Number(purchaseMonthly);
+      const purchaseTotal = cleanItems.reduce(
+        (sum, item) => sum + item.price,
+        0,
+      );
+      const invalidNameIndex = cleanItems.findIndex(
+        (item) => !/^[\p{L}\s]+$/u.test(item.name),
+      );
+      if (invalidNameIndex !== -1) {
+        setPurchaseError({
+          field: "name",
+          itemIndex: invalidNameIndex,
+          message: "Cheez ka naam sirf huroof mein likhein",
+        });
+        return;
+      }
+      const invalidPriceIndex = cleanItems.findIndex(
+        (item) =>
+          !Number.isSafeInteger(item.price) ||
+          item.price < 1 ||
+          item.price > 2147483647,
+      );
+      if (invalidPriceIndex !== -1) {
+        setPurchaseError({
+          field: "price",
+          itemIndex: invalidPriceIndex,
+          message: "Qeemat 1 se 2,147,483,647 ke darmiyan likhein",
+        });
+        return;
+      }
+      if (!Number.isSafeInteger(purchaseTotal) || purchaseTotal > 2147483647) {
+        setPurchaseError({
+          field: "price",
+          itemIndex: cleanItems.length - 1,
+          message: "Cheezon ki kul qeemat bohat zyada hai",
+        });
+        return;
+      }
+      if (
+        !Number.isSafeInteger(downPayment) ||
+        downPayment < 0 ||
+        downPayment > 2147483647
+      ) {
+        setPurchaseError({
+          field: "downPayment",
+          message: "Advance ki raqam sahi likhein",
+        });
+        return;
+      }
+      if (
+        !Number.isSafeInteger(monthlyPayment) ||
+        monthlyPayment < 1 ||
+        monthlyPayment > 2147483647
+      ) {
+        setPurchaseError({
+          field: "monthlyPayment",
+          message: "Mahana qist ki raqam sahi likhein",
+        });
+        return;
+      }
+      if (
+        downPayment > purchaseTotal ||
+        monthlyPayment > purchaseTotal ||
+        downPayment + monthlyPayment > purchaseTotal
+      ) {
+        setPurchaseError({
+          field: "monthlyPayment",
+          message:
+            "Advance aur mahana qist alag alag bhi aur mila kar bhi kul qeemat se zyada nahi ho sakte",
+        });
+        return;
+      }
+      if (
+        Math.ceil((purchaseTotal - downPayment) / monthlyPayment) >
+        MAX_SCHEDULE_INSTALLMENTS
+      ) {
+        setPurchaseError({
+          field: "monthlyPayment",
+          message:
+            "Mahana qist itni honi chahiye ke schedule 1200 qiston se zyada na ho",
+        });
+        return;
+      }
+      if (c.monthlyTotal + monthlyPayment > 2147483647) {
+        setPurchaseError({
+          field: "monthlyPayment",
+          message: "Kul mahana qist ki raqam bohat zyada hai",
+        });
+        return;
+      }
+
+      const items = await Promise.all(
+        purchaseItems.map(async (item, index) => ({
+          ...cleanItems[index],
+          photo: item.photo ? await fileToDataUrl(item.photo) : undefined,
+        })),
+      );
+
+      await dispatch(
+        addCustomerPurchase({
+          customerId: c.id,
+          items,
+          downPayment,
+          monthlyPayment,
+        }),
+      ).unwrap();
+      showToast("Nayi khareedari save ho gayi", "success");
+      setShowPurchaseForm(false);
+      setPurchaseError(null);
+      setPurchaseItems([{ name: "", price: "", photo: undefined }]);
+      setPurchaseDownPayment("0");
+      setPurchaseMonthly("");
+      onPaid();
+    } catch (error) {
+      setPurchaseError({
+        field: "monthlyPayment",
+        message:
+          typeof error === "string"
+            ? error
+            : "Khareedari save nahi ho saki, dobara koshish karein",
+      });
+    } finally {
+      setSavingPurchase(false);
+    }
+  };
+
+  const pay = c.next;
   const rows = showAll ? c.installments : c.installments.slice(0, VISIBLE);
   const docCount = DOC_CONFIGS.filter((d) => !!c.documents?.[d.key]).length;
 
@@ -261,8 +420,13 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
               {c.next ? (
                 <>
                   <br />
-                  Agli: {formatRs(c.next.amount)} on{" "}
-                  {formatDate(c.next.dueDate)}
+                  Agli: {formatRs(c.next.amount)}
+                  {c.next.planLabel ? ` (${c.next.planLabel})` : ""}
+                  {c.next.dueDate
+                    ? ` on ${formatDate(c.next.dueDate)}`
+                    : c.plans.length > 1
+                      ? " · tareekh baad mein set hogi"
+                      : ""}
                 </>
               ) : null}
             </p>
@@ -278,48 +442,122 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
               خریدی گئی چیزیں
             </span>
           </h2>
-          <span>{c.items.length} items</span>
+          <span>{c.plans.reduce((sum, plan) => sum + plan.items.length, 0)} items</span>
         </div>
-        <ul>
-          {c.items.map((i) => (
-            <li key={i.name} className="cp-item">
-              {i.photo ? (
-                <button
-                  type="button"
-                  className="cp-item-photo"
-                  onClick={() =>
-                    setViewer({
-                      src: resolveMediaUrl(i.photo)!,
-                      title: i.name,
-                    })
-                  }
-                  aria-label={`${i.name} ki photo dekhein`}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={resolveMediaUrl(i.photo)} alt={i.name} />
-                </button>
-              ) : (
-                <span className="cp-item-icon">
-                  <Package size={24} aria-hidden="true" />
+        {c.plans.length === 1 ? (
+          <>
+            <ul>
+              {c.items.map((i) => (
+                <li key={i.name} className="cp-item">
+                  {i.photo ? (
+                    <button
+                      type="button"
+                      className="cp-item-photo"
+                      onClick={() =>
+                        setViewer({
+                          src: resolveMediaUrl(i.photo)!,
+                          title: i.name,
+                        })
+                      }
+                      aria-label={`${i.name} ki photo dekhein`}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={resolveMediaUrl(i.photo)} alt={i.name} />
+                    </button>
+                  ) : (
+                    <span className="cp-item-icon">
+                      <Package size={24} aria-hidden="true" />
+                    </span>
+                  )}
+                  <div>
+                    <strong>{i.name}</strong>
+                    <p>Bought {formatDate(i.boughtOn)}</p>
+                  </div>
+                  <b>{formatRs(i.price)}</b>
+                </li>
+              ))}
+            </ul>
+            <div className="cp-total">
+              <span>
+                Total{" "}
+                <span className="ur" lang="ur">
+                  کل
                 </span>
-              )}
-              <div>
-                <strong>{i.name}</strong>
-                <p>Bought {formatDate(i.boughtOn)}</p>
-              </div>
-              <b>{formatRs(i.price)}</b>
-            </li>
-          ))}
-        </ul>
-        <div className="cp-total">
-          <span>
-            Total{" "}
-            <span className="ur" lang="ur">
-              کل
-            </span>
-          </span>
-          <b>{formatRs(c.total)}</b>
-        </div>
+              </span>
+              <b>{formatRs(c.total)}</b>
+            </div>
+          </>
+        ) : (
+          <div className="cp-plan-list">
+            {c.plans.map((plan) => (
+              <article className="cp-plan-card" key={plan.id}>
+                <div className="cp-plan-heading">
+                  <h3>{plan.label}</h3>
+                  <span>{formatRs(plan.monthly)} / month</span>
+                </div>
+                <ul>
+                  {plan.items.map((item, index) => (
+                    <li key={`${item.name}-${index}`} className="cp-item">
+                      {item.photo ? (
+                        <button
+                          type="button"
+                          className="cp-item-photo"
+                          onClick={() =>
+                            setViewer({
+                              src: resolveMediaUrl(item.photo)!,
+                              title: item.name,
+                            })
+                          }
+                          aria-label={`${item.name} ki photo dekhein`}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={resolveMediaUrl(item.photo)} alt={item.name} />
+                        </button>
+                      ) : (
+                        <span className="cp-item-icon">
+                          <Package size={24} aria-hidden="true" />
+                        </span>
+                      )}
+                      <div>
+                        <strong>{item.name}</strong>
+                        <p>Bought {formatDate(item.boughtOn)}</p>
+                      </div>
+                      <b>{formatRs(item.price)}</b>
+                    </li>
+                  ))}
+                </ul>
+                <div className="cp-plan-stats">
+                  <div>
+                    <span>Kul qeemat</span>
+                    <b>{formatRs(plan.total)}</b>
+                  </div>
+                  <div>
+                    <span>Advance</span>
+                    <b>{formatRs(plan.downPayment)}</b>
+                  </div>
+                  <div>
+                    <span>Wasool hue</span>
+                    <b>{formatRs(plan.paid)}</b>
+                  </div>
+                  <div>
+                    <span>Baaki</span>
+                    <b>{formatRs(plan.remaining)}</b>
+                  </div>
+                </div>
+                <p className="cp-plan-progress">
+                  {plan.receivedInstallments} of {plan.totalInstallments} qistein
+                  wasool
+                </p>
+              </article>
+            ))}
+          </div>
+        )}
+        <CommonBtn
+          text="Nayi cheez add karein"
+          icon={<Plus size={18} />}
+          className="outline-btn full-btn cp-add-purchase"
+          onClick={() => setShowPurchaseForm(true)}
+        />
       </section>
 
       <section className="cp-section">
@@ -362,7 +600,7 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
             </span>
           </h2>
           <div className="cp-installment-actions">
-            <span>{formatRs(c.monthly)} / month</span>
+            <span>{formatRs(c.plans.length > 1 ? c.monthlyTotal : c.monthly)} / month</span>
             <Link
               href={ROUTES.SHOP.CUSTOMER_EDIT(c.id)}
               className="cp-edit-link"
@@ -385,7 +623,11 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
             </div>
           </li>
           {rows.map((r) => (
-            <InstallmentItem key={r.no} row={r} isNext={c.next?.no === r.no} />
+            <InstallmentItem
+              key={`${r.planId ?? "base"}-${r.no}`}
+              row={r}
+              isNext={c.next?.planId === r.planId && c.next?.no === r.no}
+            />
           ))}
         </ol>
         {c.installments.length > VISIBLE && (
@@ -413,8 +655,9 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
                 customerId: c.id,
                 name: c.name,
                 installmentNo: pay.no,
+                planLabel: c.plans.length > 1 ? "Tamam plans" : undefined,
                 dueDate: pay.dueDate,
-                amount: pay.expected - pay.paid,
+                amount: pay.amount,
                 daysLate: pay.daysLate,
               })
             }
@@ -426,8 +669,13 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
               </span>
             </span>
             <small>
-              {formatRs(pay.expected - pay.paid)}{" "}
-              {pay.daysLate > 0 ? "late hain" : "due hain"}
+              {c.plans.length > 1 ? "Tamam plans · " : ""}
+              {formatRs(pay.amount)}{" "}
+              {pay.daysLate > 0
+                ? "late hain"
+                : c.plans.length > 1
+                  ? "baqi hain"
+                  : "due hain"}
             </small>
           </button>
         )}
@@ -435,6 +683,197 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
 
       {showDocsModal && (
         <DocumentsModal customer={c} onClose={() => setShowDocsModal(false)} />
+      )}
+      {showPurchaseForm && (
+        <div className="cp-purchase-backdrop">
+          <form
+            className="cp-purchase-form"
+            onSubmit={savePurchase}
+            noValidate
+            aria-labelledby="cp-purchase-title"
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="cp-purchase-form-head">
+              <h2 id="cp-purchase-title">Nayi khareedari add karein</h2>
+              <button
+                type="button"
+                aria-label="Form band karein"
+                onClick={() => setShowPurchaseForm(false)}
+              >
+                <X size={20} />
+              </button>
+            </div>
+            <p>Ek ya do cheezen aur unki mahana qist likhein.</p>
+            {purchaseItems.map((item, index) => (
+              <div className="cp-purchase-item" key={index}>
+                <label>
+                  Cheez ka naam
+                  <input
+                    required
+                    value={item.name}
+                    onChange={(event) => {
+                      setPurchaseError(null);
+                      const name = event.target.value.replace(
+                        /[^\p{L}\s]/gu,
+                        "",
+                      );
+                      setPurchaseItems((current) =>
+                        current.map((entry, itemIndex) =>
+                          itemIndex === index
+                            ? { ...entry, name }
+                            : entry,
+                        ),
+                      );
+                    }}
+                  />
+                  {purchaseError?.field === "name" &&
+                    purchaseError.itemIndex === index && (
+                      <span className="cp-purchase-error" role="alert">
+                        {purchaseError.message}
+                      </span>
+                    )}
+                </label>
+                <label>
+                  Qeemat (Rs.)
+                  <input
+                    required
+                    min="1"
+                    step="1"
+                    type="text"
+                    inputMode="numeric"
+                    value={item.price}
+                    onChange={(event) => {
+                      setPurchaseError(null);
+                      setPurchaseItems((current) =>
+                        current.map((entry, itemIndex) =>
+                          itemIndex === index
+                            ? {
+                                ...entry,
+                                price: event.target.value
+                                  .replace(/\D/g, "")
+                                  .replace(/^0+(?=\d)/, ""),
+                              }
+                            : entry,
+                        ),
+                      );
+                    }}
+                  />
+                  {purchaseError?.field === "price" &&
+                    purchaseError.itemIndex === index && (
+                      <span className="cp-purchase-error" role="alert">
+                        {purchaseError.message}
+                      </span>
+                    )}
+                </label>
+                <ItemPhoto
+                  itemName={item.name}
+                  file={item.photo}
+                  onChange={(photo) =>
+                    setPurchaseItems((current) =>
+                      current.map((entry, itemIndex) =>
+                        itemIndex === index ? { ...entry, photo } : entry,
+                      ),
+                    )
+                  }
+                />
+                {purchaseItems.length > 1 && (
+                  <button
+                    type="button"
+                    className="cp-remove-purchase-item"
+                    onClick={() =>
+                      setPurchaseItems((current) =>
+                        current.filter((_, itemIndex) => itemIndex !== index),
+                      )
+                    }
+                  >
+                    Hatayein
+                  </button>
+                )}
+              </div>
+            ))}
+            {purchaseItems.length < 2 && (
+              <button
+                className="cp-add-item"
+                type="button"
+                onClick={() =>
+                  setPurchaseItems((current) => [
+                    ...current,
+                      { name: "", price: "", photo: undefined },
+                  ])
+                }
+              >
+                <Plus size={16} /> Ek aur cheez
+              </button>
+            )}
+            <label className="cp-monthly-input">
+              Advance (Rs.)
+              <input
+                min="0"
+                step="1"
+                type="text"
+                inputMode="numeric"
+                value={purchaseDownPayment}
+                onFocus={() => {
+                  setPurchaseError(null);
+                  if (purchaseDownPayment === "0") setPurchaseDownPayment("");
+                }}
+                onBlur={() => {
+                  if (!purchaseDownPayment) setPurchaseDownPayment("0");
+                }}
+                onChange={(event) => {
+                  setPurchaseError(null);
+                  setPurchaseDownPayment(
+                    event.target.value
+                      .replace(/\D/g, "")
+                      .replace(/^0+(?=\d)/, ""),
+                  );
+                }}
+              />
+              {purchaseError?.field === "downPayment" && (
+                <span className="cp-purchase-error" role="alert">
+                  {purchaseError.message}
+                </span>
+              )}
+            </label>
+            <label className="cp-monthly-input">
+              Mahana qist (Rs.)
+              <input
+                required
+                min="1"
+                step="1"
+                type="text"
+                inputMode="numeric"
+                value={purchaseMonthly}
+                onChange={(event) => {
+                  setPurchaseError(null);
+                  setPurchaseMonthly(
+                    event.target.value
+                      .replace(/\D/g, "")
+                      .replace(/^0+(?=\d)/, ""),
+                  );
+                }}
+              />
+              {purchaseError?.field === "monthlyPayment" && (
+                <span className="cp-purchase-error" role="alert">
+                  {purchaseError.message}
+                </span>
+              )}
+            </label>
+            <div className="cp-purchase-actions">
+              <button
+                type="button"
+                onClick={() => setShowPurchaseForm(false)}
+                disabled={savingPurchase}
+              >
+                Wapas
+              </button>
+              <button type="submit" disabled={savingPurchase}>
+                {savingPurchase ? "Save ho raha hai..." : "Khareedari save karein"}
+              </button>
+            </div>
+          </form>
+        </div>
       )}
       {viewer && (
         <PhotoViewer
