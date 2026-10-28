@@ -1,9 +1,17 @@
-/** Installment maths in whole rupees. The last installment absorbs any rounding. */
-export function calcPlan(total: number, down: number, months: number) {
+export const MAX_SCHEDULE_INSTALLMENTS = 1200;
+
+/** Installment maths in whole rupees. The final installment covers the balance. */
+export function calcPlan(total: number, down: number, monthlyPayment: number) {
   const remaining = Math.max(total - down, 0);
-  if (!months || remaining === 0) return { remaining, monthly: 0, last: 0 };
-  const monthly = Math.ceil(remaining / months);
-  return { remaining, monthly, last: remaining - monthly * (months - 1) };
+  if (!remaining) return { remaining, monthly: monthlyPayment, installments: 0, last: 0 };
+  if (!monthlyPayment) return { remaining, monthly: 0, installments: 0, last: 0 };
+  const installments = Math.ceil(remaining / monthlyPayment);
+  return {
+    remaining,
+    monthly: monthlyPayment,
+    installments,
+    last: remaining - monthlyPayment * (installments - 1),
+  };
 }
 
 export const toIsoDate = (d: Date) => {

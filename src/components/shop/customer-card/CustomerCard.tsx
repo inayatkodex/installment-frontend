@@ -4,6 +4,7 @@ import DropdownMenu from "@/components/common/DropdownMenu/DropdownMenu";
 import StatusBadge from "@/components/common/StatusBadge/StatusBadge";
 import { ROUTES } from "@/constant/appRoutes";
 import { formatRs, initials } from "@/shared/formatUtils";
+import { resolveMediaUrl } from "@/shared/imageUtils";
 import { CustomerListItem } from "@/types/customer";
 import "./customer-card.scss";
 
@@ -22,7 +23,7 @@ const CustomerCard = ({ customer, onDelete }: Props) => {
       >
         {customer.photo ? (
           <img
-            src={customer.photo}
+            src={resolveMediaUrl(customer.photo)}
             alt=""
             className="cc-avatar cc-avatar-img"
           />

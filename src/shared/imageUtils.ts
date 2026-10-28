@@ -1,3 +1,5 @@
+import { BASE_URL } from "@/store/ApiServices/config";
+
 /**
  * Makes phone photos smaller before saving/uploading (a 5 MB photo becomes ~200 KB).
  * Works on slow internet and keeps the app fast. Falls back to the original file if anything fails.
@@ -35,3 +37,16 @@ export const fileToDataUrl = (file: Blob): Promise<string> =>
     reader.onerror = reject;
     reader.readAsDataURL(file);
   });
+
+export function resolveMediaUrl(src?: string | null): string | undefined {
+  if (!src) return undefined;
+  if (/^(data:|blob:|https?:\/\/)/i.test(src)) return src;
+  if (!src.startsWith("/uploads/")) return src;
+
+  const apiBase = new URL(
+    BASE_URL,
+    typeof window === "undefined" ? "http://localhost" : window.location.origin,
+  );
+  const basePath = apiBase.pathname.replace(/\/api\/?$/, "").replace(/\/$/, "");
+  return `${apiBase.origin}${basePath}${src}`;
+}

@@ -5,6 +5,7 @@ import CommonBtn from "@/components/common/CommonButton/Button";
 import StatusBadge from "@/components/common/StatusBadge/StatusBadge";
 import { ROUTES } from "@/constant/appRoutes";
 import { formatRs, initials } from "@/shared/formatUtils";
+import { resolveMediaUrl } from "@/shared/imageUtils";
 import { CollectionItem } from "@/types/payment";
 import "./collection-row.scss";
 
@@ -20,7 +21,11 @@ const CollectionRow = ({ item, onReceive }: Props) => {
   return (
     <li className="collection-row">
       {item.photo ? (
-        <img src={item.photo} alt="" className="cr-avatar cr-avatar-img" />
+        <img
+          src={resolveMediaUrl(item.photo)}
+          alt=""
+          className="cr-avatar cr-avatar-img"
+        />
       ) : (
         <span className="cr-avatar" aria-hidden="true">
           {initials(item.name)}

@@ -23,6 +23,7 @@ import DocumentsModal from "../documents-modal/DocumentsModal";
 import { PersonIcon } from "@/svgs";
 import { ROUTES } from "@/constant/appRoutes";
 import { formatDate, formatRs } from "@/shared/formatUtils";
+import { resolveMediaUrl } from "@/shared/imageUtils";
 import { CustomerDetail, InstallmentRow } from "@/types/customer";
 import "./customer-profile.scss";
 
@@ -188,7 +189,11 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
           <span className="cp-photo">
             {c.photo ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={c.photo} alt={c.name} className="cp-photo-img" />
+              <img
+                src={resolveMediaUrl(c.photo)}
+                alt={c.name}
+                className="cp-photo-img"
+              />
             ) : (
               <PersonIcon size={60} />
             )}
@@ -282,11 +287,16 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
                 <button
                   type="button"
                   className="cp-item-photo"
-                  onClick={() => setViewer({ src: i.photo!, title: i.name })}
+                  onClick={() =>
+                    setViewer({
+                      src: resolveMediaUrl(i.photo)!,
+                      title: i.name,
+                    })
+                  }
                   aria-label={`${i.name} ki photo dekhein`}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={i.photo} alt={i.name} />
+                  <img src={resolveMediaUrl(i.photo)} alt={i.name} />
                 </button>
               ) : (
                 <span className="cp-item-icon">
@@ -357,7 +367,7 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
               href={ROUTES.SHOP.CUSTOMER_EDIT(c.id)}
               className="cp-edit-link"
             >
-              Date badlein
+              Plan badlein
             </Link>
           </div>
         </div>

@@ -5,13 +5,16 @@ import {
   maskMoney,
   toNumber,
 } from "@/shared/formatUtils";
-import { calcPlan } from "@/shared/planUtils";
+import {
+  calcPlan,
+  MAX_SCHEDULE_INSTALLMENTS,
+} from "@/shared/planUtils";
 import { StepProps } from "../formTypes";
 
 const PlanStep = ({ form, errors, update }: StepProps) => {
   const total = form.items.reduce((a, i) => a + toNumber(i.price), 0);
-  const months = Number(form.months);
-  const plan = calcPlan(total, toNumber(form.down), months);
+  const monthlyPayment = toNumber(form.monthlyPayment);
+  const plan = calcPlan(total, toNumber(form.down), monthlyPayment);
 
   return (
     <>
@@ -29,17 +32,20 @@ const PlanStep = ({ form, errors, update }: StepProps) => {
       </p>
 
       <FormInput
-        label="Number of installments (months)"
-        labelUr="قسطوں کے مہینے"
-        type="number"
+        label="Monthly installment amount (Rs.)"
+        labelUr="ماہانہ قسط"
         inputMode="numeric"
-        min="1"
-        value={form.months}
-        onChange={(e) => update({ months: e.target.value })}
-        placeholder="Mahine likhein, misal: 12"
+        value={form.monthlyPayment}
+        onChange={(e) =>
+          update({ monthlyPayment: maskMoney(e.target.value) })
+        }
+        placeholder="Misal: 2000"
         autoFocus
-        error={errors.months}
+        error={errors.monthlyPayment}
       />
+      <p className="cf-help">
+        Har mahine customer se jitni raqam leni hai woh likhein.
+      </p>
 
       <FormInput
         label="First installment date"
@@ -71,11 +77,17 @@ const PlanStep = ({ form, errors, update }: StepProps) => {
             </span>
           </span>
           <strong>
-            {months > 0 && plan.monthly > 0 ? formatRs(plan.monthly) : "—"}
+            {plan.monthly > 0 ? formatRs(plan.monthly) : "—"}
           </strong>
         </div>
-        {plan.monthly > 0 && plan.last !== plan.monthly && (
-          <p>Aakhri qist: {formatRs(plan.last)}</p>
+        {plan.installments > 0 && (
+          <p>
+            Taqreeban {plan.installments} qistein · Aakhri qist:{" "}
+            {formatRs(plan.last)}
+          </p>
+        )}
+        {plan.installments > MAX_SCHEDULE_INSTALLMENTS && (
+          <p>Qist ki raqam barha kar schedule ko chhota karein.</p>
         )}
       </div>
       <p className="cf-help">

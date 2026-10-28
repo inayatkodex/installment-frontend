@@ -59,7 +59,7 @@ export interface NewCustomerPayload {
   address?: string;
   items: { name: string; price: number; photo?: string }[];
   downPayment: number;
-  months: number;
+  monthlyPayment: number;
   firstDueDate: string;
   documents: { cnicFront?: string; cnicBack?: string; other?: string };
 }

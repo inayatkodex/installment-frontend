@@ -9,8 +9,14 @@ import FormInput from "@/components/common/ui/FormInput";
 import Loader from "@/components/common/Loader/Loader";
 import PhotoSourceSheet from "@/components/common/PhotoSourceSheet/PhotoSourceSheet";
 import { ROUTES } from "@/constant/appRoutes";
-import { fileToDataUrl } from "@/shared/imageUtils";
-import { maskCnic, maskMobile } from "@/shared/formatUtils";
+import { fileToDataUrl, resolveMediaUrl } from "@/shared/imageUtils";
+import {
+  digits,
+  maskCnic,
+  maskMobile,
+  maskMoney,
+  toNumber,
+} from "@/shared/formatUtils";
 import { showToast } from "@/shared/toastUtils";
 import {
   deleteCustomerDocument,
@@ -51,6 +57,7 @@ const CustomerEditPage = () => {
     phone: "",
     address: "",
     firstDueDate: "",
+    monthlyPayment: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -81,6 +88,7 @@ const CustomerEditPage = () => {
         phone: detail.phone || "",
         address: detail.address || "",
         firstDueDate: detail.firstDueDate,
+        monthlyPayment: String(detail.monthly),
       });
       setDocs({
         cnicFront: detail.documents?.cnicFront ?? null,
@@ -110,7 +118,8 @@ const CustomerEditPage = () => {
       formData.cnic.trim() !== (detail.cnic || "").trim() ||
       formData.phone.trim() !== (detail.phone || "").trim() ||
       formData.address.trim() !== (detail.address || "").trim() ||
-      formData.firstDueDate !== detail.firstDueDate
+      formData.firstDueDate !== detail.firstDueDate ||
+      toNumber(formData.monthlyPayment) !== detail.monthly
     );
   }, [detail, id, formData]);
 
@@ -157,6 +166,15 @@ const CustomerEditPage = () => {
     if (!formData.firstDueDate) {
       errs.firstDueDate = "Pehli qist ki tareekh chunein";
     }
+    if (
+      (detail?.remaining ?? 0) > 0 &&
+      (!digits(formData.monthlyPayment) ||
+        !Number.isSafeInteger(toNumber(formData.monthlyPayment)) ||
+        toNumber(formData.monthlyPayment) < 1)
+    ) {
+      errs.monthlyPayment =
+        "Mahine ki qist kam az kam 1 rupay ki poori raqam honi chahiye";
+    }
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -180,6 +198,7 @@ const CustomerEditPage = () => {
             cnic: formData.cnic.trim(),
             address: formData.address.trim(),
             firstDueDate: formData.firstDueDate,
+            monthlyPayment: toNumber(formData.monthlyPayment),
           }),
         ).unwrap();
       }
@@ -330,8 +349,8 @@ const CustomerEditPage = () => {
 
       <section className="ce-card">
         <h2>
-          <span>Qist ki tareekh</span>
-          <span className="muted">Pehli qist ki date</span>
+          <span>Qist ka plan</span>
+          <span className="muted">Tareekh aur mahana raqam</span>
         </h2>
         <FormInput
           label="First installment date"
@@ -346,6 +365,26 @@ const CustomerEditPage = () => {
         <p className="muted">
           Is date ko badalne se customer ka poora qiston ka schedule update ho
           jayega.
+        </p>
+        <FormInput
+          label="Monthly installment amount (Rs.)"
+          labelUr="ماہانہ قسط"
+          inputMode="numeric"
+          value={formData.monthlyPayment}
+          disabled={detail?.remaining === 0}
+          onChange={(e) => {
+            setFormData((p) => ({
+              ...p,
+              monthlyPayment: maskMoney(e.target.value),
+            }));
+            if (errors.monthlyPayment)
+              setErrors((err) => ({ ...err, monthlyPayment: "" }));
+          }}
+          error={errors.monthlyPayment}
+        />
+        <p className="muted">
+          Current adhoori qist apni raqam par rahegi; nayi raqam agli poori qist
+          se lagu hogi.
         </p>
       </section>
 
@@ -366,7 +405,7 @@ const CustomerEditPage = () => {
                   {hasPhoto ? (
                     <div className="ce-doc-thumb">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={currentPhoto!} alt={doc.label} />
+                      <img src={resolveMediaUrl(currentPhoto)} alt={doc.label} />
                     </div>
                   ) : (
                     <div className="ce-doc-empty-box">

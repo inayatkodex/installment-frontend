@@ -3,6 +3,7 @@ import CommonBtn from "@/components/common/CommonButton/Button";
 import StatusBadge from "@/components/common/StatusBadge/StatusBadge";
 import { ROUTES } from "@/constant/appRoutes";
 import { formatDate, formatRs, initials } from "@/shared/formatUtils";
+import { resolveMediaUrl } from "@/shared/imageUtils";
 import { LateItem } from "@/types/payment";
 import "./late-card.scss";
 
@@ -15,7 +16,11 @@ const LateCard = ({ item, onReceive }: Props) => (
   <li className="late-card">
     <div className="lc-top">
       {item.photo ? (
-        <img src={item.photo} alt="" className="lc-avatar lc-avatar-img" />
+        <img
+          src={resolveMediaUrl(item.photo)}
+          alt=""
+          className="lc-avatar lc-avatar-img"
+        />
       ) : (
         <span className="lc-avatar" aria-hidden="true">
           {initials(item.name)}

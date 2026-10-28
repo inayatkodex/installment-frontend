@@ -6,6 +6,7 @@ import { FileText, Pencil, Phone } from "lucide-react";
 import Modal from "@/components/common/modal/Modal";
 import PhotoViewer from "@/components/common/PhotoViewer/PhotoViewer";
 import { ROUTES } from "@/constant/appRoutes";
+import { resolveMediaUrl } from "@/shared/imageUtils";
 import { CustomerDetail } from "@/types/customer";
 import "./documents-modal.scss";
 
@@ -97,7 +98,7 @@ const DocumentsModal = ({ customer, onClose }: Props) => {
                     className="dm-tile has-photo"
                     onClick={() =>
                       setViewer({
-                        src: photoUrl,
+                        src: resolveMediaUrl(photoUrl)!,
                         title: `${customer.name} · ${doc.label}`,
                       })
                     }
@@ -105,7 +106,7 @@ const DocumentsModal = ({ customer, onClose }: Props) => {
                   >
                     <div className="dm-tile-thumb">
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={photoUrl} alt={doc.label} />
+                      <img src={resolveMediaUrl(photoUrl)} alt={doc.label} />
                       <span className="dm-tile-badge">Photo hai</span>
                     </div>
                     <strong className="dm-tile-title">{doc.label}</strong>

@@ -15,7 +15,11 @@ import {
   toNumber,
 } from "@/shared/formatUtils";
 import { fileToDataUrl } from "@/shared/imageUtils";
-import { calcPlan, defaultFirstDue } from "@/shared/planUtils";
+import {
+  calcPlan,
+  defaultFirstDue,
+  MAX_SCHEDULE_INSTALLMENTS,
+} from "@/shared/planUtils";
 import { showToast } from "@/shared/toastUtils";
 import { CustomerFormState, FormErrors } from "./formTypes";
 import CustomerInfoStep from "./steps/customer-info-step";
@@ -41,7 +45,7 @@ const emptyForm = (): CustomerFormState => ({
   docs: {},
   items: [{ key: 1, name: "", price: "" }],
   down: "",
-  months: "",
+  monthlyPayment: "",
   firstDue: defaultFirstDue(),
 });
 
@@ -77,15 +81,25 @@ const CustomerForm = () => {
     if (step === 4) {
       if (!form.down.trim())
         e.down = "Advance ki raqam likhein; advance na ho to 0 likhein";
-      if (
-        !/^\d+$/.test(form.months) ||
-        !Number.isSafeInteger(Number(form.months)) ||
-        Number(form.months) < 1
-      )
-        e.months =
-          "Mahino ki tadaad 1 ya us se zyada poora number honi chahiye";
       if (toNumber(form.down) > total)
         e.down = "Advance kul qeemat se zyada nahi ho sakta";
+      const remaining = total - toNumber(form.down);
+      const monthlyPayment = toNumber(form.monthlyPayment);
+      if (
+        remaining > 0 &&
+        (!digits(form.monthlyPayment) ||
+          !Number.isSafeInteger(monthlyPayment) ||
+        monthlyPayment < 1 ||
+        monthlyPayment > 2147483647)
+      )
+        e.monthlyPayment =
+          "Mahine ki qist kam az kam 1 rupay ki poori raqam honi chahiye";
+      else if (
+        remaining > 0 &&
+        Math.ceil(remaining / monthlyPayment) > MAX_SCHEDULE_INSTALLMENTS
+      )
+        e.monthlyPayment =
+          "Qist ki raqam kam az kam itni ho ke schedule 1200 qiston se zyada na ho";
       if (!form.firstDue) e.firstDue = "Pehli qist ki tareekh chunein";
     }
     return e;
@@ -138,7 +152,7 @@ const CustomerForm = () => {
           address: form.address.trim() || undefined,
           items,
           downPayment: toNumber(form.down),
-          months: Number(form.months),
+          monthlyPayment: toNumber(form.monthlyPayment),
           firstDueDate: form.firstDue,
           documents,
         }),
@@ -155,7 +169,11 @@ const CustomerForm = () => {
   };
 
   if (savedId) {
-    const plan = calcPlan(total, toNumber(form.down), Number(form.months));
+    const plan = calcPlan(
+      total,
+      toNumber(form.down),
+      toNumber(form.monthlyPayment),
+    );
     return (
       <div className="cf-done" role="status">
         <span className="cf-tick">

@@ -10,6 +10,7 @@ import { ROUTES } from "@/constant/appRoutes";
 import { fetchAdminShops } from "@/store/slices/admin/shops/adminShopsSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { formatDate } from "@/shared/formatUtils";
+import { resolveMediaUrl } from "@/shared/imageUtils";
 import "./pending-requests.scss";
 
 /** Latest shops waiting for approval. Shown on the dashboard. */
@@ -43,7 +44,7 @@ const PendingRequests = () => {
             <li key={s.id}>
               {s.profilePic ? (
                 <img
-                  src={s.profilePic}
+                  src={resolveMediaUrl(s.profilePic)}
                   alt={s.ownerName}
                   className="pr-avatar"
                 />

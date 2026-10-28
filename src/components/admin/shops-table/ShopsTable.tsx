@@ -11,6 +11,7 @@ import StatusBadge from "@/components/common/StatusBadge/StatusBadge";
 import { ROUTES } from "@/constant/appRoutes";
 import { STATUS_ACTIONS, STATUS_LIST } from "@/constant/shopStatus";
 import { formatDate } from "@/shared/formatUtils";
+import { resolveMediaUrl } from "@/shared/imageUtils";
 import { AdminShop, FeeStatus } from "@/types/adminShop";
 import { ShopStatus } from "@/types/common";
 import "./shops-table.scss";
@@ -59,7 +60,11 @@ const ShopsTable = ({ shops, onStatus, onFee }: Props) => {
       render: (s) => (
         <div className="st-shop-cell">
           {s.profilePic ? (
-            <img src={s.profilePic} alt={s.ownerName} className="st-avatar" />
+            <img
+              src={resolveMediaUrl(s.profilePic)}
+              alt={s.ownerName}
+              className="st-avatar"
+            />
           ) : (
             <div className="st-avatar-fallback">{s.ownerName.charAt(0)}</div>
           )}

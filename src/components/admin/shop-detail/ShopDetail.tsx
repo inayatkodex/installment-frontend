@@ -10,6 +10,7 @@ import { useShopStatusChange } from "@/hooks/useShopStatusChange";
 import { setAdminShopFee } from "@/store/slices/admin/shops/adminShopsSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { formatDate } from "@/shared/formatUtils";
+import { resolveMediaUrl } from "@/shared/imageUtils";
 import { showToast } from "@/shared/toastUtils";
 import { AdminShop, FeeStatus } from "@/types/adminShop";
 import "./shop-detail.scss";
@@ -52,11 +53,11 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
             <button
               type="button"
               className="sd-avatar-btn"
-              onClick={() => setPhotoSrc(s.profilePic!)}
+              onClick={() => setPhotoSrc(resolveMediaUrl(s.profilePic)!)}
               title="Click to enlarge profile photo"
             >
               <img
-                src={s.profilePic}
+                src={resolveMediaUrl(s.profilePic)}
                 alt={s.ownerName}
                 className="sd-head-avatar"
               />
@@ -106,9 +107,12 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
             <button
               type="button"
               className="sd-profile-preview"
-              onClick={() => setPhotoSrc(s.profilePic!)}
+              onClick={() => setPhotoSrc(resolveMediaUrl(s.profilePic)!)}
             >
-              <img src={s.profilePic} alt={`${s.ownerName} profile`} />
+              <img
+                src={resolveMediaUrl(s.profilePic)}
+                alt={`${s.ownerName} profile`}
+              />
               <span className="sd-preview-overlay">
                 <Maximize2 size={20} /> View Full Photo
               </span>
