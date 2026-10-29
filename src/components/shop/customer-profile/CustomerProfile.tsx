@@ -36,6 +36,7 @@ import { addCustomerPurchase } from "@/store/slices/shop/customers/shopCustomers
 import { useAppDispatch } from "@/store/store";
 import { showToast } from "@/shared/toastUtils";
 import ItemPhoto from "@/components/shop/customer-form/steps/item-photo";
+import DatePartsPicker from "@/components/common/ui/DatePartsPicker";
 import "./customer-profile.scss";
 
 interface Props {
@@ -47,7 +48,7 @@ interface Props {
 const VISIBLE = 6;
 
 type PurchaseError = {
-  field: "name" | "price" | "downPayment" | "monthlyPayment";
+  field: "name" | "price" | "downPayment" | "monthlyPayment" | "firstDueDate";
   itemIndex?: number;
   message: string;
 };
@@ -180,6 +181,7 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
   >([{ name: "", price: "" }]);
   const [purchaseDownPayment, setPurchaseDownPayment] = useState("0");
   const [purchaseMonthly, setPurchaseMonthly] = useState("");
+  const [purchaseFirstDueDate, setPurchaseFirstDueDate] = useState("");
   const [purchaseError, setPurchaseError] = useState<PurchaseError | null>(
     null,
   );
@@ -229,6 +231,13 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
           field: "price",
           itemIndex: cleanItems.length - 1,
           message: "Cheezon ki kul qeemat bohat zyada hai",
+        });
+        return;
+      }
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(purchaseFirstDueDate)) {
+        setPurchaseError({
+          field: "firstDueDate",
+          message: "Plan B ki pehli qist ki tareekh chunein",
         });
         return;
       }
@@ -298,6 +307,7 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
           items,
           downPayment,
           monthlyPayment,
+          firstDueDate: purchaseFirstDueDate,
         }),
       ).unwrap();
       showToast("Nayi khareedari save ho gayi", "success");
@@ -306,6 +316,7 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
       setPurchaseItems([{ name: "", price: "", photo: undefined }]);
       setPurchaseDownPayment("0");
       setPurchaseMonthly("");
+      setPurchaseFirstDueDate("");
       onPaid();
     } catch (error) {
       setPurchaseError({
@@ -495,6 +506,11 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
                   <h3>{plan.label}</h3>
                   <span>{formatRs(plan.monthly)} / month</span>
                 </div>
+                {plan.firstDueDate && (
+                  <p className="cp-plan-date">
+                    Pehli qist: {formatDate(plan.firstDueDate)}
+                  </p>
+                )}
                 <ul>
                   {plan.items.map((item, index) => (
                     <li key={`${item.name}-${index}`} className="cp-item">
@@ -556,7 +572,10 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
           text="Nayi cheez add karein"
           icon={<Plus size={18} />}
           className="outline-btn full-btn cp-add-purchase"
-          onClick={() => setShowPurchaseForm(true)}
+          onClick={() => {
+            setPurchaseFirstDueDate(c.next?.dueDate ?? c.firstDueDate);
+            setShowPurchaseForm(true);
+          }}
         />
       </section>
 
@@ -705,6 +724,21 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
               </button>
             </div>
             <p>Ek ya do cheezen aur unki mahana qist likhein.</p>
+            <div className="cp-monthly-input">
+              <DatePartsPicker
+                label="Plan B ki pehli qist ki tareekh"
+                value={purchaseFirstDueDate}
+                onChange={(date) => {
+                  setPurchaseError(null);
+                  setPurchaseFirstDueDate(date);
+                }}
+                error={
+                  purchaseError?.field === "firstDueDate"
+                    ? purchaseError.message
+                    : undefined
+                }
+              />
+            </div>
             {purchaseItems.map((item, index) => (
               <div className="cp-purchase-item" key={index}>
                 <label>

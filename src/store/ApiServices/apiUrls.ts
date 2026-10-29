@@ -14,7 +14,12 @@ const API_URLS = {
     REVERSE_PAYMENT: (id: string) => `api/shop/payments/${id}/reverse`,
     CUSTOMERS: "api/shop/customers",
     CUSTOMER_DETAIL: (id: string) => `api/shop/customers/${id}`,
+    CUSTOMER_INSTALLMENT: (id: string) => `api/shop/customers/${id}/installment`,
     CUSTOMER_PURCHASES: (id: string) => `api/shop/customers/${id}/purchases`,
+    CUSTOMER_PURCHASE_DATE: (customerId: string, purchaseId: string) =>
+      `api/shop/customers/${customerId}/purchases/${purchaseId}/date`,
+    CUSTOMER_PURCHASE_INSTALLMENT: (customerId: string, purchaseId: string) =>
+      `api/shop/customers/${customerId}/purchases/${purchaseId}/installment`,
     CUSTOMER_DOCUMENT: (id: string, docKey: string) => `api/shop/customers/${id}/documents/${docKey}`,
     LATE: "api/shop/late",
     STATUS: "api/shop/status",

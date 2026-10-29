@@ -1,4 +1,5 @@
 import FormInput from "@/components/common/ui/FormInput";
+import DatePartsPicker from "@/components/common/ui/DatePartsPicker";
 import {
   formatRs,
   maskMobile,
@@ -47,12 +48,11 @@ const PlanStep = ({ form, errors, update }: StepProps) => {
         Har mahine customer se jitni raqam leni hai woh likhein.
       </p>
 
-      <FormInput
+      <DatePartsPicker
         label="First installment date"
         labelUr="پہلی قسط کی تاریخ"
-        type="date"
         value={form.firstDue}
-        onChange={(e) => update({ firstDue: e.target.value })}
+        onChange={(firstDue) => update({ firstDue })}
         error={errors.firstDue}
       />
 

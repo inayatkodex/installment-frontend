@@ -1,8 +1,9 @@
 const nf = new Intl.NumberFormat("en-PK");
 const df = new Intl.DateTimeFormat("en-GB", {
   day: "2-digit",
-  month: "short",
+  month: "2-digit",
   year: "numeric",
+  timeZone: "UTC",
 });
 
 export const formatRs = (n: number) => `Rs. ${nf.format(n)}`;

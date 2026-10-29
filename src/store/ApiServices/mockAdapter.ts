@@ -58,6 +58,15 @@ function route(method: string, url: string, params: Params, body: Record<string,
   if ((m = u.match(/^api\/shop\/customers\/([^/]+)\/purchases$/))) {
     return db.addCustomerPurchase(m[1], body as never);
   }
+  if ((m = u.match(/^api\/shop\/customers\/([^/]+)\/installment$/))) {
+    return db.updateCustomerBasePayment(m[1], Number(body.monthlyPayment));
+  }
+  if ((m = u.match(/^api\/shop\/customers\/([^/]+)\/purchases\/([^/]+)\/date$/))) {
+    return db.updateCustomerPurchaseDate(m[1], m[2], String(body.firstDueDate));
+  }
+  if ((m = u.match(/^api\/shop\/customers\/([^/]+)\/purchases\/([^/]+)\/installment$/))) {
+    return db.updateCustomerPurchasePayment(m[1], m[2], Number(body.monthlyPayment));
+  }
   if ((m = u.match(/^api\/shop\/customers\/([^/]+)\/documents\/([^/]+)$/))) {
     if (method === "delete") return db.deleteCustomerDocument(m[1], m[2]);
     return db.updateCustomerDocument(m[1], m[2], String(body.photo || ""));

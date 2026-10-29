@@ -56,6 +56,7 @@ interface MockCustomer {
     downPayment: number;
     initialMonthlyPayment: number;
     monthlyPayment: number;
+    firstDueDate: string;
     allocationStartInstallmentNo: number;
     createdAt: string;
     rateChanges: { fromInstallmentNo: number; monthlyPayment: number }[];
@@ -175,9 +176,14 @@ function buildPlanSchedules(c: MockCustomer) {
       rows: buildSchedule(c, false),
     },
     ...c.purchases.map((purchase, index) => {
-      const firstDueDate = toIsoDate(
-        addMonths(new Date(c.firstDue), purchase.allocationStartInstallmentNo - 1),
-      );
+      const firstDueDate =
+        purchase.firstDueDate ||
+        toIsoDate(
+          addMonths(
+            new Date(c.firstDue),
+            purchase.allocationStartInstallmentNo - 1,
+          ),
+        );
       const planCustomer = {
         ...c,
         items: purchase.items,
@@ -272,7 +278,7 @@ function combineInstallmentSchedules(
         .sort((a, b) => (a.paidOn ?? "").localeCompare(b.paidOn ?? ""))
         .at(-1);
       return {
-        no: index + 1,
+        no: rows.length === 1 ? rows[0].no : index + 1,
         dueDate,
         expected,
         paid,
@@ -326,11 +332,32 @@ export function getCustomerDetail(id: string): CustomerDetail {
     planSchedules.length > 1
       ? combineInstallmentSchedules(
           planSchedules.map((plan) => plan.rows),
-        ).map((row) => ({
-          ...row,
-          planId: "combined",
-          planLabel: "Tamam plans",
-        }))
+        ).map((row) => {
+          const contributors = planSchedules
+            .map((plan) => ({
+              plan,
+              installment: plan.rows.find(
+                (planRow) => planRow.dueDate === row.dueDate,
+              ),
+            }))
+            .filter(({ installment }) => installment);
+          const singlePlan = contributors[0];
+          return {
+            ...row,
+            no:
+              contributors.length === 1
+                ? (singlePlan?.installment?.no ?? row.no)
+                : row.no,
+            planId:
+              contributors.length === 1
+                ? (singlePlan?.plan.id ?? "combined")
+                : "combined",
+            planLabel:
+              contributors.length === 1
+                ? (singlePlan?.plan.label ?? "Tamam plans")
+                : "Tamam plans",
+          };
+        })
       : planSchedules.flatMap((plan) =>
           plan.rows.map((row) => ({ ...row, planId: plan.id })),
         );
@@ -347,7 +374,7 @@ export function getCustomerDetail(id: string): CustomerDetail {
       remaining: planTotal - paid,
       downPayment: plan.downPayment,
       monthly: plan.monthlyPayment,
-      firstDueDate: plan.id === "base" ? plan.firstDueDate : undefined,
+      firstDueDate: plan.firstDueDate,
       receivedInstallments: plan.rows.filter((row) => row.status === "paid").length,
       totalInstallments: plan.rows.length,
       items: plan.items,
@@ -383,9 +410,7 @@ export function getCustomerDetail(id: string): CustomerDetail {
           planId: next.planId!,
           planLabel: planSchedules.length > 1 ? next.planLabel : undefined,
           dueDate: next.dueDate,
-          amount: plans.length > 1
-            ? Math.min(monthlyTotal, total(c) - paidTotal(c))
-            : next.expected - next.paid,
+          amount: next.expected - next.paid,
           daysLate: next.daysLate,
         }
       : undefined,
@@ -422,6 +447,14 @@ export function addCustomerPurchase(
   ) {
     throw new MockError("Cheez aur mahana qist ki raqam sahi likhein");
   }
+  const parsedFirstDueDate = new Date(`${payload.firstDueDate}T00:00:00Z`);
+  if (
+    !/^\d{4}-\d{2}-\d{2}$/.test(payload.firstDueDate) ||
+    Number.isNaN(parsedFirstDueDate.getTime()) ||
+    parsedFirstDueDate.toISOString().slice(0, 10) !== payload.firstDueDate
+  ) {
+    throw new MockError("Plan B ki pehli qist ki tareekh sahi likhein");
+  }
   const purchaseTotal = payload.items.reduce((sum, item) => sum + item.price, 0);
   const downPayment = payload.downPayment ?? 0;
   if (
@@ -441,6 +474,7 @@ export function addCustomerPurchase(
     downPayment,
     initialMonthlyPayment: payload.monthlyPayment,
     monthlyPayment: payload.monthlyPayment,
+    firstDueDate: payload.firstDueDate,
     createdAt: new Date().toISOString(),
     allocationStartInstallmentNo,
     rateChanges: [],
@@ -452,6 +486,150 @@ export function addCustomerPurchase(
           .slice(0, -1)
           .reduce((sum, purchase) => sum + purchase.monthlyPayment, 0)) +
     payload.monthlyPayment;
+  return getCustomerDetail(customerId);
+}
+
+export function updateCustomerPurchaseDate(
+  customerId: string,
+  purchaseId: string,
+  firstDueDate: string,
+): CustomerDetail {
+  const c = customers.find((customer) => customer.id === customerId);
+  if (!c) throw new MockError("Customer nahi mila", 404);
+  const purchase = c.purchases.find((item) => item.id === purchaseId);
+  if (!purchase) throw new MockError("Plan nahi mila", 404);
+  const parsedDate = new Date(`${firstDueDate}T00:00:00Z`);
+  if (
+    !/^\d{4}-\d{2}-\d{2}$/.test(firstDueDate) ||
+    Number.isNaN(parsedDate.getTime()) ||
+    parsedDate.toISOString().slice(0, 10) !== firstDueDate
+  ) {
+    throw new MockError("Plan ki pehli qist ki tareekh sahi likhein");
+  }
+  purchase.firstDueDate = firstDueDate;
+  return getCustomerDetail(customerId);
+}
+
+export function updateCustomerBasePayment(
+  customerId: string,
+  monthlyPayment: number,
+): CustomerDetail {
+  const c = customers.find((customer) => customer.id === customerId);
+  if (!c) throw new MockError("Customer nahi mila", 404);
+  if (
+    !Number.isSafeInteger(monthlyPayment) ||
+    monthlyPayment < 1 ||
+    monthlyPayment > 2147483647
+  ) {
+    throw new MockError("Mahine ki qist ki raqam sahi likhein");
+  }
+
+  const currentPlan = buildPlanSchedules(c).find((plan) => plan.id === "base");
+  const current = currentPlan?.rows.find((row) => row.status !== "paid");
+  if (!currentPlan || !current) {
+    throw new MockError("Mukammal plan ki qist ki raqam tabdeel nahi ho sakti");
+  }
+  const fromInstallmentNo = current.paid > 0 ? current.no + 1 : current.no;
+  const rateChanges = c.rateChanges.map((change) => ({ ...change }));
+  const existing = rateChanges.find(
+    (change) => change.fromInstallmentNo === fromInstallmentNo,
+  );
+  if (existing) existing.monthlyPayment = monthlyPayment;
+  else rateChanges.push({ fromInstallmentNo, monthlyPayment });
+  rateChanges.sort((a, b) => a.fromInstallmentNo - b.fromInstallmentNo);
+
+  const proposedRows = buildSchedule({ ...c, rateChanges }, false);
+  const remainingBalance = baseTotal(c) - c.downPayment;
+  if (
+    proposedRows.length >= 1200 &&
+    proposedRows.reduce((sum, row) => sum + row.expected, 0) < remainingBalance
+  ) {
+    throw new MockError("Qiston ka schedule bohat lamba hai");
+  }
+
+  if (c.monthlyCollectionTarget !== undefined) {
+    const updatedTarget =
+      c.monthlyCollectionTarget + monthlyPayment - c.monthlyPayment;
+    if (updatedTarget < 1 || updatedTarget > 2147483647) {
+      throw new MockError("Kul mahana qist ki raqam sahi likhein");
+    }
+    c.monthlyCollectionTarget = updatedTarget;
+  }
+  c.rateChanges = rateChanges;
+  c.monthlyPayment = monthlyPayment;
+  return getCustomerDetail(customerId);
+}
+
+export function updateCustomerPurchasePayment(
+  customerId: string,
+  purchaseId: string,
+  monthlyPayment: number,
+): CustomerDetail {
+  const c = customers.find((customer) => customer.id === customerId);
+  if (!c) throw new MockError("Customer nahi mila", 404);
+  const purchase = c.purchases.find((item) => item.id === purchaseId);
+  if (!purchase) throw new MockError("Plan nahi mila", 404);
+  if (purchase.firstDueDate === c.firstDue) {
+    throw new MockError("Alag tareekh wala plan hi alag se edit ho sakta hai");
+  }
+  if (
+    !Number.isSafeInteger(monthlyPayment) ||
+    monthlyPayment < 1 ||
+    monthlyPayment > 2147483647
+  ) {
+    throw new MockError("Mahine ki qist ki raqam sahi likhein");
+  }
+
+  const currentPlan = buildPlanSchedules(c).find(
+    (plan) => plan.id === purchaseId,
+  );
+  if (!currentPlan) throw new MockError("Plan nahi mila", 404);
+  const current = currentPlan.rows.find((row) => row.status !== "paid");
+  if (!current) {
+    throw new MockError("Mukammal plan ki qist ki raqam tabdeel nahi ho sakti");
+  }
+  const fromInstallmentNo = current.paid > 0 ? current.no + 1 : current.no;
+  const rateChanges = purchase.rateChanges.map((change) => ({ ...change }));
+  const existing = rateChanges.find(
+    (change) => change.fromInstallmentNo === fromInstallmentNo,
+  );
+  if (existing) existing.monthlyPayment = monthlyPayment;
+  else rateChanges.push({ fromInstallmentNo, monthlyPayment });
+  rateChanges.sort((a, b) => a.fromInstallmentNo - b.fromInstallmentNo);
+
+  const planCustomer = {
+    ...c,
+    items: purchase.items,
+    downPayment: purchase.downPayment,
+    initialMonthlyPayment: purchase.initialMonthlyPayment,
+    monthlyPayment: purchase.monthlyPayment,
+    firstDue: purchase.firstDueDate,
+    rateChanges,
+    payments: [],
+  };
+  const proposedRows = buildSchedule(planCustomer, false);
+  const remainingBalance =
+    purchase.items.reduce((sum, item) => sum + item.price, 0) -
+    purchase.downPayment;
+  if (
+    proposedRows.length >= 1200 &&
+    proposedRows.reduce((sum, row) => sum + row.expected, 0) < remainingBalance
+  ) {
+    throw new MockError("Qiston ka schedule bohat lamba hai");
+  }
+
+  const monthlyTarget =
+    c.monthlyCollectionTarget ??
+    c.monthlyPayment +
+      c.purchases.reduce((sum, item) => sum + item.monthlyPayment, 0);
+  const updatedTarget = monthlyTarget + monthlyPayment - purchase.monthlyPayment;
+  if (updatedTarget < 1 || updatedTarget > 2147483647) {
+    throw new MockError("Kul mahana qist ki raqam sahi likhein");
+  }
+
+  purchase.rateChanges = rateChanges;
+  purchase.monthlyPayment = monthlyPayment;
+  c.monthlyCollectionTarget = updatedTarget;
   return getCustomerDetail(customerId);
 }
 

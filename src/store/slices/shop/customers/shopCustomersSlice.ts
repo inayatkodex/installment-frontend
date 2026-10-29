@@ -122,6 +122,82 @@ export const updateCustomer = createAsyncThunk(
   }
 );
 
+export const updateCustomerPurchaseDate = createAsyncThunk(
+  "shopCustomers/updatePurchaseDate",
+  async (
+    {
+      customerId,
+      purchaseId,
+      firstDueDate,
+    }: {
+      customerId: string;
+      purchaseId: string;
+      firstDueDate: string;
+    },
+    { rejectWithValue },
+  ) => {
+    try {
+      const res = await api.put(
+        API_URLS.SHOP.CUSTOMER_PURCHASE_DATE(customerId, purchaseId),
+        { firstDueDate },
+      );
+      return res.data.data as CustomerDetail;
+    } catch (error) {
+      return rejectWithValue(
+        getErrorMessage(error, "Plan ki tareekh update nahi ho saki"),
+      );
+    }
+  },
+);
+
+export const updateCustomerBasePayment = createAsyncThunk(
+  "shopCustomers/updateBasePayment",
+  async (
+    { customerId, monthlyPayment }: { customerId: string; monthlyPayment: number },
+    { rejectWithValue },
+  ) => {
+    try {
+      const res = await api.put(
+        API_URLS.SHOP.CUSTOMER_INSTALLMENT(customerId),
+        { monthlyPayment },
+      );
+      return res.data.data as CustomerDetail;
+    } catch (error) {
+      return rejectWithValue(
+        getErrorMessage(error, "Plan A ki qist update nahi ho saki"),
+      );
+    }
+  },
+);
+
+export const updateCustomerPurchasePayment = createAsyncThunk(
+  "shopCustomers/updatePurchasePayment",
+  async (
+    {
+      customerId,
+      purchaseId,
+      monthlyPayment,
+    }: {
+      customerId: string;
+      purchaseId: string;
+      monthlyPayment: number;
+    },
+    { rejectWithValue },
+  ) => {
+    try {
+      const res = await api.put(
+        API_URLS.SHOP.CUSTOMER_PURCHASE_INSTALLMENT(customerId, purchaseId),
+        { monthlyPayment },
+      );
+      return res.data.data as CustomerDetail;
+    } catch (error) {
+      return rejectWithValue(
+        getErrorMessage(error, "Plan ki qist update nahi ho saki"),
+      );
+    }
+  },
+);
+
 export const uploadCustomerDocument = createAsyncThunk(
   "shopCustomers/uploadDocument",
   async ({ customerId, docKey, photo }: { customerId: string; docKey: string; photo: string }, { rejectWithValue }) => {

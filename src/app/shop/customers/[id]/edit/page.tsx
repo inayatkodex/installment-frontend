@@ -6,6 +6,7 @@ import { Camera, ChevronLeft, FileText, Plus, Trash2 } from "lucide-react";
 import CommonBtn from "@/components/common/CommonButton/Button";
 import ConfirmModal from "@/components/common/modal/confirm-modal/ConfirmModal";
 import FormInput from "@/components/common/ui/FormInput";
+import DatePartsPicker from "@/components/common/ui/DatePartsPicker";
 import Loader from "@/components/common/Loader/Loader";
 import PhotoSourceSheet from "@/components/common/PhotoSourceSheet/PhotoSourceSheet";
 import { ROUTES } from "@/constant/appRoutes";
@@ -22,6 +23,9 @@ import {
   deleteCustomerDocument,
   fetchCustomerDetail,
   updateCustomer,
+  updateCustomerBasePayment,
+  updateCustomerPurchaseDate,
+  updateCustomerPurchasePayment,
   uploadCustomerDocument,
 } from "@/store/slices/shop/customers/shopCustomersSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
@@ -58,6 +62,8 @@ const CustomerEditPage = () => {
     address: "",
     firstDueDate: "",
     monthlyPayment: "",
+    purchaseDates: {} as Record<string, string>,
+    purchaseMonthlyPayments: {} as Record<string, string>,
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -88,7 +94,20 @@ const CustomerEditPage = () => {
         phone: detail.phone || "",
         address: detail.address || "",
         firstDueDate: detail.firstDueDate,
-        monthlyPayment: String(detail.monthlyTotal),
+        monthlyPayment: String(
+          detail.plans.find((plan) => plan.id === "base")?.monthly ??
+            detail.monthly,
+        ),
+        purchaseDates: Object.fromEntries(
+          detail.plans
+            .filter((plan) => plan.id !== "base")
+            .map((plan) => [plan.id, plan.firstDueDate ?? ""]),
+        ),
+        purchaseMonthlyPayments: Object.fromEntries(
+          detail.plans
+            .filter((plan) => plan.id !== "base")
+            .map((plan) => [plan.id, String(plan.monthly)]),
+        ),
       });
       setDocs({
         cnicFront: detail.documents?.cnicFront ?? null,
@@ -110,6 +129,15 @@ const CustomerEditPage = () => {
     };
   }, [detail, id]);
 
+  const hasMonthlyPaymentChange = useMemo(() => {
+    if (!detail || detail.id !== id) return false;
+    const basePlan = detail.plans.find((plan) => plan.id === "base");
+    return (
+      toNumber(formData.monthlyPayment) !==
+      (basePlan?.monthly ?? detail.monthly)
+    );
+  }, [detail, id, formData.monthlyPayment]);
+
   const hasInfoChanges = useMemo(() => {
     if (!detail || detail.id !== id) return false;
     return (
@@ -119,9 +147,38 @@ const CustomerEditPage = () => {
       formData.phone.trim() !== (detail.phone || "").trim() ||
       formData.address.trim() !== (detail.address || "").trim() ||
       formData.firstDueDate !== detail.firstDueDate ||
-      toNumber(formData.monthlyPayment) !== detail.monthlyTotal
+      hasMonthlyPaymentChange
     );
-  }, [detail, id, formData]);
+  }, [detail, id, formData, hasMonthlyPaymentChange]);
+
+  const hasPurchaseDateChanges = useMemo(() => {
+    if (!detail || detail.id !== id) return false;
+    return detail.plans.some(
+      (plan) =>
+        plan.id !== "base" &&
+        formData.purchaseDates[plan.id] !== (plan.firstDueDate ?? ""),
+    );
+  }, [detail, id, formData.purchaseDates]);
+
+  const hasPurchasePaymentChanges = useMemo(() => {
+    if (!detail || detail.id !== id) return false;
+    return detail.plans.some((plan) => {
+      if (plan.id === "base") return false;
+      const currentDueDate =
+        formData.purchaseDates[plan.id] ?? plan.firstDueDate ?? "";
+      return (
+        currentDueDate !== formData.firstDueDate &&
+        toNumber(formData.purchaseMonthlyPayments[plan.id] ?? "") !==
+          plan.monthly
+      );
+    });
+  }, [
+    detail,
+    id,
+    formData.firstDueDate,
+    formData.purchaseDates,
+    formData.purchaseMonthlyPayments,
+  ]);
 
   const hasDocChanges = useMemo(() => {
     return DOC_ITEMS.some((d) => {
@@ -131,7 +188,11 @@ const CustomerEditPage = () => {
     });
   }, [initialDocs, docs]);
 
-  const hasChanges = hasInfoChanges || hasDocChanges;
+  const hasChanges =
+    hasInfoChanges ||
+    hasPurchaseDateChanges ||
+    hasPurchasePaymentChanges ||
+    hasDocChanges;
 
   const handlePickFile = async (file: File) => {
     if (!pickDoc) return;
@@ -166,8 +227,26 @@ const CustomerEditPage = () => {
     if (!formData.firstDueDate) {
       errs.firstDueDate = "Pehli qist ki tareekh chunein";
     }
+    detail?.plans
+      .filter((plan) => plan.id !== "base")
+      .forEach((plan) => {
+        if (!formData.purchaseDates[plan.id]) {
+          errs[`purchaseDate-${plan.id}`] =
+            `${plan.label} ki pehli qist ki tareekh chunein`;
+        }
+        const planDate =
+          formData.purchaseDates[plan.id] ?? plan.firstDueDate ?? "";
+        if (
+          planDate !== formData.firstDueDate &&
+          (!digits(formData.purchaseMonthlyPayments[plan.id] ?? "") ||
+            toNumber(formData.purchaseMonthlyPayments[plan.id] ?? "") < 1)
+        ) {
+          errs[`purchasePayment-${plan.id}`] =
+            `${plan.label} ki mahana qist sahi likhein`;
+        }
+      });
     if (
-      (detail?.remaining ?? 0) > 0 &&
+      (detail?.plans.find((plan) => plan.id === "base")?.remaining ?? 0) > 0 &&
       (!digits(formData.monthlyPayment) ||
         !Number.isSafeInteger(toNumber(formData.monthlyPayment)) ||
         toNumber(formData.monthlyPayment) < 1)
@@ -198,6 +277,53 @@ const CustomerEditPage = () => {
             cnic: formData.cnic.trim(),
             address: formData.address.trim(),
             firstDueDate: formData.firstDueDate,
+          }),
+        ).unwrap();
+      }
+
+      if (hasPurchaseDateChanges) {
+        for (const plan of detail.plans.filter(
+          (item) =>
+            item.id !== "base" &&
+            formData.purchaseDates[item.id] !== (item.firstDueDate ?? ""),
+        )) {
+          await dispatch(
+            updateCustomerPurchaseDate({
+              customerId: detail.id,
+              purchaseId: plan.id,
+              firstDueDate: formData.purchaseDates[plan.id],
+            }),
+          ).unwrap();
+        }
+      }
+
+      if (hasPurchasePaymentChanges) {
+        for (const plan of detail.plans.filter((item) => {
+          if (item.id === "base") return false;
+          const currentDueDate =
+            formData.purchaseDates[item.id] ?? item.firstDueDate ?? "";
+          return (
+            currentDueDate !== formData.firstDueDate &&
+            toNumber(formData.purchaseMonthlyPayments[item.id] ?? "") !==
+              item.monthly
+          );
+        })) {
+          await dispatch(
+            updateCustomerPurchasePayment({
+              customerId: detail.id,
+              purchaseId: plan.id,
+              monthlyPayment: toNumber(
+                formData.purchaseMonthlyPayments[plan.id],
+              ),
+            }),
+          ).unwrap();
+        }
+      }
+
+      if (hasMonthlyPaymentChange) {
+        await dispatch(
+          updateCustomerBasePayment({
+            customerId: detail.id,
             monthlyPayment: toNumber(formData.monthlyPayment),
           }),
         ).unwrap();
@@ -347,51 +473,96 @@ const CustomerEditPage = () => {
         </div>
       </section>
 
-      <section className="ce-card">
-        <h2>
-          <span>Qist ka plan</span>
-          <span className="muted">Tareekh aur mahana raqam</span>
-        </h2>
-        <FormInput
-          label="First installment date"
-          labelUr="پہلی قسط کی تاریخ"
-          type="date"
-          value={formData.firstDueDate}
-          onChange={(e) =>
-            setFormData((p) => ({ ...p, firstDueDate: e.target.value }))
-          }
-          error={errors.firstDueDate}
-        />
-        <p className="muted">
-          Is date ko badalne se customer ka poora qiston ka schedule update ho
-          jayega.
-        </p>
-        <FormInput
-          label={
-            detail && detail.plans.length > 1
-              ? "Total monthly installment (Rs.)"
-              : "Monthly installment amount (Rs.)"
-          }
-          labelUr="ماہانہ قسط"
-          inputMode="numeric"
-          value={formData.monthlyPayment}
-          disabled={detail?.remaining === 0}
-          onChange={(e) => {
-            setFormData((p) => ({
-              ...p,
-              monthlyPayment: maskMoney(e.target.value),
-            }));
-            if (errors.monthlyPayment)
-              setErrors((err) => ({ ...err, monthlyPayment: "" }));
-          }}
-          error={errors.monthlyPayment}
-        />
-        <p className="muted">
-          {detail && detail.plans.length > 1
-            ? "Yeh tamam khareedariyon ki mahana raqam hai. Wasooli pehle purani khareedari par lagegi."
-            : "Current adhoori qist apni raqam par rahegi; nayi raqam agli poori qist se lagu hogi."}
-        </p>
-      </section>
+      {detail?.plans
+        .slice()
+        .sort((left, right) =>
+          left.id === "base" ? -1 : right.id === "base" ? 1 : 0,
+        )
+        .map((plan) => {
+          const isBasePlan = plan.id === "base";
+          const planDate = isBasePlan
+            ? formData.firstDueDate
+            : (formData.purchaseDates[plan.id] ?? plan.firstDueDate ?? "");
+          const canEditRate =
+            isBasePlan || planDate !== formData.firstDueDate;
+          const paymentValue = isBasePlan
+            ? formData.monthlyPayment
+            : (formData.purchaseMonthlyPayments[plan.id] ?? "");
+          const paymentError = isBasePlan
+            ? errors.monthlyPayment
+            : errors[`purchasePayment-${plan.id}`];
+
+          return (
+            <section className="ce-card" key={plan.id}>
+              <h2>
+                <span>{plan.label} - {isBasePlan ? "Pehli khareedari" : "Nayi khareedari"}</span>
+              </h2>
+
+              <DatePartsPicker
+                label={`${plan.label} first installment date`}
+                labelUr="پہلی قسط کی تاریخ"
+                value={planDate}
+                onChange={(firstDueDate) =>
+                  isBasePlan
+                    ? setFormData((previous) => ({
+                        ...previous,
+                        firstDueDate,
+                      }))
+                    : setFormData((previous) => ({
+                        ...previous,
+                        purchaseDates: {
+                          ...previous.purchaseDates,
+                          [plan.id]: firstDueDate,
+                        },
+                      }))
+                }
+                error={
+                  isBasePlan
+                    ? errors.firstDueDate
+                    : errors[`purchaseDate-${plan.id}`]
+                }
+              />
+              <p className="muted">
+                Is tareekh ko badalne se sirf {plan.label} ka schedule update
+                hoga.
+              </p>
+
+              <FormInput
+                label={`${plan.label} monthly installment (Rs.)`}
+                labelUr="ماہانہ قسط"
+                inputMode="numeric"
+                value={paymentValue}
+                disabled={plan.remaining === 0 || !canEditRate}
+                onChange={(event) => {
+                  const monthlyPayment = maskMoney(event.target.value);
+                  setFormData((previous) =>
+                    isBasePlan
+                      ? { ...previous, monthlyPayment }
+                      : {
+                          ...previous,
+                          purchaseMonthlyPayments: {
+                            ...previous.purchaseMonthlyPayments,
+                            [plan.id]: monthlyPayment,
+                          },
+                        },
+                  );
+                  const errorKey = isBasePlan
+                    ? "monthlyPayment"
+                    : `purchasePayment-${plan.id}`;
+                  if (errors[errorKey]) {
+                    setErrors((previous) => ({ ...previous, [errorKey]: "" }));
+                  }
+                }}
+                error={paymentError}
+              />
+              <p className="muted">
+                {!canEditRate
+                  ? "Alag qist ki raqam edit karne ke liye is plan ki tareekh Plan A se alag rakhein."
+                  : "Nayi qist ki raqam agli unpaid qist se lagu hogi. Pehle se di hui ya adhoori qist ki raqam nahi badlegi."}
+              </p>
+            </section>
+          );
+        })}
 
       <section className="ce-card">
         <h2>

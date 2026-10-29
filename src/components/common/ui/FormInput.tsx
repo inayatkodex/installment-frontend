@@ -112,6 +112,7 @@ const FormInput = ({
           <input
             className="form-control"
             type={isPassword && showPassword ? "text" : type}
+            lang={type === "date" ? "en-GB" : undefined}
             placeholder={placeholder}
             autoComplete={autoComplete}
             inputMode={inputMode}

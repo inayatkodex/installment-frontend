@@ -80,6 +80,7 @@ export interface NewCustomerPurchasePayload {
   items: { name: string; price: number; photo?: string }[];
   downPayment: number;
   monthlyPayment: number;
+  firstDueDate: string;
 }
 
 export interface NewCustomerPayload {

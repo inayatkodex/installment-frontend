@@ -55,32 +55,6 @@
     grid-column: 1 / -1;
   }
 
-  .ce-info-grid {
-    @include grid(2, 12px);
-    @include mobile() {
-      grid-template-columns: 1fr;
-    }
-
-    .ce-info-item {
-      @include flex-wrapper(2px);
-      background: $bg;
-      border: 1px solid $line;
-      border-radius: 12px;
-      padding: 10px 12px;
-
-      span {
-        font-size: 12px;
-        color: $muted;
-      }
-
-      strong {
-        font-size: 14px;
-        color: $ink;
-        word-break: break-word;
-      }
-    }
-  }
-
   .ce-docs-list {
     @include flex-wrapper(10px);
   }
