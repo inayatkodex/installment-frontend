@@ -26,7 +26,7 @@ const ConfirmModal = ({
   title,
   message,
   confirmText,
-  cancelText = "Wapas",
+  cancelText = "Cancel",
   loadingText,
   tone = "primary",
   loading = false,

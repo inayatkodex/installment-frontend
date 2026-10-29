@@ -47,7 +47,7 @@ const CustomersPage = () => {
     try {
       await dispatch(deleteCustomer(toDelete.id)).unwrap();
       showToast(
-        "Customer chup gaya hai. 24 ghantay ke andar 'Haal hi mein delete huay' section se wapas la sakte hain.",
+        "Customer delete ho gaya. 24 ghantay tak wapas la sakte hain.",
         "success",
       );
       setToDelete(null);
@@ -116,9 +116,9 @@ const CustomersPage = () => {
           className="cu-recently-deleted"
           aria-labelledby="cu-recent-title"
         >
-          <h2 id="cu-recent-title">Deleted customers</h2>
+          <h2 id="cu-recent-title">Delete huay customers</h2>
           <p>
-            Customer ka data 24 ghantay baad permanently delete hoga.
+            24 ghantay baad data hamesha ke liye delete ho jayega.
           </p>
           <ul>
             {pendingDeletion.map((customer) => (
@@ -127,12 +127,11 @@ const CustomersPage = () => {
                   <strong>{customer.name}</strong>
                   <span>{customer.customerCode}</span>
                   <small>
-                    Delete request:{" "}
+                    Delete kiya:{" "}
                     {new Date(customer.deletionRequestedAt).toLocaleString(
                       "en-PK",
                       { timeZone: "Asia/Karachi" },
-                    )}{" "}
-                    (Pakistan time)
+                    )}
                   </small>
                 </div>
                 <button
@@ -186,8 +185,8 @@ const CustomersPage = () => {
 
       {toDelete && (
         <ConfirmModal
-          title={`${toDelete.name} ko delete karein?`}
-          message="Is customer ki saari qistein poori hain. Customer abhi list se chhup jayega, lekin us ka data 24 ghantay tak 'Haal hi mein delete huay' section se wapas laya ja sakta hai. 24 ghantay baad data hamesha ke liye delete ho jayega."
+          title="Customer delete karein?"
+          message="Customer list se hat jayega. 24 ghantay tak 'Delete huay customers' se wapas la sakte hain."
           confirmText="Delete"
           cancelText="Cancel"
           tone="danger"

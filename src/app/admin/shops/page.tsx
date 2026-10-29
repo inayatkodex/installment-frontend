@@ -132,8 +132,8 @@ const AdminShopsPage = () => {
 
       {pendingDeletion.length > 0 && (
         <section className="as-recently-deleted" aria-labelledby="as-recent-title">
-          <h2 id="as-recent-title">Recently deleted shops</h2>
-          <p>Shops are permanently removed after 24 hours. Restore them before then.</p>
+          <h2 id="as-recent-title">Recently deleted</h2>
+          <p>Shops are permanently deleted after 24 hours.</p>
           <ul>
             {pendingDeletion.map((shop) => (
               <li key={shop.id}>
@@ -141,7 +141,7 @@ const AdminShopsPage = () => {
                   <strong>{shop.shopName}</strong>
                   <span>{shop.shopCode} · {shop.ownerName}</span>
                   <small>
-                    Deletion requested {new Date(shop.requestedAt).toLocaleString("en-PK", { timeZone: "Asia/Karachi" })} (Pakistan time)
+                    Deleted: {new Date(shop.requestedAt).toLocaleString("en-PK", { timeZone: "Asia/Karachi" })}
                   </small>
                 </div>
                 <button

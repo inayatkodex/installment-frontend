@@ -40,7 +40,7 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
   const deleteShop = async () => {
     try {
       await dispatch(deleteAdminShop(s.id)).unwrap();
-      showToast(`${s.shopName} was hidden and can be restored for 24 hours`, "success");
+      showToast(`${s.shopName} deleted. Undo is available for 24 hours.`, "success");
       router.push(ROUTES.ADMIN.SHOPS);
     } catch (e) {
       showToast(
@@ -114,7 +114,7 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
                 onClick: () => ask(s, "archived"),
               },
               {
-                label: "Delete shop (24-hour undo)",
+                label: "Delete shop",
                 tone: "danger",
                 onClick: () => setConfirmDelete(true),
               },
@@ -182,8 +182,8 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
       {confirmDelete && (
         <ConfirmModal
           title={`Delete ${s.shopName}?`}
-          message="The shop will be archived immediately and its account will be disabled. You can restore the shop and all its data from Recently Deleted for 24 hours; after that, its related data will be permanently deleted."
-          confirmText="Delete for 24 hours"
+          message="The shop will be disabled. Undo within 24 hours, or its data will be permanently deleted."
+          confirmText="Delete"
           cancelText="Cancel"
           loadingText="Deleting…"
           tone="danger"

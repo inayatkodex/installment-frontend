@@ -43,7 +43,7 @@ const CustomerDetailPage = () => {
     try {
       await dispatch(deleteCustomer(id)).unwrap();
       showToast(
-        "Customer chup gaya hai. 24 ghantay ke andar 'Haal hi mein delete huay' section se wapas la sakte hain.",
+        "Customer delete ho gaya. 24 ghantay tak wapas la sakte hain.",
         "success",
       );
       router.push(ROUTES.SHOP.CUSTOMERS);
@@ -77,8 +77,8 @@ const CustomerDetailPage = () => {
       ) : null}
       {askDelete && detail && (
         <ConfirmModal
-          title={`${detail.name} ko delete karein?`}
-          message="Is customer ki saari qistein poori hain. Customer abhi list se chhup jayega, lekin us ka data 24 ghantay tak 'Haal hi mein delete huay' section se wapas laya ja sakta hai. 24 ghantay baad data hamesha ke liye delete ho jayega."
+          title="Customer delete karein?"
+          message="Customer list se hat jayega. 24 ghantay tak 'Delete huay customers' se wapas la sakte hain."
           confirmText="Delete"
           cancelText="Cancel"
           tone="danger"
