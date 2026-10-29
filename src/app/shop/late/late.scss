@@ -2,20 +2,29 @@
 @use "../../../styles/variables.scss" as *;
 
 .late-page {
+  @include flex-wrapper(14px);
+
+  > .page-title {
+    margin-bottom: 0;
+  }
+
   .lp-summary {
     background: $danger-soft;
     color: $danger;
     padding: 12px 14px;
     border-radius: 14px;
     font-size: 15px;
-    margin-bottom: 12px;
+    margin: 0;
     font-weight: 600;
   }
   .lp-list {
     @include flex-wrapper(10px);
+    margin: 0;
+    padding: 0;
     @include from-tablet() {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
     }
   }
   .lp-error {

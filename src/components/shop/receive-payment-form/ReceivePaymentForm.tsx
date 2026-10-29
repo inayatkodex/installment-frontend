@@ -36,6 +36,7 @@ interface Props {
 const ReceivePaymentForm = ({ target, onClose, onDone }: Props) => {
   const dispatch = useAppDispatch();
   const receiving = useAppSelector((s) => s.shopCollection.receiving);
+  const [idempotencyKey] = useState(() => crypto.randomUUID());
   const [amount, setAmount] = useState(maskMoney(String(target.amount)));
   const [note, setNote] = useState("");
   const [error, setError] = useState<string>();
@@ -55,6 +56,7 @@ const ReceivePaymentForm = ({ target, onClose, onDone }: Props) => {
           installmentNo: target.installmentNo,
           amount: value,
           note: note.trim() || undefined,
+          idempotencyKey,
         }),
       ).unwrap();
       setDone(true);

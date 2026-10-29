@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { PartyPopper } from "lucide-react";
 import LateCard from "@/components/shop/late-card/LateCard";
 import ReceivePaymentForm, {
@@ -9,6 +9,8 @@ import ReceivePaymentForm, {
 import EmptyState from "@/components/common/EmptyState/EmptyState";
 import Loader from "@/components/common/Loader/Loader";
 import CommonBtn from "@/components/common/CommonButton/Button";
+import SearchBar from "@/components/common/SearchBar/SearchBar";
+import { useDebounce } from "@/hooks/useDebounce";
 import { fetchLate } from "@/store/slices/shop/late/shopLateSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { formatRs } from "@/shared/formatUtils";
@@ -19,6 +21,8 @@ const LatePage = () => {
   const dispatch = useAppDispatch();
   const { items, loading, error } = useAppSelector((s) => s.shopLate);
   const [target, setTarget] = useState<ReceiveTarget | null>(null);
+  const [query, setQuery] = useState("");
+  const search = useDebounce(query, 300);
 
   useEffect(() => {
     dispatch(fetchLate());
@@ -33,6 +37,18 @@ const LatePage = () => {
       amount: i.oldestRemaining,
       daysLate: i.daysLate,
     });
+
+  const filteredItems = useMemo(() => {
+    const normalizedQuery = search.trim().toLocaleLowerCase();
+    if (!normalizedQuery) return items;
+    const phoneQuery = normalizedQuery.replace(/\D/g, "");
+    return items.filter(
+      (item) =>
+        item.name.toLocaleLowerCase().includes(normalizedQuery) ||
+        (phoneQuery.length > 0 &&
+          item.phone.replace(/\D/g, "").includes(phoneQuery)),
+    );
+  }, [items, search]);
 
   return (
     <div className="late-page">
@@ -61,16 +77,31 @@ const LatePage = () => {
         />
       ) : (
         <>
+          <SearchBar
+            value={query}
+            onChange={setQuery}
+            placeholder="Naam ya mobile number se dhoondein"
+            label="Late customers search"
+          />
           <p className="lp-summary">
-            <b>{items.length}</b> customers ·{" "}
-            <b>{formatRs(items.reduce((a, i) => a + i.lateAmount, 0))}</b> late
-            hain
+            <b>{filteredItems.length}</b> customers ·{" "}
+            <b>
+              {formatRs(filteredItems.reduce((a, i) => a + i.lateAmount, 0))}
+            </b>{" "}
+            late hain
           </p>
-          <ul className="lp-list">
-            {items.map((i) => (
-              <LateCard key={i.customerId} item={i} onReceive={open} />
-            ))}
-          </ul>
+          {filteredItems.length === 0 ? (
+            <EmptyState
+              title="Koi customer nahi mila"
+              text="Naam ya mobile number check karke dobara dhoondein."
+            />
+          ) : (
+            <ul className="lp-list">
+              {filteredItems.map((i) => (
+                <LateCard key={i.customerId} item={i} onReceive={open} />
+              ))}
+            </ul>
+          )}
         </>
       )}
 

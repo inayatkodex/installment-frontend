@@ -18,6 +18,7 @@ export interface ReceivePaymentPayload {
   installmentNo: number;
   amount: number;
   note?: string;
+  idempotencyKey?: string;
 }
 
 export interface LateItem {
