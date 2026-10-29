@@ -52,6 +52,8 @@ function route(method: string, url: string, params: Params, body: Record<string,
   if ((m = u.match(/^api\/shop\/payments\/([^/]+)\/reverse$/))) return db.reversePayment(m[1]);
   if (u === "api/shop/late") return db.getLate();
   if (u === "api/shop/status") return db.getStatus(String(params.month));
+  if (u === "api/shop/customers/pending-deletion") return db.getPendingCustomerDeletions();
+  if ((m = u.match(/^api\/shop\/customers\/([^/]+)\/undo-delete$/))) return db.undoDeleteCustomer(m[1]);
   if (u === "api/shop/customers") {
     return method === "post" ? db.createCustomer(body as never) : db.getCustomers({ search: String(params.search ?? ""), status: String(params.status ?? "") });
   }
@@ -79,10 +81,15 @@ function route(method: string, url: string, params: Params, body: Record<string,
 
   // admin (preserved static mock fallback)
   if (u === "api/admin/dashboard") return db.getAdminDashboard();
+  if (u === "api/admin/shops/pending-deletion") return db.getPendingShopDeletions();
+  if ((m = u.match(/^api\/admin\/shops\/([^/]+)\/undo-delete$/))) return db.undoDeleteAdminShop(m[1]);
   if (u === "api/admin/shops") return db.getAdminShops(params as never);
   if ((m = u.match(/^api\/admin\/shops\/([^/]+)\/status$/))) return db.setAdminShopStatus(m[1], body.status, body.reason);
   if ((m = u.match(/^api\/admin\/shops\/([^/]+)\/fee$/))) return db.setAdminShopFee(m[1], body.month, body.status, body.method);
-  if ((m = u.match(/^api\/admin\/shops\/([^/]+)$/))) return db.getAdminShop(m[1]);
+  if ((m = u.match(/^api\/admin\/shops\/([^/]+)$/))) {
+    if (method === "delete") return db.deleteAdminShop(m[1]);
+    return db.getAdminShop(m[1]);
+  }
 
   throw new db.MockError("Yeh page nahi mila", 404);
 }

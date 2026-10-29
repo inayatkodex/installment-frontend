@@ -339,7 +339,7 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
     <div className="customer-profile">
       <div className="cp-hero">
         <div className="cp-banner" />
-        {c.status === "completed" && onDelete && (
+        {onDelete && (
           <div className="cp-menu">
             <DropdownMenu
               ariaLabel="Customer ke options"
@@ -347,9 +347,13 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
               triggerClassName="icon-only"
               items={[
                 {
-                  label: "Customer delete karein",
+                  label:
+                    c.status === "completed"
+                      ? "Delete"
+                      : "Qistein mukammal hone k bad delete ho ga",
                   tone: "danger",
                   onClick: onDelete,
+                  disabled: c.status !== "completed",
                 },
               ]}
             />

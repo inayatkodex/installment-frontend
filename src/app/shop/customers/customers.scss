@@ -23,6 +23,49 @@
   .cu-filters {
     margin: 12px 0;
   }
+  .cu-recently-deleted {
+    margin: 14px 0;
+    padding: 16px;
+    border: 1px solid $border;
+    border-radius: 14px;
+    background: $white;
+    h2 {
+      margin: 0 0 6px;
+      font-size: 18px;
+    }
+    p {
+      margin: 0 0 12px;
+      color: $muted;
+      font-size: 14px;
+    }
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    li {
+      @include flex-between();
+      gap: 12px;
+      padding: 12px 0;
+      border-top: 1px solid $border;
+      div {
+        @include flex-wrapper(3px);
+      }
+      span,
+      small {
+        color: $muted;
+      }
+      button {
+        flex: 0 0 auto;
+        padding: 9px 16px;
+        border: 0;
+        border-radius: 9px;
+        background: $primary;
+        color: $white;
+        font-weight: 700;
+      }
+    }
+  }
   .cu-list {
     @include flex-wrapper(10px);
     @include from-tablet() {

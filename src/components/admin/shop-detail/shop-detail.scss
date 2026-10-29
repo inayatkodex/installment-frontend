@@ -16,6 +16,10 @@
       @include flex(16px);
       align-items: center;
     }
+    .sd-head-actions {
+      @include flex(8px);
+      justify-content: flex-end;
+    }
     .sd-avatar-btn {
       background: none;
       border: none;

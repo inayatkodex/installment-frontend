@@ -74,7 +74,7 @@ const CustomerCard = ({ customer, onDelete }: Props) => {
             triggerClassName="icon-only"
             items={[
               {
-                label: "Customer delete karein",
+                label: "Delete",
                 tone: "danger",
                 onClick: () => onDelete!(customer),
               },

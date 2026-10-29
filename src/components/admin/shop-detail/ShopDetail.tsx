@@ -1,13 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import { Maximize2, User } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Maximize2, MoreVertical, User } from "lucide-react";
 import FeeCard from "../fee-card/FeeCard";
 import StatusControl from "../status-control/StatusControl";
+import DropdownMenu from "@/components/common/DropdownMenu/DropdownMenu";
+import ConfirmModal from "@/components/common/modal/confirm-modal/ConfirmModal";
 import PhotoViewer from "@/components/common/PhotoViewer/PhotoViewer";
 import StatusBadge from "@/components/common/StatusBadge/StatusBadge";
+import { ROUTES } from "@/constant/appRoutes";
 import { useShopStatusChange } from "@/hooks/useShopStatusChange";
-import { setAdminShopFee } from "@/store/slices/admin/shops/adminShopsSlice";
+import {
+  deleteAdminShop,
+  setAdminShopFee,
+} from "@/store/slices/admin/shops/adminShopsSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { formatDate } from "@/shared/formatUtils";
 import { resolveMediaUrl } from "@/shared/imageUtils";
@@ -24,9 +31,24 @@ const Row = ({ k, v }: { k: string; v: string }) => (
 
 const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const updating = useAppSelector((st) => st.adminShops.updating);
   const { ask, dialog } = useShopStatusChange();
   const [photoSrc, setPhotoSrc] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState(false);
+
+  const deleteShop = async () => {
+    try {
+      await dispatch(deleteAdminShop(s.id)).unwrap();
+      showToast(`${s.shopName} was hidden and can be restored for 24 hours`, "success");
+      router.push(ROUTES.ADMIN.SHOPS);
+    } catch (e) {
+      showToast(
+        typeof e === "string" ? e : "Failed to schedule shop deletion",
+        "error",
+      );
+    }
+  };
 
   const changeFee = async (month: string, status: FeeStatus) => {
     try {
@@ -78,7 +100,27 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
             </p>
           </div>
         </div>
-        <StatusControl value={s.status} onSelect={(st) => ask(s, st)} />
+        <div className="sd-head-actions">
+          <StatusControl value={s.status} onSelect={(st) => ask(s, st)} />
+          <DropdownMenu
+            ariaLabel={`More actions for ${s.shopName}`}
+            trigger={<MoreVertical size={22} aria-hidden="true" />}
+            triggerClassName="icon-only"
+            items={[
+              {
+                label: "Archive shop",
+                tone: "danger",
+                disabled: s.status === "archived",
+                onClick: () => ask(s, "archived"),
+              },
+              {
+                label: "Delete shop (24-hour undo)",
+                tone: "danger",
+                onClick: () => setConfirmDelete(true),
+              },
+            ]}
+          />
+        </div>
       </div>
 
       {s.statusNote && (
@@ -137,6 +179,19 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
         />
       )}
       {dialog}
+      {confirmDelete && (
+        <ConfirmModal
+          title={`Delete ${s.shopName}?`}
+          message="The shop will be archived immediately and its account will be disabled. You can restore the shop and all its data from Recently Deleted for 24 hours; after that, its related data will be permanently deleted."
+          confirmText="Delete for 24 hours"
+          cancelText="Cancel"
+          loadingText="Deleting…"
+          tone="danger"
+          loading={updating}
+          onConfirm={deleteShop}
+          onCancel={() => setConfirmDelete(false)}
+        />
+      )}
     </div>
   );
 };

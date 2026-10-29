@@ -50,3 +50,11 @@ export interface AdminShopsResponse {
   pageSize: number;
   counts: Record<"all" | ShopStatus, number>;
 }
+
+export interface PendingShopDeletion {
+  id: string;
+  shopCode: string;
+  shopName: string;
+  ownerName: string;
+  requestedAt: string;
+}

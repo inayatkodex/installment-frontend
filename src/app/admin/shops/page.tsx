@@ -11,8 +11,10 @@ import SearchBar from "@/components/common/SearchBar/SearchBar";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useShopStatusChange } from "@/hooks/useShopStatusChange";
 import {
+  fetchPendingShopDeletions,
   fetchAdminShops,
   setAdminShopFee,
+  undoDeleteAdminShop,
 } from "@/store/slices/admin/shops/adminShopsSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { currentMonthKey } from "@/shared/planUtils";
@@ -22,7 +24,7 @@ import "./shops.scss";
 
 const AdminShopsPage = () => {
   const dispatch = useAppDispatch();
-  const { list, loading, error } = useAppSelector((s) => s.adminShops);
+  const { list, loading, error, pendingDeletion, updating } = useAppSelector((s) => s.adminShops);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("all");
   const [fee, setFee] = useState("all");
@@ -46,6 +48,9 @@ const AdminShopsPage = () => {
   useEffect(() => {
     load();
   }, [load]);
+  useEffect(() => {
+    dispatch(fetchPendingShopDeletions());
+  }, [dispatch]);
 
   const { ask, dialog } = useShopStatusChange(load);
 
@@ -70,6 +75,17 @@ const AdminShopsPage = () => {
         typeof e === "string" ? e : "Failed to update fee status",
         "error",
       );
+    }
+  };
+
+  const undoDeletion = async (id: string, shopName: string) => {
+    try {
+      await dispatch(undoDeleteAdminShop(id)).unwrap();
+      showToast(`${shopName} restored`, "success");
+      dispatch(fetchPendingShopDeletions());
+      load();
+    } catch (e) {
+      showToast(typeof e === "string" ? e : "Failed to restore shop", "error");
     }
   };
 
@@ -113,6 +129,33 @@ const AdminShopsPage = () => {
           />
         </div>
       </div>
+
+      {pendingDeletion.length > 0 && (
+        <section className="as-recently-deleted" aria-labelledby="as-recent-title">
+          <h2 id="as-recent-title">Recently deleted shops</h2>
+          <p>Shops are permanently removed after 24 hours. Restore them before then.</p>
+          <ul>
+            {pendingDeletion.map((shop) => (
+              <li key={shop.id}>
+                <div>
+                  <strong>{shop.shopName}</strong>
+                  <span>{shop.shopCode} · {shop.ownerName}</span>
+                  <small>
+                    Deletion requested {new Date(shop.requestedAt).toLocaleString("en-PK", { timeZone: "Asia/Karachi" })} (Pakistan time)
+                  </small>
+                </div>
+                <button
+                  type="button"
+                  disabled={updating}
+                  onClick={() => undoDeletion(shop.id, shop.shopName)}
+                >
+                  Undo
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       {error ? (
         <p className="as-error" role="alert">

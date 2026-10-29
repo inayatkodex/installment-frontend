@@ -36,6 +36,14 @@ export interface CustomerListItem {
   progress: number;
 }
 
+export interface PendingCustomerDeletion {
+  id: string;
+  customerNo: number;
+  customerCode: string;
+  name: string;
+  deletionRequestedAt: string;
+}
+
 export interface CustomerDetail extends CustomerListItem {
   fatherName?: string;
   cnic?: string;

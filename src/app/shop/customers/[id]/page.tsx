@@ -42,7 +42,10 @@ const CustomerDetailPage = () => {
     setDeleting(true);
     try {
       await dispatch(deleteCustomer(id)).unwrap();
-      showToast("Customer delete ho gaya", "success");
+      showToast(
+        "Customer chup gaya hai. 24 ghantay ke andar 'Haal hi mein delete huay' section se wapas la sakte hain.",
+        "success",
+      );
       router.push(ROUTES.SHOP.CUSTOMERS);
     } catch (e) {
       showToast(
@@ -75,9 +78,9 @@ const CustomerDetailPage = () => {
       {askDelete && detail && (
         <ConfirmModal
           title={`${detail.name} ko delete karein?`}
-          message="Is ki saari qistein poori ho chuki hain. Delete karne ke baad yeh customer list se hat jayega."
-          confirmText="Haan, delete karein"
-          cancelText="Nahi"
+          message="Is customer ki saari qistein poori hain. Customer abhi list se chhup jayega, lekin us ka data 24 ghantay tak 'Haal hi mein delete huay' section se wapas laya ja sakta hai. 24 ghantay baad data hamesha ke liye delete ho jayega."
+          confirmText="Delete"
+          cancelText="Cancel"
           tone="danger"
           loading={deleting}
           onConfirm={confirmDelete}

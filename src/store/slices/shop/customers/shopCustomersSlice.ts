@@ -6,18 +6,20 @@ import {
   CustomerListItem,
   NewCustomerPayload,
   NewCustomerPurchasePayload,
+  PendingCustomerDeletion,
 } from "@/types/customer";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface State {
   list: CustomerListItem[];
+  pendingDeletion: PendingCustomerDeletion[];
   detail: CustomerDetail | null;
   loading: boolean;
   detailLoading: boolean;
   creating: boolean;
   error: string | null;
 }
-const initialState: State = { list: [], detail: null, loading: false, detailLoading: false, creating: false, error: null };
+const initialState: State = { list: [], pendingDeletion: [], detail: null, loading: false, detailLoading: false, creating: false, error: null };
 
 export const fetchCustomers = createAsyncThunk(
   "shopCustomers/fetchList",
@@ -39,6 +41,30 @@ export const fetchCustomerDetail = createAsyncThunk("shopCustomers/fetchDetail",
     return rejectWithValue(getErrorMessage(error, "Customer ki detail load nahi ho saki"));
   }
 });
+
+export const fetchPendingCustomerDeletions = createAsyncThunk(
+  "shopCustomers/fetchPendingDeletion",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await api.get(API_URLS.SHOP.CUSTOMERS_PENDING_DELETION);
+      return res.data.data as PendingCustomerDeletion[];
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error, "Pending deleted customers load nahi ho sake"));
+    }
+  },
+);
+
+export const undoDeleteCustomer = createAsyncThunk(
+  "shopCustomers/undoDelete",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      await api.post(API_URLS.SHOP.CUSTOMER_UNDO_DELETE(id));
+      return id;
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error, "Customer wapas nahi aa saka"));
+    }
+  },
+);
 
 export const createCustomer = createAsyncThunk("shopCustomers/create", async (payload: NewCustomerPayload, { rejectWithValue }) => {
   try {
@@ -231,10 +257,15 @@ const shopCustomersSlice = createSlice({
       .addCase(fetchCustomers.pending, (s) => { s.loading = true; s.error = null; })
       .addCase(fetchCustomers.fulfilled, (s, a) => { s.loading = false; s.list = a.payload; })
       .addCase(fetchCustomers.rejected, (s, a) => { s.loading = false; s.error = a.payload as string; })
+      .addCase(fetchPendingCustomerDeletions.fulfilled, (s, a) => { s.pendingDeletion = a.payload; })
+      .addCase(fetchPendingCustomerDeletions.rejected, (s, a) => { s.error = a.payload as string; })
       .addCase(fetchCustomerDetail.pending, (s) => { s.detailLoading = true; s.error = null; })
       .addCase(fetchCustomerDetail.fulfilled, (s, a) => { s.detailLoading = false; s.detail = a.payload; })
       .addCase(fetchCustomerDetail.rejected, (s, a) => { s.detailLoading = false; s.error = a.payload as string; })
       .addCase(deleteCustomer.fulfilled, (s, a) => { s.list = s.list.filter((c) => c.id !== a.payload); })
+      .addCase(undoDeleteCustomer.fulfilled, (s, a) => {
+        s.pendingDeletion = s.pendingDeletion.filter((customer) => customer.id !== a.payload);
+      })
       .addCase(uploadCustomerDocument.fulfilled, (s, a) => {
         if (s.detail && s.detail.id === a.payload.customerId) {
           if (!s.detail.documents) s.detail.documents = {};

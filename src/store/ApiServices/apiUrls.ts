@@ -13,7 +13,9 @@ const API_URLS = {
     PAYMENTS_TODAY: "api/shop/payments/today",
     REVERSE_PAYMENT: (id: string) => `api/shop/payments/${id}/reverse`,
     CUSTOMERS: "api/shop/customers",
+    CUSTOMERS_PENDING_DELETION: "api/shop/customers/pending-deletion",
     CUSTOMER_DETAIL: (id: string) => `api/shop/customers/${id}`,
+    CUSTOMER_UNDO_DELETE: (id: string) => `api/shop/customers/${id}/undo-delete`,
     CUSTOMER_INSTALLMENT: (id: string) => `api/shop/customers/${id}/installment`,
     CUSTOMER_PURCHASES: (id: string) => `api/shop/customers/${id}/purchases`,
     CUSTOMER_PURCHASE_DATE: (customerId: string, purchaseId: string) =>
@@ -27,7 +29,10 @@ const API_URLS = {
   ADMIN: {
     DASHBOARD: "api/admin/dashboard",
     SHOPS: "api/admin/shops",
+    SHOPS_PENDING_DELETION: "api/admin/shops/pending-deletion",
     SHOP_DETAIL: (id: string) => `api/admin/shops/${id}`,
+    SHOP_DELETE: (id: string) => `api/admin/shops/${id}`,
+    SHOP_UNDO_DELETE: (id: string) => `api/admin/shops/${id}/undo-delete`,
     SHOP_STATUS: (id: string) => `api/admin/shops/${id}/status`,
     SHOP_FEE: (id: string) => `api/admin/shops/${id}/fee`,
   },

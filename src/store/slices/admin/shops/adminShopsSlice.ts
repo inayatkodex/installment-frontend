@@ -1,19 +1,24 @@
 import api from "@/store/ApiServices/api";
 import API_URLS from "@/store/ApiServices/apiUrls";
 import { getErrorMessage } from "@/shared/apiError";
-import { AdminShop, AdminShopsResponse } from "@/types/adminShop";
+import {
+  AdminShop,
+  AdminShopsResponse,
+  PendingShopDeletion,
+} from "@/types/adminShop";
 import { ShopStatus } from "@/types/common";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface State {
   list: AdminShopsResponse | null;
   detail: AdminShop | null;
+  pendingDeletion: PendingShopDeletion[];
   loading: boolean;
   detailLoading: boolean;
   updating: boolean;
   error: string | null;
 }
-const initialState: State = { list: null, detail: null, loading: false, detailLoading: false, updating: false, error: null };
+const initialState: State = { list: null, detail: null, pendingDeletion: [], loading: false, detailLoading: false, updating: false, error: null };
 
 export const fetchAdminShops = createAsyncThunk(
   "adminShops/fetchList",
@@ -35,6 +40,42 @@ export const fetchAdminShop = createAsyncThunk("adminShops/fetchDetail", async (
     return rejectWithValue(getErrorMessage(error, "Failed to load shop details"));
   }
 });
+
+export const fetchPendingShopDeletions = createAsyncThunk(
+  "adminShops/fetchPendingDeletion",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await api.get(API_URLS.ADMIN.SHOPS_PENDING_DELETION);
+      return res.data.data as PendingShopDeletion[];
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error, "Failed to load pending shop deletions"));
+    }
+  },
+);
+
+export const undoDeleteAdminShop = createAsyncThunk(
+  "adminShops/undoDelete",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      await api.post(API_URLS.ADMIN.SHOP_UNDO_DELETE(id));
+      return id;
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error, "Failed to restore shop"));
+    }
+  },
+);
+
+export const deleteAdminShop = createAsyncThunk(
+  "adminShops/delete",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      await api.delete(API_URLS.ADMIN.SHOP_DELETE(id));
+      return id;
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error, "Failed to delete shop"));
+    }
+  },
+);
 
 export const updateAdminShopStatus = createAsyncThunk(
   "adminShops/updateStatus",
@@ -76,6 +117,32 @@ const adminShopsSlice = createSlice({
       .addCase(fetchAdminShop.pending, (s) => { s.detailLoading = true; s.error = null; })
       .addCase(fetchAdminShop.fulfilled, (s, a) => { s.detailLoading = false; s.detail = a.payload; })
       .addCase(fetchAdminShop.rejected, (s, a) => { s.detailLoading = false; s.error = a.payload as string; })
+      .addCase(fetchPendingShopDeletions.fulfilled, (s, a) => { s.pendingDeletion = a.payload; })
+      .addCase(fetchPendingShopDeletions.rejected, (s, a) => { s.error = a.payload as string; })
+      .addCase(deleteAdminShop.pending, (s) => { s.updating = true; })
+      .addCase(deleteAdminShop.fulfilled, (s, a) => {
+        s.updating = false;
+        if (s.detail?.id === a.payload) s.detail = null;
+        if (s.list) {
+          const deleted = s.list.items.find((item) => item.id === a.payload);
+          s.list.items = s.list.items.filter((item) => item.id !== a.payload);
+          if (deleted) {
+            s.list.total = Math.max(0, s.list.total - 1);
+            s.list.counts.all = Math.max(0, s.list.counts.all - 1);
+            s.list.counts[deleted.status] = Math.max(
+              0,
+              s.list.counts[deleted.status] - 1,
+            );
+          }
+        }
+      })
+      .addCase(undoDeleteAdminShop.pending, (s) => { s.updating = true; })
+      .addCase(undoDeleteAdminShop.fulfilled, (s, a) => {
+        s.updating = false;
+        s.pendingDeletion = s.pendingDeletion.filter((shop) => shop.id !== a.payload);
+      })
+      .addCase(undoDeleteAdminShop.rejected, (s) => { s.updating = false; })
+      .addCase(deleteAdminShop.rejected, (s) => { s.updating = false; })
       .addCase(updateAdminShopStatus.pending, (s) => { s.updating = true; })
       .addCase(updateAdminShopStatus.fulfilled, (s, a) => {
         s.updating = false;
