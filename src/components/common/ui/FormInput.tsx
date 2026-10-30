@@ -1,6 +1,6 @@
 "use client";
 
-import React, { ReactNode, useId, useState } from "react";
+import React, { ReactNode, useEffect, useId, useState } from "react";
 import { EyeHideIcon, EyeIcon } from "@/svgs";
 import "./formInput.scss";
 
@@ -57,21 +57,34 @@ const FormInput = ({
 }: FormInputProps) => {
   const id = useId();
   const [showPassword, setShowPassword] = useState(false);
+  const [dismissedError, setDismissedError] = useState<string | null>(null);
   const isPassword = type === "password";
+  const visibleError = error && error !== dismissedError ? error : undefined;
+  const handleChange = (event: ChangeEv) => {
+    if (error) setDismissedError(error);
+    onChange?.(event);
+  };
+
+  useEffect(() => {
+    if (!error || (dismissedError && dismissedError !== error)) {
+      setDismissedError(null);
+    }
+  }, [dismissedError, error]);
+
   const common = {
     id,
     name,
     value,
     disabled,
-    onChange,
+    onChange: handleChange,
     onKeyDown,
     autoFocus,
-    "aria-invalid": !!error,
-    "aria-describedby": error ? `${id}-err` : undefined,
+    "aria-invalid": !!visibleError,
+    "aria-describedby": visibleError ? `${id}-err` : undefined,
   };
 
   return (
-    <div className={`form-field ${error ? "has-error" : ""}`}>
+    <div className={`form-field ${visibleError ? "has-error" : ""}`}>
       {label && (
         <label className="form-label" htmlFor={id}>
           <span>
@@ -137,9 +150,9 @@ const FormInput = ({
         )}
       </div>
 
-      {error && (
+      {visibleError && (
         <p id={`${id}-err`} className="form-error" role="alert">
-          {error}
+          {visibleError}
         </p>
       )}
     </div>

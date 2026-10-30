@@ -1,99 +1,94 @@
 import FormInput from "@/components/common/ui/FormInput";
 import DatePartsPicker from "@/components/common/ui/DatePartsPicker";
-import {
-  formatRs,
-  maskMobile,
-  maskMoney,
-  toNumber,
-} from "@/shared/formatUtils";
-import {
-  calcPlan,
-  MAX_SCHEDULE_INSTALLMENTS,
-} from "@/shared/planUtils";
+import { formatRs, maskMoney, toNumber } from "@/shared/formatUtils";
+import { calcPlan, MAX_SCHEDULE_INSTALLMENTS } from "@/shared/planUtils";
 import { StepProps } from "../formTypes";
 
-const PlanStep = ({ form, errors, update }: StepProps) => {
+const PlanStep = ({ form, errors, update, clearError }: StepProps) => {
   const total = form.items.reduce((a, i) => a + toNumber(i.price), 0);
   const monthlyPayment = toNumber(form.monthlyPayment);
   const plan = calcPlan(total, toNumber(form.down), monthlyPayment);
 
   return (
-    <>
+    <div className="cf-plan-step">
+      <div className="cf-plan-total">
+        <span>Kul qeemat</span>
+        <strong>{formatRs(total)}</strong>
+      </div>
+
       <FormInput
-        label="Advance paid today (Rs.)"
+        label="Advance (Rs.)"
         labelUr="ایڈوانس"
         inputMode="numeric"
         value={form.down}
-        onChange={(e) => update({ down: maskMoney(e.target.value) })}
-        placeholder="Khali chhor sakte hain"
+        onChange={(e) => {
+          update({ down: maskMoney(e.target.value) });
+          clearError("down");
+        }}
+        placeholder="Misal: 10,000"
         error={errors.down}
       />
-      <p className="cf-help">
-        Advance na diya ho to khali chhor dein; yeh 0 samjha jayega.
-      </p>
+      <p className="cf-plan-hint">Advance na mila ho to khali chhor dein.</p>
 
       <FormInput
-        label="Monthly installment amount (Rs.)"
+        label="Mahana qist (Rs.)"
         labelUr="ماہانہ قسط"
         inputMode="numeric"
         value={form.monthlyPayment}
-        onChange={(e) =>
-          update({ monthlyPayment: maskMoney(e.target.value) })
-        }
-        placeholder="Misal: 2000"
+        onChange={(e) => {
+          update({ monthlyPayment: maskMoney(e.target.value) });
+          clearError("monthlyPayment");
+        }}
+        placeholder="Misal: 2,000"
         autoFocus
         error={errors.monthlyPayment}
       />
-      <p className="cf-help">
-        Har mahine customer se jitni raqam leni hai woh likhein.
-      </p>
-
       <DatePartsPicker
-        label="First installment date"
+        label="Pehli qist ki tareekh"
         labelUr="پہلی قسط کی تاریخ"
         value={form.firstDue}
-        onChange={(firstDue) => update({ firstDue })}
+        onChange={(firstDue) => {
+          update({ firstDue });
+          clearError("firstDue");
+        }}
         error={errors.firstDue}
       />
 
-      <div className="cf-summary" aria-live="polite">
-        <div>
-          <span>Total price</span>
-          <b>{formatRs(total)}</b>
-        </div>
-        <div>
+      <section className="cf-plan-summary" aria-live="polite" aria-label="Qiston ka hisaab">
+        <h3>Hisaab</h3>
+        <div className="cf-plan-summary-row">
           <span>Advance</span>
           <b>{formatRs(toNumber(form.down))}</b>
         </div>
-        <div>
-          <span>Baaki raqam</span>
+        <div className="cf-plan-summary-row cf-plan-remaining">
+          <span>Qiston mein baqi raqam</span>
           <b>{formatRs(plan.remaining)}</b>
         </div>
-        <div className="cf-monthly">
-          <span>
-            Har mahine{" "}
-            <span className="ur" lang="ur">
-              ماہانہ قسط
+        {plan.remaining === 0 ? (
+          <p className="cf-plan-result">
+            Advance se poori qeemat ada ho gayi; qistein nahi banengi.
+          </p>
+        ) : plan.installments > 0 ? (
+          <div className="cf-plan-result">
+            <strong>
+              {plan.installments} qistein · {formatRs(monthlyPayment)} mahana
+            </strong>
+            <span>
+              Aakhri qist: <b>{formatRs(plan.last)}</b>
             </span>
-          </span>
-          <strong>
-            {plan.monthly > 0 ? formatRs(plan.monthly) : "—"}
-          </strong>
-        </div>
-        {plan.installments > 0 && (
-          <p>
-            Taqreeban {plan.installments} qistein · Aakhri qist:{" "}
-            {formatRs(plan.last)}
+          </div>
+        ) : (
+          <p className="cf-plan-result">
+            Mahana qist likhein.
           </p>
         )}
         {plan.installments > MAX_SCHEDULE_INSTALLMENTS && (
-          <p>Qist ki raqam barha kar schedule ko chhota karein.</p>
+          <p className="cf-plan-limit">
+            Mahana qist barha dein. Qistein 1,200 se zyada nahi ho sakti.
+          </p>
         )}
-      </div>
-      <p className="cf-help">
-        {form.name} · {maskMobile(form.mobile)} · {form.items.length} item
-      </p>
-    </>
+      </section>
+    </div>
   );
 };
 

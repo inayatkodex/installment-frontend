@@ -56,9 +56,10 @@ const ShopLoginPage = () => {
             inputMode="numeric"
             autoComplete="tel"
             value={form.mobile}
-            onChange={(e) =>
-              setForm({ ...form, mobile: maskMobile(e.target.value) })
-            }
+            onChange={(e) => {
+              setForm({ ...form, mobile: maskMobile(e.target.value) });
+              setErrors((previous) => ({ ...previous, mobile: "" }));
+            }}
             placeholder="03xx-xxxxxxx"
             error={errors.mobile}
           />
@@ -68,7 +69,10 @@ const ShopLoginPage = () => {
             type="password"
             autoComplete="current-password"
             value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            onChange={(e) => {
+              setForm({ ...form, password: e.target.value });
+              setErrors((previous) => ({ ...previous, password: "" }));
+            }}
             placeholder="Apna password likhein"
             error={errors.password}
           />

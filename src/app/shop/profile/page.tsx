@@ -353,17 +353,19 @@ const ShopProfilePage = () => {
               <FormInput
                 label="Dukaan ka naam"
                 value={editValues.shopName}
-                onChange={(event) =>
-                  setEditValues({ ...editValues, shopName: event.target.value })
-                }
+                onChange={(event) => {
+                  setProfileSaveError(null);
+                  setEditValues({ ...editValues, shopName: event.target.value });
+                }}
                 autoComplete="organization"
               />
               <FormInput
                 label="Malik ka naam"
                 value={editValues.ownerName}
-                onChange={(event) =>
-                  setEditValues({ ...editValues, ownerName: event.target.value })
-                }
+                onChange={(event) => {
+                  setProfileSaveError(null);
+                  setEditValues({ ...editValues, ownerName: event.target.value });
+                }}
                 autoComplete="name"
               />
               <FormInput
@@ -371,17 +373,22 @@ const ShopProfilePage = () => {
                 type="email"
                 optional
                 value={editValues.email ?? ""}
-                onChange={(event) =>
-                  setEditValues({ ...editValues, email: event.target.value || null })
-                }
+                onChange={(event) => {
+                  setProfileSaveError(null);
+                  setEditValues({
+                    ...editValues,
+                    email: event.target.value || null,
+                  });
+                }}
                 autoComplete="email"
               />
               <FormInput
                 label="Shehar"
                 value={editValues.city}
-                onChange={(event) =>
-                  setEditValues({ ...editValues, city: event.target.value })
-                }
+                onChange={(event) => {
+                  setProfileSaveError(null);
+                  setEditValues({ ...editValues, city: event.target.value });
+                }}
                 autoComplete="address-level2"
               />
               <FormInput
@@ -389,9 +396,10 @@ const ShopProfilePage = () => {
                 multiline
                 rows={2}
                 value={editValues.address}
-                onChange={(event) =>
-                  setEditValues({ ...editValues, address: event.target.value })
-                }
+                onChange={(event) => {
+                  setProfileSaveError(null);
+                  setEditValues({ ...editValues, address: event.target.value });
+                }}
                 autoComplete="street-address"
               />
               {profileSaveError && (
@@ -496,27 +504,27 @@ const ShopProfilePage = () => {
                 autoComplete="current-password"
                 value={passwordValues.currentPassword}
                 error={currentPasswordError ?? undefined}
-                onChange={(event) =>
-                  {
-                    setPasswordValues({
-                      ...passwordValues,
-                      currentPassword: event.target.value,
-                    });
-                    setCurrentPasswordError(null);
-                  }
-                }
+                onChange={(event) => {
+                  setPasswordValues({
+                    ...passwordValues,
+                    currentPassword: event.target.value,
+                  });
+                  setCurrentPasswordError(null);
+                  setPasswordError(null);
+                }}
               />
               <FormInput
                 label="Naya password"
                 type="password"
                 autoComplete="new-password"
                 value={passwordValues.newPassword}
-                onChange={(event) =>
+                onChange={(event) => {
                   setPasswordValues({
                     ...passwordValues,
                     newPassword: event.target.value,
-                  })
-                }
+                  });
+                  setPasswordError(null);
+                }}
               />
               <p className="sp-note">
                 Password mein kam az kam aik English letter aur aik number
@@ -530,12 +538,13 @@ const ShopProfilePage = () => {
                 type="password"
                 autoComplete="new-password"
                 value={passwordValues.confirmPassword}
-                onChange={(event) =>
+                onChange={(event) => {
                   setPasswordValues({
                     ...passwordValues,
                     confirmPassword: event.target.value,
-                  })
-                }
+                  });
+                  setPasswordError(null);
+                }}
               />
               <p className="sp-note">
                 Password change hone ke baad aapko dobara login karna hoga.

@@ -23,7 +23,7 @@ import "./signup-form.scss";
 const STEPS = [
   { title: "Dukaan ki maloomat", ur: "دکان کی معلومات" },
   { title: "Aap ki maloomat", ur: "آپ کی معلومات" },
-  { title: "Profile photo", ur: "پروفائل تصویر" },
+  { title: "Profile photo (optional)", ur: "پروفائل تصویر (ضروری نہیں)" },
 ];
 
 const SignupForm = () => {
@@ -43,8 +43,14 @@ const SignupForm = () => {
     password: "",
     profilePic: undefined,
   });
-  const update = (patch: Partial<SignupFormState>) =>
+  const update = (patch: Partial<SignupFormState>) => {
     setForm((f) => ({ ...f, ...patch }));
+    setErrors((previous) => {
+      const next = { ...previous };
+      Object.keys(patch).forEach((field) => delete next[field]);
+      return next;
+    });
+  };
 
   const validate = (): SignupErrors => {
     if (step === 1) return validateForm({ ...form }, signupShopRules);
@@ -52,6 +58,13 @@ const SignupForm = () => {
       const e = validateForm({ ...form }, signupOwnerRules, [], [], {
         password: 6,
       });
+      if (
+        !e.password &&
+        (!/[A-Za-z]/.test(form.password) || !/\d/.test(form.password))
+      ) {
+        e.password =
+          "Password mein kam az kam aik English letter aur aik number zaroor ho.";
+      }
       if (!e.mobile && !isValidMobile(form.mobile))
         e.mobile =
           "Mobile number 11 digits ka hona chahiye, jaise 0300-1234567";
@@ -61,9 +74,7 @@ const SignupForm = () => {
         e.email = "Email sahi nahi hai";
       return e;
     }
-    const e: SignupErrors = {};
-    if (!form.profilePic) e.profilePic = "Apni profile photo upload karein";
-    return e;
+    return {};
   };
 
   const next = () => {

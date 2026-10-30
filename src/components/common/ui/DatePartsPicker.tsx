@@ -43,25 +43,49 @@ const DatePartsPicker = ({
   error,
 }: Props) => {
   const [displayValue, setDisplayValue] = useState(() => toDisplayDate(value));
+  const [invalidDate, setInvalidDate] = useState(false);
+  const [dismissedError, setDismissedError] = useState<string | undefined>();
   const previousValue = useRef(value);
 
   useEffect(() => {
     if (previousValue.current !== value) {
       previousValue.current = value;
       setDisplayValue(toDisplayDate(value));
+      setInvalidDate(false);
     }
   }, [value]);
+
+  useEffect(() => {
+    if (!error || (dismissedError && dismissedError !== error)) {
+      setDismissedError(undefined);
+    }
+  }, [dismissedError, error]);
 
   const handleChange = (nextValue: string) => {
     const cleaned = nextValue.replace(/[^\d/]/g, "").slice(0, 10);
     setDisplayValue(cleaned);
     const isoDate = toIsoDate(cleaned);
+    setInvalidDate(false);
+    if (error) setDismissedError(error);
     previousValue.current = isoDate;
     onChange(isoDate);
   };
 
+  const handleBlur = () => {
+    setInvalidDate(
+      /^\d{1,2}\/\d{1,2}\/\d{4}$/.test(displayValue.trim()) &&
+        !toIsoDate(displayValue),
+    );
+  };
+
+  const errorMessage = invalidDate
+    ? "Yeh tareekh sahi nahi hai. Meherbani karke durust tareekh likhein."
+    : error && error !== dismissedError
+      ? error
+      : undefined;
+
   return (
-    <div className={`date-parts-field ${error ? "has-error" : ""}`}>
+    <div className={`date-parts-field ${errorMessage ? "has-error" : ""}`}>
       <label className="date-parts-label">
         <span>{label}</span>
         {labelUr && (
@@ -78,12 +102,13 @@ const DatePartsPicker = ({
         placeholder="DD/MM/YYYY"
         value={displayValue}
         aria-label={label}
-        aria-invalid={!!error}
+        aria-invalid={!!errorMessage}
         onChange={(event) => handleChange(event.target.value)}
+        onBlur={handleBlur}
       />
-      {error && (
+      {errorMessage && (
         <p className="date-parts-error" role="alert">
-          {error}
+          {errorMessage}
         </p>
       )}
     </div>

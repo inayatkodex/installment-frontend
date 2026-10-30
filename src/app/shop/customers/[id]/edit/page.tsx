@@ -502,20 +502,29 @@ const CustomerEditPage = () => {
                 label={`${plan.label} first installment date`}
                 labelUr="پہلی قسط کی تاریخ"
                 value={planDate}
-                onChange={(firstDueDate) =>
-                  isBasePlan
-                    ? setFormData((previous) => ({
-                        ...previous,
-                        firstDueDate,
-                      }))
-                    : setFormData((previous) => ({
-                        ...previous,
-                        purchaseDates: {
-                          ...previous.purchaseDates,
-                          [plan.id]: firstDueDate,
-                        },
-                      }))
-                }
+                onChange={(firstDueDate) => {
+                  if (isBasePlan) {
+                    setFormData((previous) => ({ ...previous, firstDueDate }));
+                    setErrors((previous) => {
+                      const next = { ...previous };
+                      delete next.firstDueDate;
+                      return next;
+                    });
+                  } else {
+                    setFormData((previous) => ({
+                      ...previous,
+                      purchaseDates: {
+                        ...previous.purchaseDates,
+                        [plan.id]: firstDueDate,
+                      },
+                    }));
+                    setErrors((previous) => {
+                      const next = { ...previous };
+                      delete next[`purchaseDate-${plan.id}`];
+                      return next;
+                    });
+                  }
+                }}
                 error={
                   isBasePlan
                     ? errors.firstDueDate

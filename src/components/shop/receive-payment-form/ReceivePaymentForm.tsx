@@ -108,7 +108,10 @@ const ReceivePaymentForm = ({ target, onClose, onDone }: Props) => {
           labelUr="وصول شدہ رقم"
           inputMode="numeric"
           value={amount}
-          onChange={(e) => setAmount(maskMoney(e.target.value))}
+          onChange={(e) => {
+            setAmount(maskMoney(e.target.value));
+            setError(undefined);
+          }}
           error={error}
           autoFocus
         />

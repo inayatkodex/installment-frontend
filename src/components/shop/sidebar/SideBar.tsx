@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 import {
   AlertCircle,
   BarChart3,
@@ -10,6 +11,8 @@ import {
   Users,
 } from "lucide-react";
 import { ROUTES } from "@/constant/appRoutes";
+import { fetchShopDashboard } from "@/store/slices/shop/dashboard/shopDashboardSlice";
+import { useAppDispatch, useAppSelector } from "@/store/store";
 import "./sidebar.scss";
 
 const NAV = [
@@ -53,6 +56,34 @@ const NAV = [
 /** Desktop = left menu. Phone = bottom tabs. */
 const SideBar = () => {
   const path = usePathname();
+  const dispatch = useAppDispatch();
+  const requestedDashboard = useRef(false);
+  const { data: dashboard, loading } = useAppSelector(
+    (state) => state.shopDashboard,
+  );
+  useEffect(() => {
+    if (!dashboard && !loading && !requestedDashboard.current) {
+      requestedDashboard.current = true;
+      dispatch(fetchShopDashboard());
+    }
+  }, [dashboard, dispatch, loading]);
+
+  const countFor = (href: string) => {
+    if (href === ROUTES.SHOP.COLLECTION) return dashboard?.dueCount ?? 0;
+    if (href === ROUTES.SHOP.LATE) return dashboard?.lateCount ?? 0;
+    return 0;
+  };
+  const badge = (count: number, href: string) =>
+    count > 0 ? (
+      <span
+        className={`shop-nav-count ${
+          href === ROUTES.SHOP.COLLECTION ? "today" : "late"
+        }`}
+        aria-label={`${count}`}
+      >
+        {count > 99 ? "99+" : count}
+      </span>
+    ) : null;
   const isActive = (href: string) =>
     path === href || path.startsWith(href + "/");
 
@@ -85,7 +116,10 @@ const SideBar = () => {
             className={isActive(href) ? "active" : ""}
             aria-current={isActive(href) ? "page" : undefined}
           >
-            <Icon size={24} />
+            <span className="shop-nav-icon">
+              <Icon size={24} />
+              {badge(countFor(href), href)}
+            </span>
             <span>{short}</span>
           </Link>
         ))}

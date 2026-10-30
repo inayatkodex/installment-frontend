@@ -50,9 +50,13 @@ const OwnerInfoStep = ({ form, errors, update }: SignupStepProps) => (
       autoComplete="new-password"
       value={form.password}
       onChange={(e) => update({ password: e.target.value })}
-      placeholder="Kam az kam 6 huroof"
+      placeholder="Kam az kam 6 characters"
       error={errors.password}
     />
+    <p className="su-help">
+      Password kam az kam 6 characters ka ho aur us mein aik English letter
+      aur aik number shamil ho. Misal: Dukaan123
+    </p>
   </>
 );
 

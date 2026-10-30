@@ -7,11 +7,14 @@ import { ItemRow, StepProps } from "../formTypes";
 
 export const MAX_ITEMS = 4;
 
-const ItemsStep = ({ form, errors, update }: StepProps) => {
-  const setItem = (key: number, patch: Partial<ItemRow>) =>
+const ItemsStep = ({ form, errors, update, clearError }: StepProps) => {
+  const setItem = (key: number, patch: Partial<ItemRow>) => {
     update({
       items: form.items.map((i) => (i.key === key ? { ...i, ...patch } : i)),
     });
+    if (patch.name !== undefined) clearError(`n${key}`);
+    if (patch.price !== undefined) clearError(`p${key}`);
+  };
   const total = form.items.reduce((a, i) => a + toNumber(i.price), 0);
 
   return (

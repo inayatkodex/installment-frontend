@@ -57,8 +57,17 @@ const CustomerForm = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [savedId, setSavedId] = useState<string | null>(null);
 
-  const update = (patch: Partial<CustomerFormState>) =>
+  const clearError = (field: string) =>
+    setErrors((previous) => {
+      if (!previous[field]) return previous;
+      const next = { ...previous };
+      delete next[field];
+      return next;
+    });
+  const update = (patch: Partial<CustomerFormState>) => {
     setForm((f) => ({ ...f, ...patch }));
+    Object.keys(patch).forEach(clearError);
+  };
   const total = form.items.reduce((a, i) => a + toNumber(i.price), 0);
 
   const validate = (): FormErrors => {
@@ -217,7 +226,7 @@ const CustomerForm = () => {
     );
   }
 
-  const stepProps = { form, errors, update };
+  const stepProps = { form, errors, update, clearError };
   const hasDocs = Object.values(form.docs).some(Boolean);
 
   return (

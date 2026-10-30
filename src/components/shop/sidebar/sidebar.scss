@@ -29,6 +29,32 @@
     min-width: 0;
     white-space: nowrap;
   }
+  .shop-nav-icon {
+    position: relative;
+    display: inline-flex;
+    flex: none;
+  }
+  .shop-nav-count {
+    position: absolute;
+    top: -7px;
+    right: -9px;
+    min-width: 17px;
+    height: 17px;
+    padding: 0 4px;
+    border: 2px solid $white;
+    border-radius: 999px;
+    color: $white;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 13px;
+    text-align: center;
+    &.today {
+      background: $primary;
+    }
+    &.late {
+      background: #d32f2f;
+    }
+  }
   a.active {
     color: $primary;
     font-weight: 700;
@@ -82,6 +108,10 @@
       .ur {
         margin-left: auto;
         font-size: 15px;
+      }
+      .shop-nav-count {
+        top: -5px;
+        right: -7px;
       }
       &:hover {
         background: $primary-soft;

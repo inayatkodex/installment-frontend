@@ -27,4 +27,5 @@ export interface StepProps {
   form: CustomerFormState;
   errors: FormErrors;
   update: (patch: Partial<CustomerFormState>) => void;
+  clearError: (field: string) => void;
 }

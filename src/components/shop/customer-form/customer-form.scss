@@ -100,6 +100,90 @@
     }
   }
 
+  .cf-plan-step {
+    @include flex-wrapper(10px);
+  }
+  .cf-plan-total {
+    @include flex-between(12px);
+    padding: 14px;
+    border: 1px solid $primary-border;
+    border-radius: 12px;
+    background: $primary-soft;
+    span {
+      color: $ink;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    strong {
+      color: $primary-dark;
+      font-size: 20px;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+  .cf-plan-hint {
+    margin-top: -6px;
+    color: $muted;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .cf-plan-summary {
+    @include flex-wrapper(8px);
+    padding: 16px;
+    border: 1px solid $line;
+    border-radius: 14px;
+    background: $white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    h3 {
+      margin-bottom: 2px;
+      color: $ink;
+      font-size: 16px;
+      svg {
+        color: $primary;
+      }
+    }
+  }
+  .cf-plan-summary-row {
+    @include flex-between(12px);
+    color: $muted;
+    font-size: 14px;
+    b {
+      color: $text;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+    }
+  }
+  .cf-plan-remaining {
+    padding-top: 8px;
+    border-top: 1px solid $line;
+    color: $ink;
+    font-weight: 700;
+    b {
+      color: $primary-dark;
+    }
+  }
+  .cf-plan-result {
+    @include flex-wrapper(4px);
+    margin-top: 2px;
+    padding: 12px;
+    border-radius: 10px;
+    background: $success-soft;
+    color: $success;
+    font-size: 14px;
+    line-height: 1.45;
+    strong {
+      font-size: 16px;
+    }
+    span {
+      color: $text;
+    }
+  }
+  .cf-plan-limit {
+    color: $danger;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.45;
+  }
+
   .cf-actions {
     position: fixed;
     left: 0;

@@ -7,7 +7,7 @@ import FormInput from "@/components/common/ui/FormInput";
 import { maskCnic, maskMobile } from "@/shared/formatUtils";
 import { StepProps } from "../formTypes";
 
-const CustomerInfoStep = ({ form, errors, update }: StepProps) => {
+const CustomerInfoStep = ({ form, errors, update, clearError }: StepProps) => {
   const [sheet, setSheet] = useState(false);
   const [url, setUrl] = useState<string>();
 
@@ -69,7 +69,10 @@ const CustomerInfoStep = ({ form, errors, update }: StepProps) => {
         label="Full name"
         labelUr="پورا نام"
         value={form.name}
-        onChange={(e) => update({ name: e.target.value })}
+        onChange={(e) => {
+          update({ name: e.target.value });
+          clearError("name");
+        }}
         placeholder="Customer ka naam"
         autoComplete="off"
         autoFocus
@@ -81,7 +84,10 @@ const CustomerInfoStep = ({ form, errors, update }: StepProps) => {
         type="tel"
         inputMode="numeric"
         value={form.mobile}
-        onChange={(e) => update({ mobile: maskMobile(e.target.value) })}
+        onChange={(e) => {
+          update({ mobile: maskMobile(e.target.value) });
+          clearError("mobile");
+        }}
         placeholder="03xx-xxxxxxx"
         error={errors.mobile}
       />
@@ -99,7 +105,10 @@ const CustomerInfoStep = ({ form, errors, update }: StepProps) => {
         optional
         inputMode="numeric"
         value={form.cnic}
-        onChange={(e) => update({ cnic: maskCnic(e.target.value) })}
+        onChange={(e) => {
+          update({ cnic: maskCnic(e.target.value) });
+          clearError("cnic");
+        }}
         placeholder="xxxxx-xxxxxxx-x"
         error={errors.cnic}
       />
