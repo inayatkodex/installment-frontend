@@ -105,6 +105,20 @@ export const setAdminShopFee = createAsyncThunk(
   },
 );
 
+export const resetAdminShopPassword = createAsyncThunk(
+  "adminShops/resetPassword",
+  async (payload: { id: string; newPassword: string }, { rejectWithValue }) => {
+    try {
+      await api.patch(API_URLS.ADMIN.SHOP_PASSWORD(payload.id), {
+        newPassword: payload.newPassword,
+      });
+      return payload.id;
+    } catch (error) {
+      return rejectWithValue(getErrorMessage(error, "Failed to reset shop password"));
+    }
+  },
+);
+
 const adminShopsSlice = createSlice({
   name: "adminShops",
   initialState,
@@ -166,7 +180,10 @@ const adminShopsSlice = createSlice({
           }
         }
       })
-      .addCase(setAdminShopFee.rejected, (s) => { s.updating = false; });
+      .addCase(setAdminShopFee.rejected, (s) => { s.updating = false; })
+      .addCase(resetAdminShopPassword.pending, (s) => { s.updating = true; })
+      .addCase(resetAdminShopPassword.fulfilled, (s) => { s.updating = false; })
+      .addCase(resetAdminShopPassword.rejected, (s) => { s.updating = false; });
   },
 });
 

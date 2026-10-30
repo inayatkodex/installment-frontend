@@ -9,6 +9,11 @@ import ClientProviders from "./ClientProviders";
 export const metadata: Metadata = {
   title: "Installment Pro",
   description: "Dukaandaron ke liye aasaan qiston ka hisaab",
+  icons: {
+    icon: "/logo/favicon.svg",
+    shortcut: "/logo/favicon.ico",
+    apple: "/logo/apple-touch-icon-180.png",
+  },
 };
 
 export const viewport: Viewport = {

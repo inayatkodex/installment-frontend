@@ -84,6 +84,64 @@
       margin-bottom: 12px;
     }
   }
+  .sd-password-heading {
+    @include flex-between(16px);
+    align-items: flex-start;
+    flex-wrap: wrap;
+    h2 {
+      margin-bottom: 6px;
+    }
+    p,
+    .sd-password-hint {
+      color: $muted;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+  }
+  .sd-password-form {
+    @include flex-wrapper(14px);
+    margin-top: 16px;
+    max-width: 560px;
+  }
+  .sd-password-hint {
+    color: $muted;
+    font-size: 14px;
+    b {
+      color: $ink;
+    }
+  }
+  .sd-password-actions {
+    @include flex(10px);
+    justify-content: flex-end;
+  }
+  .sd-password-button,
+  .sd-password-cancel {
+    @include flex-center();
+    gap: 7px;
+    min-height: 40px;
+    border-radius: 9px;
+    padding: 0 14px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+  .sd-password-button {
+    border: 1px solid $primary;
+    background: $primary;
+    color: $white;
+    &:hover:not(:disabled) {
+      background: $primary-dark;
+    }
+  }
+  .sd-password-cancel {
+    border: 1px solid $border;
+    background: $white;
+    color: $text;
+  }
   .sd-row {
     @include flex-between(16px);
     padding: 11px 0;

@@ -26,18 +26,67 @@
     max-width: 100%;
     flex: none;
   }
-  .shop-navbar-menu-trigger {
-    width: 44px;
-    height: 44px;
+  .shop-navbar-actions {
+    @include flex(8px);
+  }
+  .shop-navbar-account-trigger {
+    @include flex-center();
+    gap: 10px;
+    min-width: 0;
+    max-width: 260px;
+    min-height: 48px;
+    padding: 0 10px;
+    border: 1px solid transparent;
     border-radius: 12px;
+    background: transparent;
+    color: $text;
+    cursor: pointer;
+    &:hover,
+    &[aria-expanded="true"] {
+      background: $bg;
+    }
+  }
+  .shop-navbar-profile-photo {
+    width: 34px;
+    height: 34px;
+    flex: none;
+    border: 1px solid $border;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .shop-navbar-profile-fallback {
+    @include flex-center();
+    width: 34px;
+    height: 34px;
+    flex: none;
+    border: 1px solid $border;
+    border-radius: 50%;
+    background: $primary-soft;
+    color: $primary;
+  }
+  .shop-navbar-owner-name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .shop-navbar-chevron {
+    flex: none;
+    color: $muted;
   }
 }
 
 @include mobile() {
   .shop-navbar {
-    .shop-navbar-menu-trigger {
-      width: 42px;
-      height: 42px;
+    .shop-navbar-account-trigger {
+      gap: 7px;
+      min-height: 42px;
+      padding: 0 4px;
+    }
+    .shop-navbar-owner-name {
+      max-width: 100px;
+      font-size: 13px;
     }
   }
 }

@@ -28,6 +28,7 @@
   .sp-heading {
     @include flex(14px);
     align-items: center;
+    flex-wrap: wrap;
     padding: 20px;
     border-bottom: 1px solid $line;
   }
@@ -43,6 +44,63 @@
     background: $primary-soft;
     color: $primary;
   }
+  .sp-photo-edit-button,
+  .sp-photo-file-label,
+  .sp-photo-save,
+  .sp-photo-cancel {
+    @include flex-center();
+    gap: 7px;
+    min-height: 38px;
+    padding: 0 12px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .sp-photo-edit-button,
+  .sp-photo-file-label {
+    border: 1px solid $primary-border;
+    background: $primary-soft;
+    color: $primary-dark;
+  }
+  .sp-photo-form {
+    display: grid;
+    gap: 10px;
+    padding: 16px 20px;
+    border-bottom: 1px solid $line;
+    input[type="file"] {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      clip-path: inset(50%);
+    }
+    input[type="file"]:focus-visible + .sp-photo-file-label {
+      outline: 2px solid $primary;
+      outline-offset: 2px;
+    }
+  }
+  .sp-photo-help {
+    color: $muted;
+    font-size: 13px;
+  }
+  .sp-photo-save,
+  .sp-photo-cancel {
+    border: 1px solid $border;
+    background: $white;
+    color: $text;
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+  .sp-photo-save {
+    border-color: $primary;
+    background: $primary;
+    color: $white;
+  }
   .sp-shop-name {
     flex: 1;
     min-width: 0;
@@ -56,6 +114,11 @@
       color: $muted;
       font-size: 13px;
     }
+  }
+  .sp-heading-actions {
+    @include flex-wrapper(8px);
+    align-items: flex-end;
+    flex: none;
   }
   .sp-owner {
     @include flex(12px);
@@ -113,6 +176,73 @@
     padding: 24px 0;
     color: $danger;
   }
+  .sp-edit-form {
+    display: grid;
+    gap: 12px;
+    padding: 20px;
+  }
+  .sp-card-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 14px 20px;
+    border-top: 1px solid $line;
+  }
+  .sp-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .sp-note {
+    color: $muted;
+    font-size: 13px;
+  }
+  .sp-password-example {
+    width: fit-content;
+    margin-top: -6px;
+    padding: 6px 10px;
+    border: 1px solid $primary-border;
+    border-radius: 8px;
+    background: $primary-soft;
+    color: $primary-dark;
+    font-size: 13px;
+    strong {
+      letter-spacing: 0.02em;
+    }
+  }
+  .sp-form-error {
+    color: $danger;
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .sp-password {
+    max-width: 760px;
+    margin-top: 16px;
+    padding: 20px;
+    border: 1px solid $line;
+    border-radius: 18px;
+    background: $white;
+    box-shadow: 0 3px 14px rgba(18, 48, 84, 0.045);
+  }
+  .sp-password-heading {
+    @include flex-between(16px);
+    gap: 16px;
+    h2 {
+      font-size: 18px;
+    }
+    p {
+      margin-top: 4px;
+      color: $muted;
+      font-size: 13px;
+    }
+  }
+  .sp-password-form {
+    display: grid;
+    gap: 12px;
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid $line;
+  }
 }
 
 @include mobile() {
@@ -120,6 +250,9 @@
     .sp-heading {
       gap: 9px;
       padding: 16px 12px;
+    }
+    .sp-photo-form {
+      padding: 14px 12px;
     }
     .sp-photo {
       width: 46px;
@@ -145,6 +278,27 @@
       dt,
       dd {
         font-size: 13px;
+      }
+    }
+    .sp-edit-form {
+      padding: 16px 12px;
+    }
+    .sp-card-actions {
+      padding: 12px;
+    }
+    .sp-password {
+      padding: 16px 12px;
+    }
+    .sp-password-heading {
+      align-items: flex-start;
+      flex-direction: column;
+      > button {
+        width: 100%;
+      }
+    }
+    .sp-actions {
+      > button {
+        flex: 1;
       }
     }
   }

@@ -8,6 +8,8 @@ const API_URLS = {
   },
   SHOP: {
     PROFILE: "api/shop/profile",
+    UPDATE_PROFILE: "api/shop/profile",
+    CHANGE_PASSWORD: "api/shop/profile/password",
     DASHBOARD: "api/shop/dashboard",
     COLLECTION_TODAY: "api/shop/collection/today",
     RECEIVE_PAYMENT: "api/shop/payments/receive",
@@ -36,6 +38,7 @@ const API_URLS = {
     SHOP_UNDO_DELETE: (id: string) => `api/admin/shops/${id}/undo-delete`,
     SHOP_STATUS: (id: string) => `api/admin/shops/${id}/status`,
     SHOP_FEE: (id: string) => `api/admin/shops/${id}/fee`,
+    SHOP_PASSWORD: (id: string) => `api/admin/shops/${id}/password`,
   },
 };
 

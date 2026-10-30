@@ -3,7 +3,7 @@ import API_URLS from "@/store/ApiServices/apiUrls";
 import { SHOP_USER_KEY, TOKEN_KEY } from "@/store/ApiServices/config";
 import { getErrorMessage } from "@/shared/apiError";
 import { ShopAuthState, ShopLoginPayload, ShopSignupPayload, ShopUser } from "@/types/auth";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 
 const initialState: ShopAuthState = { user: null, access_token: null, loading: false, error: null };
@@ -51,6 +51,28 @@ const shopAuthSlice = createSlice({
       Cookies.remove(TOKEN_KEY, { path: "/" });
       Cookies.remove(SHOP_USER_KEY, { path: "/" });
     },
+    shopProfileUpdated: (
+      state,
+      action: PayloadAction<
+        Partial<Pick<ShopUser, "shopName" | "ownerName" | "profilePic">>
+      >,
+    ) => {
+      if (!state.user || !state.access_token) return;
+      state.user = { ...state.user, ...action.payload };
+      const payload = state.access_token.split(".")[1];
+      const claims = JSON.parse(
+        atob(
+          payload
+            .replace(/-/g, "+")
+            .replace(/_/g, "/")
+            .padEnd(Math.ceil(payload.length / 4) * 4, "="),
+        ),
+      ) as { exp: number };
+      Cookies.set(SHOP_USER_KEY, JSON.stringify(state.user), {
+        expires: new Date(claims.exp * 1000),
+        path: "/",
+      });
+    },
     rehydrateShopFromCookies: (state) => {
       const token = Cookies.get(TOKEN_KEY);
       const user = Cookies.get(SHOP_USER_KEY);
@@ -80,5 +102,9 @@ const shopAuthSlice = createSlice({
   },
 });
 
-export const { shopLogout, rehydrateShopFromCookies } = shopAuthSlice.actions;
+export const {
+  shopLogout,
+  shopProfileUpdated,
+  rehydrateShopFromCookies,
+} = shopAuthSlice.actions;
 export default shopAuthSlice.reducer;

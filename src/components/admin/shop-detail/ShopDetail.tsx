@@ -1,18 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { type FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Maximize2, MoreVertical, User } from "lucide-react";
+import { KeyRound, Maximize2, MoreVertical, User } from "lucide-react";
 import FeeCard from "../fee-card/FeeCard";
 import StatusControl from "../status-control/StatusControl";
 import DropdownMenu from "@/components/common/DropdownMenu/DropdownMenu";
 import ConfirmModal from "@/components/common/modal/confirm-modal/ConfirmModal";
 import PhotoViewer from "@/components/common/PhotoViewer/PhotoViewer";
 import StatusBadge from "@/components/common/StatusBadge/StatusBadge";
+import FormInput from "@/components/common/ui/FormInput";
 import { ROUTES } from "@/constant/appRoutes";
 import { useShopStatusChange } from "@/hooks/useShopStatusChange";
 import {
   deleteAdminShop,
+  resetAdminShopPassword,
   setAdminShopFee,
 } from "@/store/slices/admin/shops/adminShopsSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
@@ -36,6 +38,66 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
   const { ask, dialog } = useShopStatusChange();
   const [photoSrc, setPhotoSrc] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
+
+  const closePasswordForm = () => {
+    setShowPasswordForm(false);
+    setNewPassword("");
+    setConfirmPassword("");
+    setPasswordError("");
+    setConfirmPasswordError("");
+  };
+
+  const resetPassword = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setPasswordError("");
+    setConfirmPasswordError("");
+
+    if (!newPassword) {
+      setPasswordError("Please enter a password.");
+      return;
+    }
+    if (newPassword.length < 6) {
+      setPasswordError("Password must be at least 6 characters long.");
+      return;
+    }
+    if (!/[A-Za-z]/.test(newPassword) || !/\d/.test(newPassword)) {
+      setPasswordError("Password must include at least one letter and one number.");
+      return;
+    }
+    if (new TextEncoder().encode(newPassword).length > 72) {
+      setPasswordError("Password must be no more than 72 bytes.");
+      return;
+    }
+    if (!confirmPassword) {
+      setConfirmPasswordError("Please confirm the new password.");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setConfirmPasswordError("Passwords do not match.");
+      return;
+    }
+
+    try {
+      await dispatch(
+        resetAdminShopPassword({ id: s.id, newPassword }),
+      ).unwrap();
+      closePasswordForm();
+      showToast(
+        `Password updated. ${s.shopName} will be signed out on the next request and can log in with the new password.`,
+        "success",
+      );
+    } catch (e) {
+      showToast(
+        typeof e === "string" ? e : "Failed to reset shop password",
+        "error",
+      );
+    }
+  };
 
   const deleteShop = async () => {
     try {
@@ -141,6 +203,78 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
         </section>
         <FeeCard shop={s} busy={updating} onChange={changeFee} />
       </div>
+
+      <section className="sd-card sd-password-card" aria-label="Shop password">
+        <div className="sd-password-heading">
+          <div>
+            <h2>Shop Password</h2>
+            <p>
+              Set a password for the shopkeeper. Existing shop
+              sessions will be signed out on their next request.
+            </p>
+          </div>
+          {!showPasswordForm && (
+            <button
+              type="button"
+              className="sd-password-button"
+              disabled={updating}
+              onClick={() => setShowPasswordForm(true)}
+            >
+              <KeyRound size={16} />
+              Reset password
+            </button>
+          )}
+        </div>
+        {showPasswordForm && (
+          <form className="sd-password-form" onSubmit={resetPassword}>
+            <FormInput
+              label="New password"
+              name="newPassword"
+              type="password"
+              value={newPassword}
+              onChange={(event) => {
+                setNewPassword(event.target.value);
+                setPasswordError("");
+              }}
+              placeholder="At least 6 characters"
+              autoComplete="new-password"
+              maxLength={72}
+              error={passwordError}
+            />
+            <FormInput
+              label="Confirm new password"
+              name="confirmPassword"
+              type="password"
+              value={confirmPassword}
+              onChange={(event) => {
+                setConfirmPassword(event.target.value);
+                setConfirmPasswordError("");
+              }}
+              placeholder="Re-enter password"
+              autoComplete="new-password"
+              maxLength={72}
+              error={confirmPasswordError}
+            />
+            <div className="sd-password-actions">
+              <button
+                type="button"
+                className="sd-password-cancel"
+                disabled={updating}
+                onClick={closePasswordForm}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                className="sd-password-button"
+                disabled={updating}
+              >
+                {updating ? "Updating…" : "Set new password"}
+              </button>
+            </div>
+          </form>
+        )}
+      </section>
 
       <section className="sd-card" aria-label="Owner Profile Picture">
         <h2>Owner Profile Picture</h2>

@@ -27,6 +27,7 @@ export interface ShopUser {
   shopName: string;
   ownerName: string;
   mobile: string;
+  profilePic?: string | null;
 }
 
 export interface ShopProfile {
