@@ -25,11 +25,11 @@ const PlanStep = ({ form, errors, update }: StepProps) => {
         inputMode="numeric"
         value={form.down}
         onChange={(e) => update({ down: maskMoney(e.target.value) })}
-        placeholder="0"
+        placeholder="Khali chhor sakte hain"
         error={errors.down}
       />
       <p className="cf-help">
-        Advance na diya ho to 0 likhein, warna di hui raqam likhein.
+        Advance na diya ho to khali chhor dein; yeh 0 samjha jayega.
       </p>
 
       <FormInput

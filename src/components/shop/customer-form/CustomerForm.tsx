@@ -79,8 +79,6 @@ const CustomerForm = () => {
       });
     }
     if (step === 4) {
-      if (!form.down.trim())
-        e.down = "Advance ki raqam likhein; advance na ho to 0 likhein";
       if (toNumber(form.down) > total)
         e.down = "Advance kul qeemat se zyada nahi ho sakta";
       const remaining = total - toNumber(form.down);

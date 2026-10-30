@@ -2,12 +2,14 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Plus, Users } from "lucide-react";
+import { MoreVertical, Plus, Users } from "lucide-react";
 import CustomerCard from "@/components/shop/customer-card/CustomerCard";
 import EmptyState from "@/components/common/EmptyState/EmptyState";
 import FilterChips from "@/components/common/FilterChips/FilterChips";
 import Loader from "@/components/common/Loader/Loader";
 import CommonBtn from "@/components/common/CommonButton/Button";
+import DropdownMenu from "@/components/common/DropdownMenu/DropdownMenu";
+import Modal from "@/components/common/modal/Modal";
 import SearchBar from "@/components/common/SearchBar/SearchBar";
 import { ROUTES } from "@/constant/appRoutes";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -32,14 +34,21 @@ const FILTERS = [
 
 const CustomersPage = () => {
   const dispatch = useAppDispatch();
-  const { list, loading, error, pendingDeletion } = useAppSelector(
-    (s) => s.shopCustomers,
-  );
+  const {
+    list,
+    loading,
+    error,
+    pendingDeletion,
+    pendingDeletionLoading,
+    pendingDeletionError,
+  } = useAppSelector((s) => s.shopCustomers);
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("all");
   const search = useDebounce(q, 300);
   const [toDelete, setToDelete] = useState<CustomerListItem | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [showDeletedCustomers, setShowDeletedCustomers] = useState(false);
+  const [undoingId, setUndoingId] = useState<string | null>(null);
 
   const confirmDelete = async () => {
     if (!toDelete) return;
@@ -70,6 +79,7 @@ const CustomersPage = () => {
   }, [dispatch]);
 
   const undoDeletion = async (id: string, name: string) => {
+    setUndoingId(id);
     try {
       await dispatch(undoDeleteCustomer(id)).unwrap();
       showToast(`${name} wapas aa gaya`, "success");
@@ -80,6 +90,8 @@ const CustomersPage = () => {
         typeof e === "string" ? e : "Customer wapas nahi aa saka",
         "error",
       );
+    } finally {
+      setUndoingId(null);
     }
   };
 
@@ -92,9 +104,23 @@ const CustomersPage = () => {
             کسٹمرز
           </span>
         </h1>
-        <Link href={ROUTES.SHOP.ADD_CUSTOMER} className="cu-add-desktop">
-          <Plus size={20} aria-hidden="true" /> Naya customer
-        </Link>
+        <div className="cu-head-actions">
+          <Link href={ROUTES.SHOP.ADD_CUSTOMER} className="cu-add-desktop">
+            <Plus size={20} aria-hidden="true" /> Naya customer
+          </Link>
+          <DropdownMenu
+            ariaLabel="Customer options"
+            trigger={<MoreVertical size={21} aria-hidden="true" />}
+            triggerClassName="icon-only"
+            items={[
+              {
+                label: "Delete huay customers",
+                hint: String(pendingDeletion.length),
+                onClick: () => setShowDeletedCustomers(true),
+              },
+            ]}
+          />
+        </div>
       </div>
 
       <SearchBar
@@ -110,41 +136,6 @@ const CustomersPage = () => {
           label="Customers filter"
         />
       </div>
-
-      {pendingDeletion.length > 0 && (
-        <section
-          className="cu-recently-deleted"
-          aria-labelledby="cu-recent-title"
-        >
-          <h2 id="cu-recent-title">Delete huay customers</h2>
-          <p>
-            24 ghantay baad data hamesha ke liye delete ho jayega.
-          </p>
-          <ul>
-            {pendingDeletion.map((customer) => (
-              <li key={customer.id}>
-                <div>
-                  <strong>{customer.name}</strong>
-                  <span>{customer.customerCode}</span>
-                  <small>
-                    Delete kiya:{" "}
-                    {new Date(customer.deletionRequestedAt).toLocaleString(
-                      "en-PK",
-                      { timeZone: "Asia/Karachi" },
-                    )}
-                  </small>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => undoDeletion(customer.id, customer.name)}
-                >
-                  Wapas karein
-                </button>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
 
       {error ? (
         <div className="cu-error" role="alert">
@@ -194,6 +185,57 @@ const CustomersPage = () => {
           onConfirm={confirmDelete}
           onCancel={() => setToDelete(null)}
         />
+      )}
+
+      {showDeletedCustomers && (
+        <Modal
+          title="Delete huay customers"
+          onClose={() => setShowDeletedCustomers(false)}
+        >
+          <div className="cu-recently-deleted">
+            <p>24 ghantay ke andar customer wapas la sakte hain.</p>
+            {pendingDeletionLoading ? (
+              <Loader />
+            ) : pendingDeletionError ? (
+              <div className="cu-deleted-error" role="alert">
+                <p>{pendingDeletionError}</p>
+                <CommonBtn
+                  text="Dobara koshish karein"
+                  onClick={() => dispatch(fetchPendingCustomerDeletions())}
+                />
+              </div>
+            ) : pendingDeletion.length === 0 ? (
+              <p>Koi deleted customer nahi hai.</p>
+            ) : (
+              <ul>
+                {pendingDeletion.map((customer) => (
+                  <li key={customer.id}>
+                    <div>
+                      <strong>{customer.name}</strong>
+                      <span>{customer.customerCode}</span>
+                      <small>
+                        Delete kiya:{" "}
+                        {new Date(customer.deletionRequestedAt).toLocaleString(
+                          "en-PK",
+                          { timeZone: "Asia/Karachi" },
+                        )}
+                      </small>
+                    </div>
+                    <button
+                      type="button"
+                      disabled={undoingId === customer.id}
+                      onClick={() =>
+                        void undoDeletion(customer.id, customer.name)
+                      }
+                    >
+                      {undoingId === customer.id ? "Wapas la rahe hain…" : "Wapas karein"}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        </Modal>
       )}
 
       <Link

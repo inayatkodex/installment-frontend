@@ -68,7 +68,7 @@ src/
     (public)/            "/" -> shop login
     (auth)/shop/         login, signup
     (auth)/admin/        signin
-    shop/                dashboard, collection, customers (+[id], add), late, status
+    shop/                dashboard, profile, collection, customers (+[id], add), late, status
     admin/               dashboard, shops (+[id])
   components/
     common/              Button, FormInput, Modal, DropdownMenu, PhotoSourceSheet, PhotoViewer ...

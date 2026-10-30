@@ -29,6 +29,21 @@ export interface ShopUser {
   mobile: string;
 }
 
+export interface ShopProfile {
+  shopCode: string;
+  shopName: string;
+  ownerName: string;
+  mobile: string;
+  email: string | null;
+  cnic: string;
+  city: string;
+  address: string;
+  profilePic: string | null;
+  status: "pending" | "active" | "inactive" | "archived";
+  monthlyFee: number;
+  createdAt: string;
+}
+
 export interface ShopAuthState {
   user: ShopUser | null;
   access_token: string | null;

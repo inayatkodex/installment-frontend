@@ -12,6 +12,7 @@ export const ROUTES = {
     LOGIN: "/shop/login",
     SIGNUP: "/shop/signup",
     DASHBOARD: "/shop/dashboard",
+    PROFILE: "/shop/profile",
     COLLECTION: "/shop/collection",
     CUSTOMERS: "/shop/customers",
     CUSTOMER_DETAIL: (id: string) => `/shop/customers/${id}`,

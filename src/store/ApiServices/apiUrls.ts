@@ -7,6 +7,7 @@ const API_URLS = {
     LOGIN: "api/admin-auth/login",
   },
   SHOP: {
+    PROFILE: "api/shop/profile",
     DASHBOARD: "api/shop/dashboard",
     COLLECTION_TODAY: "api/shop/collection/today",
     RECEIVE_PAYMENT: "api/shop/payments/receive",

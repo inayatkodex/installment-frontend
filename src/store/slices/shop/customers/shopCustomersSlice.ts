@@ -13,13 +13,25 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 interface State {
   list: CustomerListItem[];
   pendingDeletion: PendingCustomerDeletion[];
+  pendingDeletionLoading: boolean;
+  pendingDeletionError: string | null;
   detail: CustomerDetail | null;
   loading: boolean;
   detailLoading: boolean;
   creating: boolean;
   error: string | null;
 }
-const initialState: State = { list: [], pendingDeletion: [], detail: null, loading: false, detailLoading: false, creating: false, error: null };
+const initialState: State = {
+  list: [],
+  pendingDeletion: [],
+  pendingDeletionLoading: false,
+  pendingDeletionError: null,
+  detail: null,
+  loading: false,
+  detailLoading: false,
+  creating: false,
+  error: null,
+};
 
 export const fetchCustomers = createAsyncThunk(
   "shopCustomers/fetchList",
@@ -257,8 +269,18 @@ const shopCustomersSlice = createSlice({
       .addCase(fetchCustomers.pending, (s) => { s.loading = true; s.error = null; })
       .addCase(fetchCustomers.fulfilled, (s, a) => { s.loading = false; s.list = a.payload; })
       .addCase(fetchCustomers.rejected, (s, a) => { s.loading = false; s.error = a.payload as string; })
-      .addCase(fetchPendingCustomerDeletions.fulfilled, (s, a) => { s.pendingDeletion = a.payload; })
-      .addCase(fetchPendingCustomerDeletions.rejected, (s, a) => { s.error = a.payload as string; })
+      .addCase(fetchPendingCustomerDeletions.pending, (s) => {
+        s.pendingDeletionLoading = true;
+        s.pendingDeletionError = null;
+      })
+      .addCase(fetchPendingCustomerDeletions.fulfilled, (s, a) => {
+        s.pendingDeletionLoading = false;
+        s.pendingDeletion = a.payload;
+      })
+      .addCase(fetchPendingCustomerDeletions.rejected, (s, a) => {
+        s.pendingDeletionLoading = false;
+        s.pendingDeletionError = a.payload as string;
+      })
       .addCase(fetchCustomerDetail.pending, (s) => { s.detailLoading = true; s.error = null; })
       .addCase(fetchCustomerDetail.fulfilled, (s, a) => { s.detailLoading = false; s.detail = a.payload; })
       .addCase(fetchCustomerDetail.rejected, (s, a) => { s.detailLoading = false; s.error = a.payload as string; })

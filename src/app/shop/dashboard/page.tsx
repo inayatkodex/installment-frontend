@@ -9,9 +9,11 @@ import ReceivePaymentForm, {
 } from "@/components/shop/receive-payment-form/ReceivePaymentForm";
 import StatCard from "@/components/common/StatCard/StatCard";
 import Loader from "@/components/common/Loader/Loader";
+import CommonBtn from "@/components/common/CommonButton/Button";
 import { ROUTES } from "@/constant/appRoutes";
 import { fetchShopDashboard } from "@/store/slices/shop/dashboard/shopDashboardSlice";
 import { fetchTodayCollection } from "@/store/slices/shop/collection/shopCollectionSlice";
+import { fetchCustomers } from "@/store/slices/shop/customers/shopCustomersSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { formatRs } from "@/shared/formatUtils";
 import { CollectionItem } from "@/types/payment";
@@ -21,7 +23,13 @@ const ShopDashboardPage = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((s) => s.shopAuth.user);
   const { data: sum, loading } = useAppSelector((s) => s.shopDashboard);
-  const items = useAppSelector((s) => s.shopCollection.items);
+  const {
+    items,
+    loading: collectionLoading,
+    error: collectionError,
+  } = useAppSelector((s) => s.shopCollection);
+  const { list: customers, loading: customersLoading, error: customersError } =
+    useAppSelector((s) => s.shopCustomers);
   const [target, setTarget] = useState<ReceiveTarget | null>(null);
 
   const refresh = useCallback(() => {
@@ -31,6 +39,9 @@ const ShopDashboardPage = () => {
   useEffect(() => {
     refresh();
   }, [refresh]);
+  useEffect(() => {
+    dispatch(fetchCustomers({ status: "all" }));
+  }, [dispatch]);
 
   const pending = items.filter((i) => i.status !== "paid");
 
@@ -114,7 +125,38 @@ const ShopDashboardPage = () => {
             </div>
             <Link href={ROUTES.SHOP.COLLECTION}>See all</Link>
           </div>
-          {pending.length === 0 ? (
+          {customersLoading ? (
+            <Loader />
+          ) : customersError ? (
+            <div role="alert">
+              <p>{customersError}</p>
+              <CommonBtn
+                text="Dobara koshish karein"
+                onClick={() => dispatch(fetchCustomers({ status: "all" }))}
+              />
+            </div>
+          ) : customers.length === 0 ? (
+            <div className="sd-empty">
+              <p>Abhi koi customer add nahi kiya.</p>
+              <Link href={ROUTES.SHOP.ADD_CUSTOMER} className="sd-add">
+                <Plus size={19} aria-hidden="true" /> Pehla customer add karein
+              </Link>
+            </div>
+          ) : collectionLoading ? (
+            <Loader />
+          ) : collectionError ? (
+            <div role="alert">
+              <p>{collectionError}</p>
+              <CommonBtn
+                text="Dobara koshish karein"
+                onClick={() => dispatch(fetchTodayCollection())}
+              />
+            </div>
+          ) : items.length === 0 ? (
+            <p className="sd-no-collection">
+              Aaj kisi customer ki qist wasool nahi ha.
+            </p>
+          ) : pending.length === 0 ? (
             <p className="sd-all-done">
               Aaj ki saari wasooli ho gayi. Shabash!
             </p>

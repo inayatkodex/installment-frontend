@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { LogOut } from "lucide-react";
+import { MoreVertical } from "lucide-react";
 import { useAppDispatch } from "@/store/store";
 import { shopLogout } from "@/store/slices/shop/auth/shopAuthSlice";
 import { ROUTES } from "@/constant/appRoutes";
 import BrandLogo from "@/components/common/BrandLogo";
 import ConfirmModal from "@/components/common/modal/confirm-modal/ConfirmModal";
+import DropdownMenu from "@/components/common/DropdownMenu/DropdownMenu";
 import "./navbar.scss";
 
 const Navbar = () => {
@@ -25,15 +26,22 @@ const Navbar = () => {
       <div className="shop-navbar-brand">
         <BrandLogo size={34} />
       </div>
-      <button
-        type="button"
-        className="shop-navbar-logout"
-        onClick={() => setConfirm(true)}
-        aria-label="Logout"
-      >
-        <LogOut size={20} />
-        <span>Logout</span>
-      </button>
+      <DropdownMenu
+        ariaLabel="Shop account menu"
+        trigger={<MoreVertical size={22} aria-hidden="true" />}
+        triggerClassName="icon-only shop-navbar-menu-trigger"
+        items={[
+          {
+            label: "Profile",
+            onClick: () => router.push(ROUTES.SHOP.PROFILE),
+          },
+          {
+            label: "Logout",
+            tone: "danger",
+            onClick: () => setConfirm(true),
+          },
+        ]}
+      />
 
       {confirm && (
         <ConfirmModal

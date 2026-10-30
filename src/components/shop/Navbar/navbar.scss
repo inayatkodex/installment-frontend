@@ -26,20 +26,18 @@
     max-width: 100%;
     flex: none;
   }
-  .shop-navbar-logout {
-    @include flex(6px);
-    min-height: 42px;
-    padding: 0 13px;
-    border: 1px solid $primary-border;
-    background: $white;
-    color: $primary;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 700;
-    flex: none;
-    transition: background 0.15s ease;
-    &:hover {
-      background: $primary-soft;
+  .shop-navbar-menu-trigger {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+}
+
+@include mobile() {
+  .shop-navbar {
+    .shop-navbar-menu-trigger {
+      width: 42px;
+      height: 42px;
     }
   }
 }
@@ -51,12 +49,6 @@
     padding-left: 16px;
     .shop-navbar-brand > img {
       height: 30px;
-    }
-    .shop-navbar-logout {
-      gap: 5px;
-      min-height: 40px;
-      padding: 0 10px;
-      font-size: 13px;
     }
   }
 }

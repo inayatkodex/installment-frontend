@@ -4,8 +4,20 @@ import { getErrorMessage } from "@/shared/apiError";
 import { CollectionItem, ReceivedItem, ReceivePaymentPayload } from "@/types/payment";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-interface State { items: CollectionItem[]; received: ReceivedItem[]; loading: boolean; error: string | null; receiving: boolean }
-const initialState: State = { items: [], received: [], loading: false, error: null, receiving: false };
+interface State {
+  items: CollectionItem[];
+  received: ReceivedItem[];
+  loading: boolean;
+  error: string | null;
+  receiving: boolean;
+}
+const initialState: State = {
+  items: [],
+  received: [],
+  loading: false,
+  error: null,
+  receiving: false,
+};
 
 export const fetchTodayCollection = createAsyncThunk("shopCollection/fetch", async (_, { rejectWithValue }) => {
   try {

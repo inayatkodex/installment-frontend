@@ -4,6 +4,10 @@
 .customers-page {
   .cu-head {
     @include flex-between();
+    .cu-head-actions {
+      @include flex(8px);
+      flex: none;
+    }
     .cu-add-desktop {
       display: none;
     }
@@ -63,8 +67,16 @@
         background: $primary;
         color: $white;
         font-weight: 700;
+        &:disabled {
+          opacity: 0.6;
+        }
       }
     }
+  }
+  .cu-deleted-error {
+    @include flex-wrapper(12px);
+    align-items: center;
+    color: $danger;
   }
   .cu-list {
     @include flex-wrapper(10px);
