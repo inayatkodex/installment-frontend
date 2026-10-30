@@ -38,17 +38,6 @@ Zip mein `package.json` pehle se in sab ke saath hai, to sirf `npm install` kaaf
 - Sass (.sass only) / SCSS IntelliSense
 - ES7+ React/Redux snippets
 
-## Demo mode (backend ke baghair)
-
-`.env.local` mein `NEXT_PUBLIC_USE_MOCK=true` ho to data `src/store/ApiServices/mockData.ts` se aata hai.
-
-| Portal | Login |
-|---|---|
-| Shopkeeper (active) | `0300-1234567` + koi bhi password |
-| Shopkeeper (pending) | `0302-8899001` |
-| Shopkeeper (archived) | `0303-1239874` |
-| Admin | `admin@installmentpro.pk` / `Admin@123` |
-
 ## Admin ka flow (naya)
 
 Admin ke paas sirf do cheezein: **shops ka status** aur **monthly fee**.
@@ -56,7 +45,7 @@ Admin ke paas sirf do cheezein: **shops ka status** aur **monthly fee**.
 - Dashboard: Active / Pending / Inactive / Archived ki ginti, is mahine ki fee (wasool, baaki, kitni shops ne di).
 - Shops: search, status filter, fee filter (Paid / Unpaid), har row mein "Status badlein" menu.
 - Shop detail: status kisi bhi stage se kisi bhi status par (Pending, Active, Inactive, Archived), pehle confirm box. Mahine ki fee "Paid / Unpaid mark karein".
-- Fee: abhi `Rs. 2,500` har Active dukaan ke liye (`mockData.ts` mein `FEE`).
+- Fee: `Rs. 2,500` har Active dukaan ke liye.
 
 ## Shopkeeper ke naye kaam
 
@@ -65,12 +54,11 @@ Admin ke paas sirf do cheezein: **shops ka status** aur **monthly fee**.
 - **Item ki photo:** optional, ek item par ek. Detail page par thumbnail, dabane par poori screen.
 - **Phone se photo:** Camera aur Gallery dono ka option. Gallery wala normal phone picker kholta hai, is liye alag permission nahi chahiye. Photo upload se pehle chhoti (compress) ho jati hai.
 
-## NestJS API se jorna
+## NestJS API configuration
 
-1. `.env.local`: `NEXT_PUBLIC_USE_MOCK=false` aur `NEXT_PUBLIC_BASE_URL=http://localhost:3001`
-2. API ke URLs `src/store/ApiServices/apiUrls.ts` mein hain. Har response: `{ status: "success", data: ... }`
-3. `mockData.ts` aur `mockAdapter.ts` delete kar dein (aur `api.ts` se `adapter` wali line).
-4. Backend ke liye: customer delete **soft delete** ho, payment undo **reverse** ho (delete nahi), photos private storage mein.
+Set `.env.local` to `NEXT_PUBLIC_BASE_URL=http://localhost:3001`. The frontend requests live backend APIs directly; shop and admin data is not supplied by demo/mock records.
+
+API URLs are in `src/store/ApiServices/apiUrls.ts`. Responses use `{ status: "success", data: ... }`.
 
 ## Folder structure
 

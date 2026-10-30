@@ -6,7 +6,6 @@ import { BarChart3, ShieldCheck, Store } from "lucide-react";
 import CommonBtn from "@/components/common/CommonButton/Button";
 import FormInput from "@/components/common/ui/FormInput";
 import { ROUTES } from "@/constant/appRoutes";
-import { USE_MOCK } from "@/store/ApiServices/config";
 import { adminLogin } from "@/store/slices/admin/auth/adminAuthSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { showToast } from "@/shared/toastUtils";
@@ -130,9 +129,6 @@ const AdminSignInPage = () => {
             className="full-btn"
             disabled={loading}
           />
-          {USE_MOCK && (
-            <p className="as-demo">Demo: admin@installmentpro.pk · Admin@123</p>
-          )}
         </form>
       </section>
     </main>

@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import CommonBtn from "@/components/common/CommonButton/Button";
 import FormInput from "@/components/common/ui/FormInput";
 import { ROUTES } from "@/constant/appRoutes";
-import { USE_MOCK } from "@/store/ApiServices/config";
 import { shopLogin } from "@/store/slices/shop/auth/shopAuthSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { isValidMobile, maskMobile } from "@/shared/formatUtils";
@@ -92,11 +91,6 @@ const ShopLoginPage = () => {
           </span>
         </Link>
 
-        {USE_MOCK && (
-          <p className="shop-login-demo">
-            Demo: 0300-1234567 · koi bhi password
-          </p>
-        )}
       </form>
     </main>
   );

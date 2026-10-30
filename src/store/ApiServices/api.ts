@@ -1,13 +1,17 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { ADMIN_TOKEN_KEY, ADMIN_USER_KEY, BASE_URL, SHOP_USER_KEY, TOKEN_KEY, USE_MOCK } from "./config";
-import { mockAdapter } from "./mockAdapter";
+import {
+  ADMIN_TOKEN_KEY,
+  ADMIN_USER_KEY,
+  BASE_URL,
+  SHOP_USER_KEY,
+  TOKEN_KEY,
+} from "./config";
 
 const api = axios.create({
   baseURL: BASE_URL,
   headers: { "Content-Type": "application/json" },
   withCredentials: true,
-  ...(USE_MOCK ? { adapter: mockAdapter } : {}),
 });
 
 api.interceptors.request.use((config) => {
