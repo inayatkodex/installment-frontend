@@ -28,6 +28,8 @@ import {
   updateCustomerPurchasePayment,
   uploadCustomerDocument,
 } from "@/store/slices/shop/customers/shopCustomersSlice";
+import { fetchTodayCollection } from "@/store/slices/shop/collection/shopCollectionSlice";
+import { fetchLate } from "@/store/slices/shop/late/shopLateSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import "./customer-edit.scss";
 
@@ -265,6 +267,10 @@ const CustomerEditPage = () => {
       return;
     }
 
+    const hasScheduleChanges =
+      formData.firstDueDate !== detail.firstDueDate ||
+      hasPurchaseDateChanges;
+
     setSaving(true);
     try {
       if (hasInfoChanges) {
@@ -354,7 +360,24 @@ const CustomerEditPage = () => {
         }
       }
 
-      showToast("Customer save ho gaya", "success");
+      let todayCollectionRefreshFailed = false;
+      if (hasScheduleChanges) {
+        try {
+          await Promise.all([
+            dispatch(fetchTodayCollection()).unwrap(),
+            dispatch(fetchLate()).unwrap(),
+          ]);
+        } catch {
+          todayCollectionRefreshFailed = true;
+        }
+      }
+
+      showToast(
+        todayCollectionRefreshFailed
+          ? "Plan update ho gaya, lekin Aaj/Late count refresh nahi ho saka"
+          : "Customer save ho gaya",
+        todayCollectionRefreshFailed ? "error" : "success",
+      );
       router.push(ROUTES.SHOP.CUSTOMER_DETAIL(id));
     } catch (e) {
       showToast(

@@ -57,6 +57,19 @@ export interface StatusReport {
   paidInstallments: number;
   pendingInstallments: number;
   overdueCustomers: number;
+  customers: StatusReportCustomer[];
+}
+
+export interface StatusReportCustomer {
+  customerId: string;
+  name: string;
+  phone: string;
+  expected: number;
+  received: number;
+  remaining: number;
+  overdue: number;
+  paidInstallments: number;
+  pendingInstallments: number;
 }
 
 export interface ReceivedItem {

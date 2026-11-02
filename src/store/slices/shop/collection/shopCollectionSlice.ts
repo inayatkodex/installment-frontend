@@ -6,6 +6,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface State {
   items: CollectionItem[];
+  hasFetchedTodayCollection: boolean;
   received: ReceivedItem[];
   loading: boolean;
   error: string | null;
@@ -13,6 +14,7 @@ interface State {
 }
 const initialState: State = {
   items: [],
+  hasFetchedTodayCollection: false,
   received: [],
   loading: false,
   error: null,
@@ -67,7 +69,11 @@ const shopCollectionSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchTodayCollection.pending, (s) => { s.loading = true; s.error = null; })
-      .addCase(fetchTodayCollection.fulfilled, (s, a) => { s.loading = false; s.items = a.payload; })
+      .addCase(fetchTodayCollection.fulfilled, (s, a) => {
+        s.loading = false;
+        s.items = a.payload;
+        s.hasFetchedTodayCollection = true;
+      })
       .addCase(fetchTodayCollection.rejected, (s, a) => { s.loading = false; s.error = a.payload as string; })
       .addCase(fetchTodayReceived.fulfilled, (s, a) => { s.received = a.payload; })
       .addCase(receivePayment.pending, (s) => { s.receiving = true; })

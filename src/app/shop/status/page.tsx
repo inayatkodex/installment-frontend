@@ -6,15 +6,17 @@ import CommonBtn from "@/components/common/CommonButton/Button";
 import Loader from "@/components/common/Loader/Loader";
 import MonthPicker from "@/components/common/MonthPicker/MonthPicker";
 import StatusSummary from "@/components/shop/status-summary/StatusSummary";
+import { showToast } from "@/shared/toastUtils";
+import { downloadMonthlyReportPdf } from "@/shared/monthlyReportPdf";
 import { fetchStatus } from "@/store/slices/shop/status/shopStatusSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { downloadCsv } from "@/shared/downloadUtils";
 import { currentMonthKey } from "@/shared/planUtils";
 import "./status.scss";
 
 const StatusPage = () => {
   const dispatch = useAppDispatch();
   const { data, loading, error } = useAppSelector((s) => s.shopStatus);
+  const shop = useAppSelector((s) => s.shopAuth.user);
   const max = currentMonthKey();
   const [month, setMonth] = useState(max);
 
@@ -22,20 +24,13 @@ const StatusPage = () => {
     dispatch(fetchStatus(month));
   }, [dispatch, month]);
 
-  const download = () => {
+  const downloadPdf = async () => {
     if (!data) return;
-    downloadCsv(`status-${data.month}.csv`, [
-      ["Mahina", data.label],
-      ["Expected", data.expected],
-      ["Received", data.received],
-      ["Remaining", data.remaining],
-      ["Late amount", data.overdue],
-      ["Wasooli %", data.collectedPercent],
-      ["Total customers", data.totalCustomers],
-      ["Paid qistein", data.paidInstallments],
-      ["Baaki qistein", data.pendingInstallments],
-      ["Late customers", data.overdueCustomers],
-    ]);
+    try {
+      await downloadMonthlyReportPdf(data, shop?.shopName || "Dukaan");
+    } catch {
+      showToast("PDF download nahi ho saki. Dobara koshish karein.", "error");
+    }
   };
 
   return (
@@ -67,10 +62,10 @@ const StatusPage = () => {
       {data && !loading && (
         <div className="st-download">
           <CommonBtn
-            text="Download Report"
+            text="Asaan report PDF download karein"
             icon={<Download size={20} />}
             className="full-btn"
-            onClick={download}
+            onClick={downloadPdf}
           />
         </div>
       )}

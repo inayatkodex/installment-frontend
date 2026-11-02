@@ -6,10 +6,16 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface State {
   items: LateItem[];
+  hasFetchedLate: boolean;
   loading: boolean;
   error: string | null;
 }
-const initialState: State = { items: [], loading: false, error: null };
+const initialState: State = {
+  items: [],
+  hasFetchedLate: false,
+  loading: false,
+  error: null,
+};
 
 export const fetchLate = createAsyncThunk(
   "shopLate/fetch",
@@ -38,6 +44,7 @@ const shopLateSlice = createSlice({
       .addCase(fetchLate.fulfilled, (s, a) => {
         s.loading = false;
         s.items = a.payload;
+        s.hasFetchedLate = true;
       })
       .addCase(fetchLate.rejected, (s, a) => {
         s.loading = false;

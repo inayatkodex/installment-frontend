@@ -11,7 +11,9 @@ import {
   Users,
 } from "lucide-react";
 import { ROUTES } from "@/constant/appRoutes";
+import { fetchTodayCollection } from "@/store/slices/shop/collection/shopCollectionSlice";
 import { fetchShopDashboard } from "@/store/slices/shop/dashboard/shopDashboardSlice";
+import { fetchLate } from "@/store/slices/shop/late/shopLateSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import "./sidebar.scss";
 
@@ -61,6 +63,12 @@ const SideBar = () => {
   const { data: dashboard, loading } = useAppSelector(
     (state) => state.shopDashboard,
   );
+  const { items: todayItems, hasFetchedTodayCollection } = useAppSelector(
+    (state) => state.shopCollection,
+  );
+  const { items: lateItems, hasFetchedLate } = useAppSelector(
+    (state) => state.shopLate,
+  );
   useEffect(() => {
     if (!dashboard && !loading && !requestedDashboard.current) {
       requestedDashboard.current = true;
@@ -69,8 +77,14 @@ const SideBar = () => {
   }, [dashboard, dispatch, loading]);
 
   const countFor = (href: string) => {
-    if (href === ROUTES.SHOP.COLLECTION) return dashboard?.dueCount ?? 0;
-    if (href === ROUTES.SHOP.LATE) return dashboard?.lateCount ?? 0;
+    if (href === ROUTES.SHOP.COLLECTION) {
+      return hasFetchedTodayCollection
+        ? todayItems.filter((item) => item.status !== "paid").length
+        : dashboard?.dueCount ?? 0;
+    }
+    if (href === ROUTES.SHOP.LATE) {
+      return hasFetchedLate ? lateItems.length : dashboard?.lateCount ?? 0;
+    }
     return 0;
   };
   const badge = (count: number, href: string) =>
