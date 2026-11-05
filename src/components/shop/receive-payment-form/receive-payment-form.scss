@@ -58,6 +58,42 @@
   .common-btn {
     width: 100%;
   }
+  .rp-allocation {
+    width: 100%;
+    padding: 12px;
+    border-radius: 12px;
+    background: $primary-soft;
+    text-align: left;
+    strong {
+      font-size: 14px;
+    }
+    ul {
+      @include flex-wrapper(6px);
+      margin-top: 8px;
+      padding-left: 18px;
+      font-size: 13px;
+      color: $text;
+    }
+  }
+  .rp-late-result {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: $danger-soft;
+    color: $danger;
+    font-weight: 700;
+    font-size: 14px;
+  }
+  .rp-target-remaining {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #f5d88a;
+    border-radius: 10px;
+    background: $warning-soft;
+    color: $warning;
+    font-size: 14px;
+    line-height: 1.4;
+  }
 }
 .rp-tick {
   width: 76px;

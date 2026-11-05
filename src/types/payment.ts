@@ -11,6 +11,21 @@ export interface CollectionItem {
   expected: number;
   paid: number;
   status: InstallmentStatus;
+  overdueInstallmentCount: number;
+}
+
+export interface PaymentAllocation {
+  planLabel?: string;
+  installmentNo: number;
+  dueDate: string;
+  amount: number;
+}
+
+export interface PaymentReceipt {
+  ok: true;
+  allocations: PaymentAllocation[];
+  remainingLateCount: number;
+  remainingLateAmount: number;
 }
 
 export interface ReceivePaymentPayload {

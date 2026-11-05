@@ -45,6 +45,11 @@
     font-size: 13px;
     color: $muted;
   }
+  .cr-overdue {
+    font-size: 12px;
+    font-weight: 700;
+    color: $danger;
+  }
   .cr-end {
     @include flex-wrapper(6px);
     align-items: flex-end;

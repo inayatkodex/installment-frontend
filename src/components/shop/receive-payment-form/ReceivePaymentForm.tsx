@@ -14,6 +14,7 @@ import {
   toNumber,
 } from "@/shared/formatUtils";
 import { showToast } from "@/shared/toastUtils";
+import type { PaymentReceipt } from "@/types/payment";
 import "./receive-payment-form.scss";
 
 export interface ReceiveTarget {
@@ -41,6 +42,15 @@ const ReceivePaymentForm = ({ target, onClose, onDone }: Props) => {
   const [note, setNote] = useState("");
   const [error, setError] = useState<string>();
   const [done, setDone] = useState(false);
+  const [receipt, setReceipt] = useState<PaymentReceipt>();
+  const allocatedToTargetInstallment =
+    receipt?.allocations
+      .filter((allocation) => allocation.dueDate === target.dueDate)
+      .reduce((sum, allocation) => sum + allocation.amount, 0) ?? 0;
+  const targetInstallmentRemaining = Math.max(
+    0,
+    target.amount - allocatedToTargetInstallment,
+  );
 
   const confirm = async () => {
     const value = toNumber(amount);
@@ -50,7 +60,7 @@ const ReceivePaymentForm = ({ target, onClose, onDone }: Props) => {
     }
     setError(undefined);
     try {
-      await dispatch(
+      const savedReceipt = await dispatch(
         receivePayment({
           customerId: target.customerId,
           installmentNo: target.installmentNo,
@@ -59,6 +69,7 @@ const ReceivePaymentForm = ({ target, onClose, onDone }: Props) => {
           idempotencyKey,
         }),
       ).unwrap();
+      setReceipt(savedReceipt);
       setDone(true);
       onDone();
     } catch (e) {
@@ -79,6 +90,41 @@ const ReceivePaymentForm = ({ target, onClose, onDone }: Props) => {
             <strong>{formatRs(toNumber(amount))}</strong> {target.name} se mil
             gaye.
           </p>
+          {receipt && receipt.allocations.length > 0 && (
+            <div className="rp-allocation" aria-live="polite">
+              <strong>Raqam in qiston mein adjust hui:</strong>
+              <ul>
+                {receipt.allocations.map((allocation, index) => (
+                  <li
+                    key={`${allocation.planLabel}-${allocation.installmentNo}-${allocation.dueDate}-${index}`}
+                  >
+                    {allocation.planLabel
+                      ? `${allocation.planLabel} · `
+                      : ""}
+                    Qist {allocation.installmentNo} (
+                    {formatDate(allocation.dueDate)}):{" "}
+                    <b>{formatRs(allocation.amount)}</b>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {receipt && (
+            <p className="rp-late-result" aria-live="polite">
+              {receipt.remainingLateCount > 0
+                ? `Ab ${receipt.remainingLateCount} purani ${
+                    receipt.remainingLateCount === 1 ? "qist" : "qistein"
+                  } baqi hain (${formatRs(receipt.remainingLateAmount)}).`
+                : "Ab koi purani late qist baqi nahi."}
+            </p>
+          )}
+          {receipt && target.dueDate && targetInstallmentRemaining > 0 && (
+            <p className="rp-target-remaining">
+              {formatDate(target.dueDate)} wali qist abhi baqi hai:{" "}
+              <b>{formatRs(targetInstallmentRemaining)}</b>. Raqam pehle purani
+              qiston mein adjust hui.
+            </p>
+          )}
           <CommonBtn text="Theek hai" className="full-btn" onClick={onClose} />
         </div>
       </Modal>

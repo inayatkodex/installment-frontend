@@ -86,7 +86,9 @@ const InstallmentItem = ({
             ? "next"
             : "pending";
   const dot =
-    row.status === "paid"
+    row.status === "paid" && row.daysLate > 0
+      ? "late-paid"
+      : row.status === "paid"
       ? "ok"
       : row.status === "pending"
         ? isNext
@@ -115,7 +117,14 @@ const InstallmentItem = ({
           {row.status === "pending" && !isNext ? (
             <span className="cp-due">Due {formatDate(row.dueDate)}</span>
           ) : (
-            <StatusBadge status={kind} />
+            <StatusBadge
+              status={kind}
+              label={
+                row.status === "paid" && row.daysLate > 0
+                  ? "Paid late"
+                  : undefined
+              }
+            />
           )}
         </div>
         {row.status === "partial" && (
@@ -156,8 +165,9 @@ const InstallmentItem = ({
         </div>
         {row.daysLate > 0 && (
           <p className="cp-late-line">
-            {row.status === "partial" ? `${formatRs(left)} baaki · ` : ""}
-            {row.daysLate} din late
+            {row.status === "paid"
+              ? `${row.daysLate} din late wasool hui`
+              : `${row.status === "partial" ? `${formatRs(left)} baaki · ` : ""}${row.daysLate} din late`}
           </p>
         )}
       </div>
@@ -507,7 +517,7 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
             {c.plans.map((plan) => (
               <article className="cp-plan-card" key={plan.id}>
                 <div className="cp-plan-heading">
-                  <h3>{plan.label}</h3>
+                  <h3>{plan.label ?? "Plan"}</h3>
                   <span>{formatRs(plan.monthly)} / month</span>
                 </div>
                 {plan.firstDueDate && (

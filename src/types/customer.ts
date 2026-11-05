@@ -71,7 +71,7 @@ export interface CustomerDetail extends CustomerListItem {
 
 export interface CustomerPurchasePlan {
   id: string;
-  label: string;
+  label?: string;
   total: number;
   paid: number;
   remaining: number;

@@ -39,6 +39,12 @@ const CollectionRow = ({ item, onReceive }: Props) => {
           {item.name}
         </Link>
         <span className="cr-phone">{item.phone}</span>
+        {item.overdueInstallmentCount > 0 && (
+          <small className="cr-overdue">
+            {item.overdueInstallmentCount} purani{" "}
+            {item.overdueInstallmentCount === 1 ? "qist" : "qistein"} baqi
+          </small>
+        )}
         <StatusBadge status={item.status} />
       </div>
       <div className="cr-end">

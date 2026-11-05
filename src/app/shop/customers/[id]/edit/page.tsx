@@ -31,7 +31,14 @@ import {
 import { fetchTodayCollection } from "@/store/slices/shop/collection/shopCollectionSlice";
 import { fetchLate } from "@/store/slices/shop/late/shopLateSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
+import type { CustomerDetail } from "@/types/customer";
 import "./customer-edit.scss";
+
+const currentPlanDueDate = (plan: CustomerDetail["plans"][number]) =>
+  plan.installments.find((installment) => installment.status !== "paid")
+    ?.dueDate ??
+  plan.firstDueDate ??
+  "";
 
 type DocKey = "cnicFront" | "cnicBack" | "other";
 
@@ -89,13 +96,16 @@ const CustomerEditPage = () => {
 
   useEffect(() => {
     if (detail && detail.id === id && !initialized) {
+      const basePlan = detail.plans.find((plan) => plan.id === "base");
       setFormData({
         name: detail.name || "",
         fatherName: detail.fatherName || "",
         cnic: detail.cnic || "",
         phone: detail.phone || "",
         address: detail.address || "",
-        firstDueDate: detail.firstDueDate,
+        firstDueDate: basePlan
+          ? currentPlanDueDate(basePlan)
+          : detail.firstDueDate,
         monthlyPayment: String(
           detail.plans.find((plan) => plan.id === "base")?.monthly ??
             detail.monthly,
@@ -103,7 +113,7 @@ const CustomerEditPage = () => {
         purchaseDates: Object.fromEntries(
           detail.plans
             .filter((plan) => plan.id !== "base")
-            .map((plan) => [plan.id, plan.firstDueDate ?? ""]),
+            .map((plan) => [plan.id, currentPlanDueDate(plan)]),
         ),
         purchaseMonthlyPayments: Object.fromEntries(
           detail.plans
@@ -142,13 +152,15 @@ const CustomerEditPage = () => {
 
   const hasInfoChanges = useMemo(() => {
     if (!detail || detail.id !== id) return false;
+    const basePlan = detail.plans.find((plan) => plan.id === "base");
     return (
       formData.name.trim() !== (detail.name || "").trim() ||
       formData.fatherName.trim() !== (detail.fatherName || "").trim() ||
       formData.cnic.trim() !== (detail.cnic || "").trim() ||
       formData.phone.trim() !== (detail.phone || "").trim() ||
       formData.address.trim() !== (detail.address || "").trim() ||
-      formData.firstDueDate !== detail.firstDueDate ||
+      formData.firstDueDate !==
+        (basePlan ? currentPlanDueDate(basePlan) : detail.firstDueDate) ||
       hasMonthlyPaymentChange
     );
   }, [detail, id, formData, hasMonthlyPaymentChange]);
@@ -158,7 +170,7 @@ const CustomerEditPage = () => {
     return detail.plans.some(
       (plan) =>
         plan.id !== "base" &&
-        formData.purchaseDates[plan.id] !== (plan.firstDueDate ?? ""),
+        formData.purchaseDates[plan.id] !== currentPlanDueDate(plan),
     );
   }, [detail, id, formData.purchaseDates]);
 
@@ -167,7 +179,7 @@ const CustomerEditPage = () => {
     return detail.plans.some((plan) => {
       if (plan.id === "base") return false;
       const currentDueDate =
-        formData.purchaseDates[plan.id] ?? plan.firstDueDate ?? "";
+        formData.purchaseDates[plan.id] ?? currentPlanDueDate(plan);
       return (
         currentDueDate !== formData.firstDueDate &&
         toNumber(formData.purchaseMonthlyPayments[plan.id] ?? "") !==
@@ -234,17 +246,17 @@ const CustomerEditPage = () => {
       .forEach((plan) => {
         if (!formData.purchaseDates[plan.id]) {
           errs[`purchaseDate-${plan.id}`] =
-            `${plan.label} ki pehli qist ki tareekh chunein`;
+            `${plan.label ?? "Plan"} ki pehli qist ki tareekh chunein`;
         }
         const planDate =
-          formData.purchaseDates[plan.id] ?? plan.firstDueDate ?? "";
+          formData.purchaseDates[plan.id] ?? currentPlanDueDate(plan);
         if (
           planDate !== formData.firstDueDate &&
           (!digits(formData.purchaseMonthlyPayments[plan.id] ?? "") ||
             toNumber(formData.purchaseMonthlyPayments[plan.id] ?? "") < 1)
         ) {
           errs[`purchasePayment-${plan.id}`] =
-            `${plan.label} ki mahana qist sahi likhein`;
+            `${plan.label ?? "Plan"} ki mahana qist sahi likhein`;
         }
       });
     if (
@@ -267,8 +279,10 @@ const CustomerEditPage = () => {
       return;
     }
 
+    const basePlan = detail.plans.find((plan) => plan.id === "base");
     const hasScheduleChanges =
-      formData.firstDueDate !== detail.firstDueDate ||
+      formData.firstDueDate !==
+        (basePlan ? currentPlanDueDate(basePlan) : detail.firstDueDate) ||
       hasPurchaseDateChanges;
 
     setSaving(true);
@@ -291,7 +305,7 @@ const CustomerEditPage = () => {
         for (const plan of detail.plans.filter(
           (item) =>
             item.id !== "base" &&
-            formData.purchaseDates[item.id] !== (item.firstDueDate ?? ""),
+            formData.purchaseDates[item.id] !== currentPlanDueDate(item),
         )) {
           await dispatch(
             updateCustomerPurchaseDate({
@@ -307,7 +321,7 @@ const CustomerEditPage = () => {
         for (const plan of detail.plans.filter((item) => {
           if (item.id === "base") return false;
           const currentDueDate =
-            formData.purchaseDates[item.id] ?? item.firstDueDate ?? "";
+            formData.purchaseDates[item.id] ?? currentPlanDueDate(item);
           return (
             currentDueDate !== formData.firstDueDate &&
             toNumber(formData.purchaseMonthlyPayments[item.id] ?? "") !==
@@ -503,9 +517,16 @@ const CustomerEditPage = () => {
         )
         .map((plan) => {
           const isBasePlan = plan.id === "base";
+          const hasMultiplePlans = detail.plans.length > 1;
+          const planLabel = plan.label ?? "Plan";
+          const planHeading = hasMultiplePlans
+            ? `${planLabel} - ${
+                isBasePlan ? "Pehli khareedari" : "Nayi khareedari"
+              }`
+            : "Qist ki tafseel";
           const planDate = isBasePlan
             ? formData.firstDueDate
-            : (formData.purchaseDates[plan.id] ?? plan.firstDueDate ?? "");
+            : (formData.purchaseDates[plan.id] ?? currentPlanDueDate(plan));
           const canEditRate =
             isBasePlan || planDate !== formData.firstDueDate;
           const paymentValue = isBasePlan
@@ -518,13 +539,18 @@ const CustomerEditPage = () => {
           return (
             <section className="ce-card" key={plan.id}>
               <h2>
-                <span>{plan.label} - {isBasePlan ? "Pehli khareedari" : "Nayi khareedari"}</span>
+                <span>{planHeading}</span>
               </h2>
 
               <DatePartsPicker
-                label={`${plan.label} first installment date`}
-                labelUr="پہلی قسط کی تاریخ"
+                label={
+                  hasMultiplePlans
+                    ? `${planLabel} next installment date`
+                    : "Next installment date"
+                }
+                labelUr="اگلی باقی قسط کی تاریخ"
                 value={planDate}
+                disabled={plan.remaining <= 0}
                 onChange={(firstDueDate) => {
                   if (isBasePlan) {
                     setFormData((previous) => ({ ...previous, firstDueDate }));
@@ -555,12 +581,16 @@ const CustomerEditPage = () => {
                 }
               />
               <p className="muted">
-                Is tareekh ko badalne se sirf {plan.label} ka schedule update
-                hoga.
+                Is tareekh se is qist aur baad ki unpaid qistein update hongi.
+                Pehle se wasool qiston ki tareekhein nahi badlein gi.
               </p>
 
               <FormInput
-                label={`${plan.label} monthly installment (Rs.)`}
+                label={
+                  hasMultiplePlans
+                    ? `${planLabel} monthly installment (Rs.)`
+                    : "Monthly installment (Rs.)"
+                }
                 labelUr="ماہانہ قسط"
                 inputMode="numeric"
                 value={paymentValue}
@@ -589,7 +619,9 @@ const CustomerEditPage = () => {
               />
               <p className="muted">
                 {!canEditRate
-                  ? "Alag qist ki raqam edit karne ke liye is plan ki tareekh Plan A se alag rakhein."
+                  ? `Alag qist ki raqam edit karne ke liye is plan ki tareekh ${
+                      hasMultiplePlans ? "Plan A ki tareekh se " : ""
+                    }alag rakhein.`
                   : "Nayi qist ki raqam agli unpaid qist se lagu hogi. Pehle se di hui ya adhoori qist ki raqam nahi badlegi."}
               </p>
             </section>

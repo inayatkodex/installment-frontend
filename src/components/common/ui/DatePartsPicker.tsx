@@ -9,6 +9,7 @@ interface Props {
   value: string;
   onChange: (value: string) => void;
   error?: string;
+  disabled?: boolean;
 }
 
 const toDisplayDate = (value: string) => {
@@ -41,6 +42,7 @@ const DatePartsPicker = ({
   value,
   onChange,
   error,
+  disabled = false,
 }: Props) => {
   const [displayValue, setDisplayValue] = useState(() => toDisplayDate(value));
   const [invalidDate, setInvalidDate] = useState(false);
@@ -103,6 +105,7 @@ const DatePartsPicker = ({
         value={displayValue}
         aria-label={label}
         aria-invalid={!!errorMessage}
+        disabled={disabled}
         onChange={(event) => handleChange(event.target.value)}
         onBlur={handleBlur}
       />

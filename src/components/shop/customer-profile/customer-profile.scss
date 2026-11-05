@@ -594,6 +594,11 @@
       border-color: #2e7d32;
       color: $white;
     }
+    &.late-paid {
+      background: #e8f4fd;
+      border-color: #64a7d6;
+      color: #145a82;
+    }
     &.partial {
       border-color: #f9a825;
       color: $warning;
@@ -622,6 +627,14 @@
     &.late {
       background: $danger-soft;
       border-color: #f4c2bd;
+    }
+    &.late-paid {
+      background: #e8f4fd;
+      border-color: #64a7d6;
+      .status-badge.paid {
+        background: $danger;
+        color: $white;
+      }
     }
     &.next {
       background: $primary-soft;

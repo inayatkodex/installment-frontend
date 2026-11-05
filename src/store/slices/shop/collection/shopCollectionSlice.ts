@@ -1,7 +1,12 @@
 import api from "@/store/ApiServices/api";
 import API_URLS from "@/store/ApiServices/apiUrls";
 import { getErrorMessage } from "@/shared/apiError";
-import { CollectionItem, ReceivedItem, ReceivePaymentPayload } from "@/types/payment";
+import {
+  CollectionItem,
+  PaymentReceipt,
+  ReceivedItem,
+  ReceivePaymentPayload,
+} from "@/types/payment";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface State {
@@ -54,8 +59,8 @@ export const receivePayment = createAsyncThunk(
   "shopCollection/receive",
   async (payload: ReceivePaymentPayload, { rejectWithValue }) => {
     try {
-      await api.post(API_URLS.SHOP.RECEIVE_PAYMENT, payload);
-      return payload;
+      const res = await api.post(API_URLS.SHOP.RECEIVE_PAYMENT, payload);
+      return res.data.data as PaymentReceipt;
     } catch (error) {
       return rejectWithValue(getErrorMessage(error, "Raqam save nahi ho saki"));
     }
