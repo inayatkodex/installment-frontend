@@ -58,6 +58,16 @@ const ShopDashboardPage = () => {
   const pct = sum.month.expected
     ? Math.min(100, Math.round((sum.month.received / sum.month.expected) * 100))
     : 0;
+  const lateCashHint = sum.cashToday.lateByMonth
+    .map(({ month, amount }) => {
+      const monthLabel = new Intl.DateTimeFormat("en-US", {
+        month: "short",
+        year: "numeric",
+        timeZone: "UTC",
+      }).format(new Date(`${month}-01T00:00:00Z`));
+      return `${formatRs(amount)} ${monthLabel} ki qist mein adjust hue`;
+    })
+    .join(" · ");
 
   return (
     <div className="shop-dashboard">
@@ -81,22 +91,22 @@ const ShopDashboardPage = () => {
       <div className="sd-grid">
         <StatCard
           tone="yellow"
-          label="Aaj ki wasooli"
-          labelUr="آج کی وصول"
+          label="Aaj ke customers"
+          labelUr="آج کے گاہک"
           value={String(sum.dueCount)}
-          hint="customers"
         />
         <StatCard
           tone="blue"
-          label="Expected"
-          labelUr="متوقع"
+          label="Total"
+          labelUr="کل"
           value={formatRs(sum.expected)}
         />
         <StatCard
           tone="green"
           label="Received"
           labelUr="وصول"
-          value={formatRs(sum.received)}
+          value={formatRs(sum.cashToday.total)}
+          hint={lateCashHint || undefined}
         />
         <StatCard
           tone="red"
@@ -200,8 +210,8 @@ const ShopDashboardPage = () => {
               <i style={{ width: `${pct}%` }} />
             </div>
             <p className="sd-meta">
-              <span>Expected {formatRs(sum.month.expected)}</span>
-              <span>Received {formatRs(sum.month.received)}</span>
+              <span>Is mahine ki qistein {formatRs(sum.month.expected)}</span>
+              <span>Wasool qistein {formatRs(sum.month.received)}</span>
             </p>
           </section>
         </aside>

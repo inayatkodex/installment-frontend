@@ -3,6 +3,8 @@ import API_URLS from "@/store/ApiServices/apiUrls";
 import { getErrorMessage } from "@/shared/apiError";
 import {
   CollectionItem,
+  CashBreakdown,
+  CollectionTodayResponse,
   PaymentReceipt,
   ReceivedItem,
   ReceivePaymentPayload,
@@ -11,6 +13,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface State {
   items: CollectionItem[];
+  cashToday: CashBreakdown;
   hasFetchedTodayCollection: boolean;
   received: ReceivedItem[];
   loading: boolean;
@@ -19,6 +22,7 @@ interface State {
 }
 const initialState: State = {
   items: [],
+  cashToday: { total: 0, forPeriod: 0, late: 0, advance: 0, lateByMonth: [] },
   hasFetchedTodayCollection: false,
   received: [],
   loading: false,
@@ -29,7 +33,7 @@ const initialState: State = {
 export const fetchTodayCollection = createAsyncThunk("shopCollection/fetch", async (_, { rejectWithValue }) => {
   try {
     const res = await api.get(API_URLS.SHOP.COLLECTION_TODAY);
-    return res.data.data as CollectionItem[];
+    return res.data.data as CollectionTodayResponse;
   } catch (error) {
     return rejectWithValue(getErrorMessage(error, "Aaj ki list load nahi ho saki"));
   }
@@ -76,7 +80,8 @@ const shopCollectionSlice = createSlice({
       .addCase(fetchTodayCollection.pending, (s) => { s.loading = true; s.error = null; })
       .addCase(fetchTodayCollection.fulfilled, (s, a) => {
         s.loading = false;
-        s.items = a.payload;
+        s.items = a.payload.items;
+        s.cashToday = a.payload.cashToday;
         s.hasFetchedTodayCollection = true;
       })
       .addCase(fetchTodayCollection.rejected, (s, a) => { s.loading = false; s.error = a.payload as string; })

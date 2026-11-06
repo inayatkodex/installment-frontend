@@ -62,7 +62,7 @@ const StatusPage = () => {
       {data && !loading && (
         <div className="st-download">
           <CommonBtn
-            text="Asaan report PDF download karein"
+            text="PDF download karein"
             icon={<Download size={20} />}
             className="full-btn"
             onClick={downloadPdf}

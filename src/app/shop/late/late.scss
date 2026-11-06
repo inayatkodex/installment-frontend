@@ -8,6 +8,18 @@
     margin-bottom: 0;
   }
 
+  .lp-totals {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    width: 100%;
+    .stat-card {
+      min-height: 100px;
+      border: 1px solid $line;
+      box-shadow: 0 3px 12px rgba(18, 48, 84, 0.04);
+    }
+  }
+
   .lp-summary {
     background: $danger-soft;
     color: $danger;

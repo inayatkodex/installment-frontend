@@ -22,7 +22,7 @@ import "./collection.scss";
 
 const CollectionPage = () => {
   const dispatch = useAppDispatch();
-  const { items, received, loading, error } = useAppSelector(
+  const { items, cashToday, received, loading, error } = useAppSelector(
     (s) => s.shopCollection,
   );
   const [q, setQ] = useState("");
@@ -61,8 +61,6 @@ const CollectionPage = () => {
     });
 
   const due = pending.reduce((a, i) => a + i.expected - i.paid, 0);
-  const receivedTotal = received.reduce((a, i) => a + i.amount, 0);
-
   return (
     <div className="collection-page">
       <h1 className="page-title">
@@ -91,8 +89,8 @@ const CollectionPage = () => {
               <span>Lena baaki hai</span>
             </div>
             <div>
-              <strong className="ok">{formatRs(receivedTotal)}</strong>
-              <span>Mil gaye</span>
+              <strong className="ok">{formatRs(cashToday.total)}</strong>
+              <span>Aaj mila</span>
             </div>
           </div>
 
@@ -123,7 +121,11 @@ const CollectionPage = () => {
             </>
           )}
 
-          <ReceivedToday items={received} onChanged={refresh} />
+          <ReceivedToday
+            items={received}
+            cashTotal={cashToday.total}
+            onChanged={refresh}
+          />
         </>
       )}
 

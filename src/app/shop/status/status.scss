@@ -10,8 +10,11 @@
   }
   .st-download {
     margin-top: 16px;
+    width: 100%;
     @include from-desktop() {
-      max-width: 320px;
+      max-width: 760px;
+      margin-right: auto;
+      margin-left: auto;
     }
   }
   .st-error {

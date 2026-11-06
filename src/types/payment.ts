@@ -28,6 +28,19 @@ export interface PaymentReceipt {
   remainingLateAmount: number;
 }
 
+export interface CashBreakdown {
+  total: number;
+  forPeriod: number;
+  late: number;
+  advance: number;
+  lateByMonth: { month: string; amount: number }[];
+}
+
+export interface CollectionTodayResponse {
+  items: CollectionItem[];
+  cashToday: CashBreakdown;
+}
+
 export interface ReceivePaymentPayload {
   customerId: string;
   installmentNo: number;
@@ -42,6 +55,7 @@ export interface LateItem {
   phone: string;
   photo?: string;
   lateAmount: number;
+  lateThisMonthAmount: number;
   lateCount: number;
   daysLate: number;
   lastPayment: string;
@@ -55,6 +69,13 @@ export interface ShopDashboardData {
   expected: number;
   received: number;
   remaining: number;
+  cashToday: CashBreakdown;
+  todayInstallments: {
+    total: number;
+    paid: number;
+    remaining: number;
+  };
+  lateTotal: number;
   lateCount: number;
   lateAmount: number;
   month: { label: string; expected: number; received: number };
@@ -66,11 +87,18 @@ export interface StatusReport {
   expected: number;
   received: number;
   remaining: number;
+  cashCollected: number;
+  cashBreakdown: {
+    thisMonth: number;
+    late: number;
+    advance: number;
+  };
   overdue: number;
   collectedPercent: number;
   totalCustomers: number;
   paidInstallments: number;
   pendingInstallments: number;
+  lateInstallments: number;
   overdueCustomers: number;
   customers: StatusReportCustomer[];
 }
@@ -85,6 +113,10 @@ export interface StatusReportCustomer {
   overdue: number;
   paidInstallments: number;
   pendingInstallments: number;
+  lateInstallments: number;
+  paidInstallmentDates: string[];
+  lateInstallmentDates: string[];
+  pendingInstallmentDates: string[];
 }
 
 export interface ReceivedItem {

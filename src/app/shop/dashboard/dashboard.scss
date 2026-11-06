@@ -146,6 +146,11 @@
       font-size: clamp(20px, 2.1vw, 25px);
       letter-spacing: -0.02em;
     }
+    .stat-hint {
+      margin-top: 6px;
+      font-size: 11px;
+      line-height: 1.4;
+    }
   }
   .sd-actions {
     display: grid;

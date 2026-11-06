@@ -13,18 +13,18 @@ import "./received-today.scss";
 
 interface Props {
   items: ReceivedItem[];
+  cashTotal: number;
   onChanged: () => void;
 }
 
 /** Closed line under the list: "Aaj mil gaye". Tap to see who paid, with a "Wapas karein" (undo) button. */
-const ReceivedToday = ({ items, onChanged }: Props) => {
+const ReceivedToday = ({ items, cashTotal, onChanged }: Props) => {
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(false);
   const [undo, setUndo] = useState<ReceivedItem | null>(null);
   const [busy, setBusy] = useState(false);
 
   if (!items.length) return null;
-  const total = items.reduce((a, i) => a + i.amount, 0);
   const people = new Set(items.map((i) => i.customerId)).size;
 
   const confirmUndo = async () => {
@@ -58,7 +58,7 @@ const ReceivedToday = ({ items, onChanged }: Props) => {
           {people === 1 ? "customer" : "customers"})
         </span>
         <span>
-          {formatRs(total)}{" "}
+          {formatRs(cashTotal)}{" "}
           {open ? (
             <ChevronUp size={20} aria-hidden="true" />
           ) : (

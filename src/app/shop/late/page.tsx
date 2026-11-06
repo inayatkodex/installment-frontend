@@ -10,6 +10,7 @@ import EmptyState from "@/components/common/EmptyState/EmptyState";
 import Loader from "@/components/common/Loader/Loader";
 import CommonBtn from "@/components/common/CommonButton/Button";
 import SearchBar from "@/components/common/SearchBar/SearchBar";
+import StatCard from "@/components/common/StatCard/StatCard";
 import { useDebounce } from "@/hooks/useDebounce";
 import { fetchLate } from "@/store/slices/shop/late/shopLateSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
@@ -49,6 +50,11 @@ const LatePage = () => {
           item.phone.replace(/\D/g, "").includes(phoneQuery)),
     );
   }, [items, search]);
+  const totalLate = items.reduce((sum, item) => sum + item.lateAmount, 0);
+  const thisMonthLate = items.reduce(
+    (sum, item) => sum + item.lateThisMonthAmount,
+    0,
+  );
 
   return (
     <div className="late-page">
@@ -77,6 +83,20 @@ const LatePage = () => {
         />
       ) : (
         <>
+          <div className="lp-totals">
+            <StatCard
+              tone="red"
+              label="Total late"
+              labelUr="کل لیٹ"
+              value={formatRs(totalLate)}
+            />
+            <StatCard
+              tone="yellow"
+              label="Is mahine late"
+              labelUr="اس مہینے لیٹ"
+              value={formatRs(thisMonthLate)}
+            />
+          </div>
           <SearchBar
             value={query}
             onChange={setQuery}
@@ -84,11 +104,7 @@ const LatePage = () => {
             label="Late customers search"
           />
           <p className="lp-summary">
-            <b>{filteredItems.length}</b> customers ·{" "}
-            <b>
-              {formatRs(filteredItems.reduce((a, i) => a + i.lateAmount, 0))}
-            </b>{" "}
-            late hain
+            {filteredItems.length} customers ki late qistein neeche hain
           </p>
           {filteredItems.length === 0 ? (
             <EmptyState

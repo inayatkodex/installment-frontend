@@ -60,11 +60,11 @@ const CollectionDonut = ({ percent, received, remaining }: Props) => (
     </svg>
     <div className="donut-legend">
       <p>
-        <i className="dot received" /> Wasool hue
+        <i className="dot received" /> Qiston mein wasool
       </p>
       <strong>{formatRs(received)}</strong>
       <p>
-        <i className="dot remaining" /> Baaki
+        <i className="dot remaining" /> Qiston ka baqi
       </p>
       <strong>{formatRs(remaining)}</strong>
     </div>
