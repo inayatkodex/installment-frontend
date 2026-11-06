@@ -27,7 +27,13 @@ const PendingRequests = () => {
   return (
     <section className="pending-requests" aria-label="Pending Approvals">
       <div className="pr-head">
-        <h2>Pending Approvals</h2>
+        <div>
+          <span className="pr-eyebrow">Needs attention</span>
+          <h2>Pending approvals</h2>
+        </div>
+        {items.length > 0 && (
+          <span className="pr-count">{items.length} waiting</span>
+        )}
         <Link href={ROUTES.ADMIN.SHOPS}>All Shops</Link>
       </div>
       {loading && !list ? (
@@ -55,9 +61,12 @@ const PendingRequests = () => {
               )}
               <div>
                 <strong>{s.shopName}</strong>
-                <span>
-                  {s.ownerName} · {s.city} · {formatDate(s.registeredAt)}
+                <span className="pr-meta">
+                  {s.ownerName} · {s.city}
                 </span>
+                <small className="pr-date">
+                  Registered {formatDate(s.registeredAt)}
+                </small>
               </div>
               <StatusBadge status="pending" label="Pending" />
               <Link href={ROUTES.ADMIN.SHOP_DETAIL(s.id)} className="pr-review">

@@ -22,10 +22,7 @@ interface Props {
   onFee: (shop: AdminShop, status: FeeStatus) => void;
 }
 
-const menuFor = (
-  s: AdminShop,
-  onStatus: Props["onStatus"],
-): MenuItem[] => {
+const menuFor = (s: AdminShop, onStatus: Props["onStatus"]): MenuItem[] => {
   const now = STATUS_LIST.find((x) => x.value === s.status)!.label;
   const items: MenuItem[] = [
     { label: now, onClick: () => undefined, disabled: true, hint: "current" },
@@ -124,7 +121,7 @@ const ShopsTable = ({ shops, onStatus, onFee }: Props) => {
             <button
               type="button"
               className="st-fee-receive-btn"
-              title={`Click to receive Rs. ${s.monthlyFee.toLocaleString()} fee`}
+              title={`Click to receive Rs. ${(s.monthlyFee ?? 0).toLocaleString()} fee`}
               onClick={(e) => {
                 e.stopPropagation();
                 onFee(s, "paid");

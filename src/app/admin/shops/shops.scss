@@ -2,77 +2,295 @@
 @use "../../../styles/variables.scss" as *;
 
 .admin-shops {
-  .as-filters {
-    @include flex-wrapper(10px);
-    margin: 12px 0 14px;
-  }
-  .as-fee {
-    @include flex(10px);
-    flex-wrap: wrap;
-    span {
-      font-size: 14px;
+  .as-header {
+    @include flex-between(14px);
+    align-items: flex-end;
+    margin-bottom: 20px;
+
+    .as-eyebrow {
+      display: block;
+      margin-bottom: 4px;
       color: $muted;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .page-title {
+      margin-bottom: 4px;
+    }
+
+    p {
+      color: $muted;
+      font-size: 13px;
+      line-height: 1.45;
     }
   }
+
+  .as-dashboard-link {
+    @include flex-center();
+    gap: 7px;
+    min-height: 40px;
+    flex: none;
+    padding: 0 12px;
+    border: 1px solid $border;
+    border-radius: 10px;
+    background: $white;
+    color: $primary-dark;
+    font-size: 12px;
+    font-weight: 700;
+    transition:
+      background 0.15s ease,
+      border-color 0.15s ease;
+
+    &:hover {
+      border-color: $primary-border;
+      background: $primary-soft;
+    }
+  }
+
+  .as-toolbar {
+    @include flex-wrapper(14px);
+    margin-bottom: 17px;
+    padding: 15px;
+    border: 1px solid $line;
+    border-radius: 15px;
+    background: $white;
+    box-shadow: 0 3px 12px rgba(18, 48, 84, 0.035);
+  }
+
+  .as-search-row {
+    @include flex-wrapper(12px);
+    min-width: 0;
+  }
+
+  .as-search {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .as-filter-bottom {
+    @include flex-wrapper(7px);
+    min-width: 0;
+    padding-top: 12px;
+    border-top: 1px solid $line;
+  }
+
+  .as-filter-caption {
+    @include flex(7px);
+
+    span {
+      color: $ink;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    small {
+      color: $muted;
+      font-size: 11px;
+    }
+  }
+
+  .as-result-summary {
+    @include flex-between(8px);
+    min-height: 34px;
+    margin: 0 2px 9px;
+    color: $muted;
+    font-size: 12px;
+
+    strong {
+      color: $ink;
+    }
+
+    small {
+      color: $primary;
+      font-weight: 600;
+    }
+  }
+
   .as-error {
+    padding: 20px;
+    border: 1px solid rgba(183, 28, 28, 0.15);
+    border-radius: 12px;
+    background: $danger-soft;
     color: $danger;
     font-weight: 600;
     text-align: center;
-    padding: 24px 0;
   }
+
   .as-loading {
-    opacity: 0.6;
-    transition: opacity 0.15s;
+    opacity: 0.58;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
   }
-  .as-recently-deleted {
-    margin: 18px 0;
-    padding: 18px;
-    border: 1px solid $border;
-    border-radius: 14px;
+
+  .as-empty {
+    @include flex-wrapper(10px);
+    align-items: center;
+    padding: 12px;
+    border: 1px solid $line;
+    border-radius: 15px;
     background: $white;
+
+    > button {
+      min-height: 40px;
+      padding: 0 13px;
+      border: 1px solid $primary-border;
+      border-radius: 9px;
+      background: $primary-soft;
+      color: $primary-dark;
+      font-size: 12px;
+      font-weight: 700;
+    }
+  }
+
+  .as-recently-deleted {
+    margin: 0 0 17px;
+    padding: 16px;
+    border: 1px solid #f0d7b8;
+    border-radius: 15px;
+    background: #fffaf3;
+    box-shadow: 0 3px 12px rgba(90, 60, 20, 0.035);
+
+    .as-recent-heading {
+      @include flex(11px);
+      align-items: center;
+      margin-bottom: 9px;
+    }
+
+    .as-recent-icon {
+      @include flex-center();
+      width: 38px;
+      height: 38px;
+      flex: none;
+      border-radius: 11px;
+      background: #fff0dc;
+      color: $warning;
+    }
+
     h2 {
-      margin: 0 0 6px;
-      font-size: 18px;
+      margin-bottom: 2px;
+      color: $ink;
+      font-size: 15px;
     }
+
     p {
-      margin: 0 0 12px;
       color: $muted;
-      font-size: 14px;
+      font-size: 12px;
+      line-height: 1.4;
     }
+
     ul {
       margin: 0;
       padding: 0;
       list-style: none;
     }
+
     li {
-      @include flex-between();
+      @include flex-between(12px);
       gap: 12px;
-      padding: 12px 0;
-      border-top: 1px solid $border;
-      div {
+      padding: 12px 0 0;
+      border-top: 1px solid #f0e2d0;
+
+      > div {
         @include flex-wrapper(3px);
+        min-width: 0;
       }
+
+      strong {
+        overflow: hidden;
+        color: $ink;
+        font-size: 13px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
       span,
       small {
         color: $muted;
+        font-size: 11px;
       }
-      button {
-        flex: 0 0 auto;
-        padding: 9px 16px;
-        border: 0;
-        border-radius: 9px;
-        background: $primary;
-        color: $white;
-        font-weight: 700;
-        &:disabled {
-          opacity: 0.6;
-        }
+
+      .as-deleted-date {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+    }
+
+    .as-undo {
+      @include flex-center();
+      gap: 6px;
+      min-height: 38px;
+      flex: none;
+      padding: 0 12px;
+      border: 1px solid $primary-border;
+      border-radius: 9px;
+      background: $white;
+      color: $primary-dark;
+      font-size: 12px;
+      font-weight: 700;
+
+      &:hover:not(:disabled) {
+        background: $primary-soft;
+      }
+
+      &:disabled {
+        cursor: wait;
+        opacity: 0.55;
       }
     }
   }
+
+  @include from-tablet() {
+    .as-search-row {
+      align-items: center;
+    }
+
+    .as-search {
+      max-width: 380px;
+    }
+
+    .as-recently-deleted {
+      padding: 18px;
+    }
+  }
+
   @include from-desktop() {
-    .search-bar {
-      max-width: 420px;
+    .as-search-row {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    .as-search {
+      max-width: 390px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .as-header {
+      align-items: flex-start;
+    }
+
+    .as-dashboard-link {
+      width: 40px;
+      overflow: hidden;
+      gap: 0;
+      padding: 0;
+      font-size: 0;
+
+      svg {
+        flex: none;
+      }
+    }
+
+    .as-toolbar {
+      padding: 12px;
+    }
+
+    .as-recently-deleted li {
+      align-items: flex-start;
     }
   }
 }

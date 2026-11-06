@@ -1,76 +1,104 @@
 "use client";
 
-import { Check, CheckCircle2 } from "lucide-react";
-import StatusBadge from "@/components/common/StatusBadge/StatusBadge";
-import { formatDate, formatMonth, formatRs } from "@/shared/formatUtils";
-import { AdminShop, FeeStatus } from "@/types/adminShop";
+import { type FormEvent, useEffect, useState } from "react";
+import { Clock3, Save, WalletCards } from "lucide-react";
+import { formatMonth, formatRs } from "@/shared/formatUtils";
+import { AdminShop } from "@/types/adminShop";
 import "./fee-card.scss";
 
 interface Props {
   shop: AdminShop;
   busy?: boolean;
-  onChange: (month: string, status: FeeStatus) => void;
+  onSetAmount: (amount: number) => void;
 }
 
-const FeeCard = ({ shop, busy, onChange }: Props) => {
-  const hasFee = shop.feeHistory.length > 0;
+const FeeCard = ({ shop, busy, onSetAmount }: Props) => {
+  const [amount, setAmount] = useState(
+    shop.nextMonthlyFee ?? shop.monthlyFee ?? "",
+  );
+  useEffect(() => {
+    setAmount(shop.nextMonthlyFee ?? shop.monthlyFee ?? "");
+  }, [shop.monthlyFee, shop.nextMonthlyFee]);
+
+  const saveAmount = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const parsedAmount = Number(amount);
+    if (Number.isSafeInteger(parsedAmount) && parsedAmount > 0) {
+      onSetAmount(parsedAmount);
+    }
+  };
+
   return (
     <section className="fee-card" aria-label="Monthly Platform Fee">
-      <div className="fc-head">
-        <div>
-          <h2>Monthly Platform Fee</h2>
-          <span className="fc-sub">Tracking month-by-month platform fee</span>
+      <header className="fc-head">
+        <div className="fc-title">
+          <span className="fc-icon">
+            <WalletCards size={19} aria-hidden="true" />
+          </span>
+          <div>
+            <h2>Monthly shop fee</h2>
+            <span className="fc-sub">Set and track this shop’s fee</span>
+          </div>
         </div>
-        <strong>{formatRs(shop.monthlyFee)}</strong>
+        <span className={`fc-current-pill ${shop.monthlyFee ? "set" : ""}`}>
+          {shop.monthlyFee ? "Fee set" : "Not set"}
+        </span>
+      </header>
+
+      <div className="fc-summary">
+        <div className="fc-summary-current">
+          <span>Current monthly fee</span>
+          <strong>
+            {shop.monthlyFee ? formatRs(shop.monthlyFee) : "Not set"}
+          </strong>
+        </div>
+        <div className="fc-summary-next">
+          <span>From {formatMonth(shop.feeChangeEffectiveMonth)}</span>
+          <strong>
+            {shop.nextMonthlyFee
+              ? formatRs(shop.nextMonthlyFee)
+              : shop.monthlyFee
+                ? formatRs(shop.monthlyFee)
+                : "—"}
+          </strong>
+        </div>
       </div>
-      {!hasFee ? (
-        <p className="fc-note">
-          Platform fees apply to Active and Inactive shops. Once activated, monthly fee
-          records will appear here.
-        </p>
-      ) : (
-        <ul>
-          {shop.feeHistory.map((h) => (
-            <li key={h.month} className={h.status}>
-              <div>
-                <b>{formatMonth(h.month)}</b>
-                <span>
-                  {h.status === "paid"
-                    ? `${formatDate(h.paidOn!)} · ${h.method || "Cash"}`
-                    : "Unpaid"}
-                </span>
-              </div>
-              <div className="fc-right">
-                {h.status === "paid" ? (
-                  <>
-                    <span className="fc-paid-badge">
-                      <Check size={14} aria-hidden="true" /> Paid
-                    </span>
-                    <button
-                      type="button"
-                      className="fc-undo-btn"
-                      disabled={busy}
-                      onClick={() => onChange(h.month, "unpaid")}
-                      title="Mark as Unpaid"
-                    >
-                      Undo
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    type="button"
-                    className="fc-receive-btn"
-                    disabled={busy}
-                    onClick={() => onChange(h.month, "paid")}
-                  >
-                    <CheckCircle2 size={15} aria-hidden="true" /> Receive Fee
-                  </button>
-                )}
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
+
+      <form className="fc-amount-form" onSubmit={saveAmount}>
+        <label htmlFor="shop-monthly-fee">
+          <span>Set monthly amount</span>
+          <span className="fc-input-wrap">
+            <span>Rs.</span>
+            <input
+              id="shop-monthly-fee"
+              type="number"
+              min="1"
+              max="2147483647"
+              step="1"
+              required
+              value={amount}
+              onChange={(event) =>
+                setAmount(
+                  event.target.value === "" ? "" : Number(event.target.value),
+                )
+              }
+              placeholder="Enter amount"
+            />
+          </span>
+        </label>
+        <button type="submit" disabled={busy || !amount}>
+          <Save size={15} aria-hidden="true" />
+          {busy ? "Saving…" : "Save fee"}
+        </button>
+      </form>
+      <p className="fc-effective" role="note">
+        <Clock3 size={15} aria-hidden="true" />
+        <span>
+          {shop.monthlyFee
+            ? `Any change applies from ${formatMonth(shop.feeChangeEffectiveMonth)}.`
+            : `First fee starts from ${formatMonth(shop.feeChangeEffectiveMonth)}.`}
+        </span>
+      </p>
     </section>
   );
 };

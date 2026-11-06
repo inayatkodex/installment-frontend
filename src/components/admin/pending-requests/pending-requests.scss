@@ -2,29 +2,76 @@
 @use "../../../styles/variables.scss" as *;
 
 .pending-requests {
-  @include card();
-  padding: 16px;
+  min-width: 0;
+  padding: 18px;
+  border: 1px solid $line;
+  border-radius: 17px;
+  background: $white;
+  box-shadow: 0 4px 16px rgba(18, 48, 84, 0.045);
+
   .pr-head {
-    @include flex-between();
-    margin-bottom: 8px;
-    h2 {
-      font-size: 17px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+
+    .pr-eyebrow {
+      display: block;
+      margin-bottom: 3px;
+      color: $muted;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
     }
-    a {
-      color: $primary;
+
+    h2 {
+      color: $ink;
+      font-size: 17px;
+      line-height: 1.3;
+    }
+
+    .pr-count {
+      padding: 6px 9px;
+      border-radius: 999px;
+      background: $warning-soft;
+      color: $warning;
+      font-size: 11px;
       font-weight: 700;
-      font-size: 14px;
-      padding: 10px 4px;
+      white-space: nowrap;
+    }
+
+    a {
+      @include flex-center();
+      min-height: 38px;
+      padding: 0 11px;
+      border: 1px solid $primary-border;
+      border-radius: 9px;
+      background: $white;
+      color: $primary;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+
+      &:hover {
+        background: $primary-soft;
+      }
     }
   }
+
   ul {
     @include flex-wrapper(0);
   }
+
   li {
-    @include flex(12px);
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) auto auto;
     align-items: center;
-    padding: 12px 0;
+    gap: 12px;
+    padding: 13px 0;
     border-top: 1px solid $line;
+
     .pr-avatar {
       width: 44px;
       height: 44px;
@@ -33,6 +80,7 @@
       border: 2px solid $line;
       flex-shrink: 0;
     }
+
     .pr-avatar-fallback {
       width: 44px;
       height: 44px;
@@ -43,28 +91,103 @@
       @include flex-center();
       flex-shrink: 0;
     }
-    div {
-      flex: 1 1 180px;
+
+    > div:not(.pr-avatar-fallback) {
       min-width: 0;
+
       strong {
         display: block;
+        overflow: hidden;
+        color: $ink;
         font-size: 15px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
       }
-      span {
-        font-size: 13px;
+
+      .pr-meta,
+      .pr-date {
+        display: block;
+        overflow: hidden;
         color: $muted;
+        font-size: 12px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .pr-date {
+        margin-top: 3px;
+        font-size: 11px;
       }
     }
+
+    .status-badge {
+      white-space: nowrap;
+    }
   }
+
   .pr-review {
     @include flex-center();
-    min-height: 44px;
-    padding: 0 18px;
-    border-radius: 10px;
+    min-height: 40px;
+    padding: 0 15px;
+    border-radius: 9px;
     background: $primary;
     color: $white;
     font-size: 14px;
     font-weight: 700;
     flex-shrink: 0;
+
+    &:hover {
+      background: $primary-dark;
+    }
+  }
+
+  @media (max-width: 600px) {
+    padding: 15px;
+
+    .pr-head {
+      grid-template-columns: minmax(0, 1fr) auto;
+
+      > a {
+        grid-column: 1 / -1;
+      }
+    }
+
+    li {
+      grid-template-columns: 40px minmax(0, 1fr) auto;
+      gap: 9px;
+
+      .pr-avatar,
+      .pr-avatar-fallback {
+        width: 40px;
+        height: 40px;
+      }
+
+      .status-badge {
+        display: none;
+      }
+
+      .pr-review {
+        min-height: 36px;
+        padding: 0 11px;
+        font-size: 12px;
+      }
+    }
+  }
+
+  @media (max-width: 360px) {
+    li {
+      grid-template-columns: 36px minmax(0, 1fr);
+
+      .pr-avatar,
+      .pr-avatar-fallback {
+        width: 36px;
+        height: 36px;
+      }
+
+      .pr-review {
+        grid-column: 2;
+        justify-self: start;
+      }
+    }
   }
 }

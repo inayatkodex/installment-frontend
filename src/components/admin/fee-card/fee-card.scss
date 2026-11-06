@@ -2,138 +2,205 @@
 @use "../../../styles/variables.scss" as *;
 
 .fee-card {
-  @include card();
-  padding: 18px;
-  @include flex-wrapper(12px);
+  @include flex-wrapper(16px);
+  min-width: 0;
+  padding: 20px;
+  border: 1px solid $line;
+  border-radius: 18px;
+  background: $white;
+  box-shadow: 0 4px 16px rgba(18, 48, 84, 0.055);
 
   .fc-head {
-    @include flex-between();
+    @include flex-between(12px);
     align-items: flex-start;
+  }
+
+  .fc-title {
+    @include flex(11px);
+    min-width: 0;
 
     h2 {
+      color: $ink;
       font-size: 18px;
-      margin-bottom: 2px;
+      line-height: 1.3;
     }
+
     .fc-sub {
-      font-size: 12px;
-      color: $muted;
-    }
-    strong {
-      font-size: 22px;
-      color: $primary;
-    }
-  }
-
-  .fc-note {
-    font-size: 14px;
-    color: $muted;
-    line-height: 1.5;
-  }
-
-  ul {
-    @include flex-wrapper(10px);
-  }
-
-  li {
-    @include flex-between(10px);
-    flex-wrap: wrap;
-    padding: 12px 14px;
-    border-radius: 12px;
-
-    &.paid {
-      background: $success-soft;
-      border: 1px solid rgba(27, 94, 32, 0.1);
-    }
-    &.unpaid {
-      background: #fff8f5;
-      border: 1px solid rgba(249, 115, 22, 0.15);
-    }
-
-    b {
       display: block;
-      font-size: 15px;
-    }
-    span {
-      font-size: 13px;
+      margin-top: 3px;
       color: $muted;
+      font-size: 12px;
     }
   }
 
-  .fc-right {
-    @include flex(10px);
-    align-items: center;
-    flex-wrap: wrap;
+  .fc-icon {
+    @include flex-center();
+    width: 42px;
+    height: 42px;
+    flex: none;
+    border-radius: 12px;
+    background: $primary-soft;
+    color: $primary;
   }
 
-  .fc-paid-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 6px 12px;
-    border-radius: 9999px;
-    background: rgba(27, 94, 32, 0.15);
-    color: $success;
-    font-size: 13px;
+  .fc-current-pill {
+    flex: none;
+    padding: 6px 9px;
+    border-radius: 999px;
+    background: $warning-soft;
+    color: $warning;
+    font-size: 11px;
     font-weight: 700;
-    line-height: 1;
 
-    svg {
+    &.set {
+      background: $success-soft;
       color: $success;
     }
   }
 
-  .fc-undo-btn {
-    background: transparent;
-    border: none;
-    color: $muted;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    padding: 4px 6px;
-    border-radius: 4px;
-    text-decoration: underline;
-    transition: all 0.15s ease;
+  .fc-summary {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
 
-    &:hover:not(:disabled) {
-      color: $danger;
-      background: $danger-soft;
+    > div {
+      @include flex-wrapper(5px);
+      min-width: 0;
+      padding: 13px;
+      border: 1px solid $line;
+      border-radius: 13px;
+      background: $bg;
     }
 
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
+    .fc-summary-next {
+      border-color: $primary-border;
+      background: $primary-soft;
+    }
+
+    span {
+      color: $muted;
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    strong {
+      overflow-wrap: anywhere;
+      color: $ink;
+      font-size: 19px;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.25;
+    }
+
+    .fc-summary-next strong {
+      color: $primary-dark;
     }
   }
 
-  .fc-receive-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    padding: 7px 16px;
-    border-radius: 8px;
-    background: #16a34a;
-    color: #ffffff;
-    font-size: 13px;
-    font-weight: 700;
-    border: none;
-    cursor: pointer;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    transition: all 0.2s ease;
-    white-space: nowrap;
+  .fc-amount-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 10px;
 
-    &:hover:not(:disabled) {
-      background: #15803d;
-      transform: translateY(-1px);
-      box-shadow: 0 3px 8px rgba(22, 163, 74, 0.25);
+    label {
+      display: grid;
+      gap: 7px;
+      color: $ink;
+      font-size: 13px;
+      font-weight: 700;
     }
 
-    &:active:not(:disabled) {
-      transform: translateY(0);
+    .fc-input-wrap {
+      @include flex(0);
+      min-width: 0;
+      min-height: 46px;
+      padding-left: 12px;
+      border: 1px solid $border;
+      border-radius: 10px;
+      background: $white;
+      transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+
+      &:focus-within {
+        border-color: $primary;
+        box-shadow: 0 0 0 3px rgba(21, 101, 192, 0.12);
+      }
+
+      > span {
+        flex: none;
+        color: $muted;
+        font-size: 14px;
+      }
     }
 
-    &:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
+    input {
+      width: 100%;
+      min-width: 0;
+      min-height: 44px;
+      padding: 8px 10px;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: $ink;
+      font-size: 16px;
+      font-variant-numeric: tabular-nums;
+      box-shadow: none;
+    }
+
+    input:focus-visible {
+      outline: 0;
+    }
+
+    button {
+      @include flex-center();
+      gap: 7px;
+      min-height: 46px;
+      padding: 0 15px;
+      border: 0;
+      border-radius: 10px;
+      background: $primary;
+      color: $white;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      transition: background 0.15s ease;
+
+      &:hover:not(:disabled) {
+        background: $primary-dark;
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.55;
+      }
+    }
+  }
+
+  .fc-effective {
+    @include flex(7px);
+    align-items: flex-start;
+    margin-top: -7px;
+    color: $muted;
+    font-size: 12px;
+    line-height: 1.45;
+
+    svg {
+      flex: none;
+      margin-top: 1px;
+      color: $primary;
+    }
+  }
+
+  @media (max-width: 575px) {
+    padding: 16px;
+
+    .fc-amount-form {
+      grid-template-columns: minmax(0, 1fr);
+
+      button {
+        width: 100%;
+      }
     }
   }
 }

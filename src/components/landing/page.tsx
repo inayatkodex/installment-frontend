@@ -22,9 +22,6 @@ import BrandLogo from "@/components/common/BrandLogo";
 import PhoneMockup from "@/components/landing/PhoneMockup";
 import "./landing.scss";
 
-/** Keep in sync with the monthly fee on the backend (Shop.monthlyFee). */
-const MONTHLY_FEE = "Rs. 2,500";
-
 const PROBLEMS = [
   "Qist ki tareekh bhool jana",
   "Kis ne kitna diya, har dafa dobara jorna",
@@ -130,8 +127,8 @@ const TRUST: Card[] = [
 
 const FAQS = [
   {
-    q: "Kya yeh free hai?",
-    a: `Signup free hai. Dukaan active hone ke baad mahana fee ${MONTHLY_FEE} hai. Koi chhupa kharcha nahi.`,
+    q: "Mahana fee kitni hai?",
+    a: "Har dukaan ki mahana fee admin alag set karta hai. Koi fixed raqam nahi; aap ki dukaan ki fee registration review ke baad aap ko bata di jayegi. Signup free hai.",
   },
   {
     q: "Mujhe computer chahiye?",

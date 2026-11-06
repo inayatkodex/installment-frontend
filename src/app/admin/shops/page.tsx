@@ -1,7 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Store } from "lucide-react";
+import { ArrowUpRight, RotateCcw, Store, Trash2 } from "lucide-react";
+import Link from "next/link";
 import ShopsTable from "@/components/admin/shops-table/ShopsTable";
 import EmptyState from "@/components/common/EmptyState/EmptyState";
 import FilterChips from "@/components/common/FilterChips/FilterChips";
@@ -19,12 +20,15 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { currentMonthKey } from "@/shared/planUtils";
 import { showToast } from "@/shared/toastUtils";
+import { ROUTES } from "@/constant/appRoutes";
 import { AdminShop, FeeStatus } from "@/types/adminShop";
 import "./shops.scss";
 
 const AdminShopsPage = () => {
   const dispatch = useAppDispatch();
-  const { list, loading, error, pendingDeletion, updating } = useAppSelector((s) => s.adminShops);
+  const { list, loading, error, pendingDeletion, updating } = useAppSelector(
+    (s) => s.adminShops,
+  );
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("all");
   const [fee, setFee] = useState("all");
@@ -65,7 +69,7 @@ const AdminShopsPage = () => {
       ).unwrap();
       showToast(
         next === "paid"
-          ? `Rs. ${shop.monthlyFee.toLocaleString()} fee received for ${shop.shopName}`
+          ? `Rs. ${(shop.monthlyFee ?? 0).toLocaleString()} fee received for ${shop.shopName}`
           : `Fee marked as unpaid for ${shop.shopName}`,
         "success",
       );
@@ -105,22 +109,39 @@ const AdminShopsPage = () => {
 
   return (
     <div className="admin-shops">
-      <h1 className="page-title">Shops</h1>
-      <SearchBar
-        value={q}
-        onChange={setQ}
-        placeholder="Search by shop, owner, mobile, or Shop ID"
-        label="Shops search"
-      />
-      <div className="as-filters">
-        <FilterChips
-          options={statusFilters}
-          value={status}
-          onChange={setStatus}
-          label="Status filter"
-        />
-        <div className="as-fee">
-          <span>Fee (This Month):</span>
+      <header className="as-header">
+        <div>
+          <span className="as-eyebrow">Shop management</span>
+          <h1 className="page-title">Shops</h1>
+          <p>Review registrations, update status, and track monthly fees.</p>
+        </div>
+        <Link href={ROUTES.ADMIN.DASHBOARD} className="as-dashboard-link">
+          Dashboard <ArrowUpRight size={16} aria-hidden="true" />
+        </Link>
+      </header>
+
+      <section className="as-toolbar" aria-label="Search and filter shops">
+        <div className="as-search-row">
+          <div className="as-search">
+            <SearchBar
+              value={q}
+              onChange={setQ}
+              placeholder="Shop, owner, mobile, or ID"
+              label="Shops search"
+            />
+          </div>
+          <FilterChips
+            options={statusFilters}
+            value={status}
+            onChange={setStatus}
+            label="Status filter"
+          />
+        </div>
+        <div className="as-filter-bottom">
+          <div className="as-filter-caption">
+            <span>Filter by fee</span>
+            <small>This month</small>
+          </div>
           <FilterChips
             options={feeFilters}
             value={fee}
@@ -128,28 +149,55 @@ const AdminShopsPage = () => {
             label="Fee filter"
           />
         </div>
-      </div>
+      </section>
+
+      {list && (
+        <div className="as-result-summary" aria-live="polite">
+          <span>
+            Showing <strong>{list.items.length}</strong> of{" "}
+            <strong>{list.total}</strong> shops
+          </span>
+          {loading && <small>Updating…</small>}
+        </div>
+      )}
 
       {pendingDeletion.length > 0 && (
-        <section className="as-recently-deleted" aria-labelledby="as-recent-title">
-          <h2 id="as-recent-title">Recently deleted</h2>
-          <p>Shops are permanently deleted after 24 hours.</p>
+        <section
+          className="as-recently-deleted"
+          aria-labelledby="as-recent-title"
+        >
+          <div className="as-recent-heading">
+            <span className="as-recent-icon">
+              <Trash2 size={17} aria-hidden="true" />
+            </span>
+            <div>
+              <h2 id="as-recent-title">Recently deleted</h2>
+              <p>Shops are permanently deleted after 7 days.</p>
+            </div>
+          </div>
           <ul>
             {pendingDeletion.map((shop) => (
               <li key={shop.id}>
                 <div>
                   <strong>{shop.shopName}</strong>
-                  <span>{shop.shopCode} · {shop.ownerName}</span>
-                  <small>
-                    Deleted: {new Date(shop.requestedAt).toLocaleString("en-PK", { timeZone: "Asia/Karachi" })}
+                  <span>
+                    {shop.shopCode} · {shop.ownerName}
+                  </span>
+                  <small className="as-deleted-date">
+                    <span>Deleted</span>
+                    {new Date(shop.requestedAt).toLocaleString("en-PK", {
+                      timeZone: "Asia/Karachi",
+                    })}
                   </small>
                 </div>
                 <button
+                  className="as-undo"
                   type="button"
                   disabled={updating}
                   onClick={() => undoDeletion(shop.id, shop.shopName)}
                 >
-                  Undo
+                  <RotateCcw size={15} aria-hidden="true" />
+                  Restore
                 </button>
               </li>
             ))}
@@ -164,11 +212,25 @@ const AdminShopsPage = () => {
       ) : !list ? (
         <Loader />
       ) : list.items.length === 0 ? (
-        <EmptyState
-          icon={<Store size={30} />}
-          title="No shops found"
-          text="Try adjusting your search or filters."
-        />
+        <div className="as-empty">
+          <EmptyState
+            icon={<Store size={30} />}
+            title="No shops found"
+            text="Try adjusting your search or filters."
+          />
+          {(q || status !== "all" || fee !== "all") && (
+            <button
+              type="button"
+              onClick={() => {
+                setQ("");
+                setStatus("all");
+                setFee("all");
+              }}
+            >
+              Clear search and filters
+            </button>
+          )}
+        </div>
       ) : (
         <div className={loading ? "as-loading" : ""}>
           <ShopsTable shops={list.items} onStatus={ask} onFee={changeFee} />

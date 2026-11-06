@@ -45,7 +45,7 @@ Admin ke paas sirf do cheezein: **shops ka status** aur **monthly fee**.
 - Dashboard: Active / Pending / Inactive / Archived ki ginti, is mahine ki fee (wasool, baaki, kitni shops ne di).
 - Shops: search, status filter, fee filter (Paid / Unpaid), har row mein "Status badlein" menu.
 - Shop detail: status kisi bhi stage se kisi bhi status par (Pending, Active, Inactive, Archived), pehle confirm box. Mahine ki fee "Paid / Unpaid mark karein".
-- Fee: `Rs. 2,500` har Active dukaan ke liye.
+- Fee: har shop ka amount admin set karta hai. Pehli setting current month se aur baad ki tabdeeliyan aglay month se apply hoti hain.
 
 ## Shopkeeper ke naye kaam
 

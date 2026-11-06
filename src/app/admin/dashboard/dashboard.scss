@@ -2,14 +2,111 @@
 @use "../../../styles/variables.scss" as *;
 
 .admin-dashboard {
+  > .page-title {
+    margin-bottom: 14px;
+  }
+
+  .ad-welcome {
+    @include flex-between(14px);
+    min-height: 92px;
+    margin-bottom: 22px;
+    padding: 17px 20px;
+    border: 1px solid $primary-border;
+    border-radius: 17px;
+    background:
+      radial-gradient(
+        circle at 90% 15%,
+        rgba(255, 255, 255, 0.55),
+        transparent 34%
+      ),
+      linear-gradient(110deg, $primary-soft, #f8fbff);
+  }
+
+  .ad-welcome-icon {
+    @include flex-center();
+    width: 48px;
+    height: 48px;
+    flex: none;
+    border-radius: 14px;
+    background: $white;
+    color: $primary;
+    box-shadow: 0 3px 10px rgba(18, 48, 84, 0.08);
+  }
+
+  .ad-welcome > div:nth-child(2) {
+    flex: 1;
+    min-width: 0;
+
+    p {
+      margin-bottom: 3px;
+      color: $primary-dark;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      color: $ink;
+      font-size: 17px;
+      line-height: 1.35;
+    }
+  }
+
+  .ad-view-shops {
+    @include flex-center();
+    gap: 7px;
+    min-height: 42px;
+    flex: none;
+    padding: 0 13px;
+    border: 1px solid rgba(21, 101, 192, 0.2);
+    border-radius: 10px;
+    background: $white;
+    color: $primary-dark;
+    font-size: 12px;
+    font-weight: 700;
+    transition:
+      background 0.15s ease,
+      border-color 0.15s ease;
+
+    &:hover {
+      border-color: $primary;
+      background: $primary-soft;
+    }
+  }
+
   .ad-body {
     @include flex-wrapper(22px);
   }
+
+  .ad-refreshing {
+    color: $muted;
+    font-size: 12px;
+    text-align: right;
+  }
+
   .ad-error {
     text-align: center;
     @include flex-wrapper(12px);
     align-items: center;
     padding: 24px 0;
     color: $muted;
+  }
+
+  @media (max-width: 540px) {
+    .ad-welcome {
+      align-items: flex-start;
+      flex-wrap: wrap;
+      padding: 15px;
+    }
+
+    .ad-welcome > div:nth-child(2) h2 {
+      font-size: 15px;
+    }
+
+    .ad-view-shops {
+      width: 100%;
+      margin-top: 2px;
+    }
   }
 }

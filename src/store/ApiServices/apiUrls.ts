@@ -45,6 +45,7 @@ const API_URLS = {
     SHOP_UNDO_DELETE: (id: string) => `api/admin/shops/${id}/undo-delete`,
     SHOP_STATUS: (id: string) => `api/admin/shops/${id}/status`,
     SHOP_FEE: (id: string) => `api/admin/shops/${id}/fee`,
+    SHOP_MONTHLY_FEE: (id: string) => `api/admin/shops/${id}/monthly-fee`,
     SHOP_PASSWORD: (id: string) => `api/admin/shops/${id}/password`,
   },
 };

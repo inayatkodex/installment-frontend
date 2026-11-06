@@ -4,6 +4,7 @@ export type FeeStatus = "paid" | "unpaid";
 
 export interface FeeMonth {
   month: string; // "YYYY-MM"
+  amount: number;
   status: FeeStatus;
   paidOn?: string;
   method?: string;
@@ -21,7 +22,9 @@ export interface AdminShop {
   city: string;
   status: ShopStatus;
   registeredAt: string;
-  monthlyFee: number;
+  monthlyFee: number | null;
+  nextMonthlyFee: number | null;
+  feeChangeEffectiveMonth: string;
   feeStatus: FeeStatus | null; // this month's fee (null if the shop has no fee yet)
   feeHistory: FeeMonth[];
   statusNote?: string;

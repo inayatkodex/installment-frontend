@@ -9,6 +9,12 @@ export function proxy(req: NextRequest) {
   const adminToken = req.cookies.get(ADMIN_TOKEN_KEY)?.value;
 
   /* ---------------- PUBLIC PAGES ---------------- */
+  // Keep authenticated admins inside the admin workspace, including on browser Back.
+  if (pathname === ROUTES.HOME.INDEX && adminToken)
+    return NextResponse.redirect(new URL(ROUTES.ADMIN.DASHBOARD, req.url));
+  // Keep authenticated users inside their shop workspace, including on browser Back.
+  if (pathname === ROUTES.HOME.INDEX && shopToken)
+    return NextResponse.redirect(new URL(ROUTES.SHOP.DASHBOARD, req.url));
   // Already logged in? Skip the login page.
   if (pathname === ROUTES.SHOP.LOGIN && shopToken)
     return NextResponse.redirect(new URL(ROUTES.SHOP.DASHBOARD, req.url));

@@ -15,13 +15,13 @@ import { useShopStatusChange } from "@/hooks/useShopStatusChange";
 import {
   deleteAdminShop,
   resetAdminShopPassword,
-  setAdminShopFee,
+  setAdminShopMonthlyFee,
 } from "@/store/slices/admin/shops/adminShopsSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { formatDate } from "@/shared/formatUtils";
 import { resolveMediaUrl } from "@/shared/imageUtils";
 import { showToast } from "@/shared/toastUtils";
-import { AdminShop, FeeStatus } from "@/types/adminShop";
+import { AdminShop } from "@/types/adminShop";
 import "./shop-detail.scss";
 
 const Row = ({ k, v }: { k: string; v: string }) => (
@@ -66,7 +66,9 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
       return;
     }
     if (!/[A-Za-z]/.test(newPassword) || !/\d/.test(newPassword)) {
-      setPasswordError("Password must include at least one letter and one number.");
+      setPasswordError(
+        "Password must include at least one letter and one number.",
+      );
       return;
     }
     if (new TextEncoder().encode(newPassword).length > 72) {
@@ -102,7 +104,10 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
   const deleteShop = async () => {
     try {
       await dispatch(deleteAdminShop(s.id)).unwrap();
-      showToast(`${s.shopName} deleted. Undo is available for 24 hours.`, "success");
+      showToast(
+        `${s.shopName} deleted. Undo is available for 7 days.`,
+        "success",
+      );
       router.push(ROUTES.ADMIN.SHOPS);
     } catch (e) {
       showToast(
@@ -112,18 +117,16 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
     }
   };
 
-  const changeFee = async (month: string, status: FeeStatus) => {
+  const setMonthlyFee = async (amount: number) => {
     try {
-      await dispatch(setAdminShopFee({ id: s.id, month, status })).unwrap();
+      await dispatch(setAdminShopMonthlyFee({ id: s.id, amount })).unwrap();
       showToast(
-        status === "paid"
-          ? `Rs. ${s.monthlyFee.toLocaleString()} fee received for ${s.shopName}`
-          : `Fee marked as unpaid for ${s.shopName}`,
+        `Monthly fee set to Rs. ${amount.toLocaleString()} for ${s.shopName}`,
         "success",
       );
     } catch (e) {
       showToast(
-        typeof e === "string" ? e : "Failed to update fee status",
+        typeof e === "string" ? e : "Failed to set monthly fee",
         "error",
       );
     }
@@ -201,7 +204,7 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
           <Row k="Address" v={s.address} />
           <Row k="City" v={s.city} />
         </section>
-        <FeeCard shop={s} busy={updating} onChange={changeFee} />
+        <FeeCard shop={s} busy={updating} onSetAmount={setMonthlyFee} />
       </div>
 
       <section className="sd-card sd-password-card" aria-label="Shop password">
@@ -209,8 +212,8 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
           <div>
             <h2>Shop Password</h2>
             <p>
-              Set a password for the shopkeeper. Existing shop
-              sessions will be signed out on their next request.
+              Set a password for the shopkeeper. Existing shop sessions will be
+              signed out on their next request.
             </p>
           </div>
           {!showPasswordForm && (
@@ -316,7 +319,7 @@ const ShopDetail = ({ shop: s }: { shop: AdminShop }) => {
       {confirmDelete && (
         <ConfirmModal
           title={`Delete ${s.shopName}?`}
-          message="The shop will be disabled. Undo within 24 hours, or its data will be permanently deleted."
+          message="The shop will be disabled. Undo within 7 days, or its data will be permanently deleted."
           confirmText="Delete"
           cancelText="Cancel"
           loadingText="Deleting…"

@@ -18,11 +18,22 @@ interface State {
   updating: boolean;
   error: string | null;
 }
-const initialState: State = { list: null, detail: null, pendingDeletion: [], loading: false, detailLoading: false, updating: false, error: null };
+const initialState: State = {
+  list: null,
+  detail: null,
+  pendingDeletion: [],
+  loading: false,
+  detailLoading: false,
+  updating: false,
+  error: null,
+};
 
 export const fetchAdminShops = createAsyncThunk(
   "adminShops/fetchList",
-  async (params: { status?: string; fee?: string; search?: string; page?: number }, { rejectWithValue }) => {
+  async (
+    params: { status?: string; fee?: string; search?: string; page?: number },
+    { rejectWithValue },
+  ) => {
     try {
       const res = await api.get(API_URLS.ADMIN.SHOPS, { params });
       return res.data.data as AdminShopsResponse;
@@ -32,14 +43,19 @@ export const fetchAdminShops = createAsyncThunk(
   },
 );
 
-export const fetchAdminShop = createAsyncThunk("adminShops/fetchDetail", async (id: string, { rejectWithValue }) => {
-  try {
-    const res = await api.get(API_URLS.ADMIN.SHOP_DETAIL(id));
-    return res.data.data as AdminShop;
-  } catch (error) {
-    return rejectWithValue(getErrorMessage(error, "Failed to load shop details"));
-  }
-});
+export const fetchAdminShop = createAsyncThunk(
+  "adminShops/fetchDetail",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const res = await api.get(API_URLS.ADMIN.SHOP_DETAIL(id));
+      return res.data.data as AdminShop;
+    } catch (error) {
+      return rejectWithValue(
+        getErrorMessage(error, "Failed to load shop details"),
+      );
+    }
+  },
+);
 
 export const fetchPendingShopDeletions = createAsyncThunk(
   "adminShops/fetchPendingDeletion",
@@ -48,7 +64,9 @@ export const fetchPendingShopDeletions = createAsyncThunk(
       const res = await api.get(API_URLS.ADMIN.SHOPS_PENDING_DELETION);
       return res.data.data as PendingShopDeletion[];
     } catch (error) {
-      return rejectWithValue(getErrorMessage(error, "Failed to load pending shop deletions"));
+      return rejectWithValue(
+        getErrorMessage(error, "Failed to load pending shop deletions"),
+      );
     }
   },
 );
@@ -79,19 +97,35 @@ export const deleteAdminShop = createAsyncThunk(
 
 export const updateAdminShopStatus = createAsyncThunk(
   "adminShops/updateStatus",
-  async (payload: { id: string; status: ShopStatus; reason?: string }, { rejectWithValue }) => {
+  async (
+    payload: { id: string; status: ShopStatus; reason?: string },
+    { rejectWithValue },
+  ) => {
     try {
-      const res = await api.patch(API_URLS.ADMIN.SHOP_STATUS(payload.id), { status: payload.status, reason: payload.reason });
+      const res = await api.patch(API_URLS.ADMIN.SHOP_STATUS(payload.id), {
+        status: payload.status,
+        reason: payload.reason,
+      });
       return res.data.data as AdminShop;
     } catch (error) {
-      return rejectWithValue(getErrorMessage(error, "Failed to update shop status"));
+      return rejectWithValue(
+        getErrorMessage(error, "Failed to update shop status"),
+      );
     }
   },
 );
 
 export const setAdminShopFee = createAsyncThunk(
   "adminShops/setFee",
-  async (payload: { id: string; month: string; status: "paid" | "unpaid"; method?: string }, { rejectWithValue }) => {
+  async (
+    payload: {
+      id: string;
+      month: string;
+      status: "paid" | "unpaid";
+      method?: string;
+    },
+    { rejectWithValue },
+  ) => {
     try {
       const res = await api.patch(API_URLS.ADMIN.SHOP_FEE(payload.id), {
         month: payload.month,
@@ -100,7 +134,25 @@ export const setAdminShopFee = createAsyncThunk(
       });
       return res.data.data as AdminShop;
     } catch (error) {
-      return rejectWithValue(getErrorMessage(error, "Failed to update fee status"));
+      return rejectWithValue(
+        getErrorMessage(error, "Failed to update fee status"),
+      );
+    }
+  },
+);
+
+export const setAdminShopMonthlyFee = createAsyncThunk(
+  "adminShops/setMonthlyFee",
+  async (payload: { id: string; amount: number }, { rejectWithValue }) => {
+    try {
+      const res = await api.patch(API_URLS.ADMIN.SHOP_MONTHLY_FEE(payload.id), {
+        amount: payload.amount,
+      });
+      return res.data.data as AdminShop;
+    } catch (error) {
+      return rejectWithValue(
+        getErrorMessage(error, "Failed to set monthly fee"),
+      );
     }
   },
 );
@@ -114,7 +166,9 @@ export const resetAdminShopPassword = createAsyncThunk(
       });
       return payload.id;
     } catch (error) {
-      return rejectWithValue(getErrorMessage(error, "Failed to reset shop password"));
+      return rejectWithValue(
+        getErrorMessage(error, "Failed to reset shop password"),
+      );
     }
   },
 );
@@ -125,15 +179,39 @@ const adminShopsSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchAdminShops.pending, (s) => { s.loading = true; s.error = null; })
-      .addCase(fetchAdminShops.fulfilled, (s, a) => { s.loading = false; s.list = a.payload; })
-      .addCase(fetchAdminShops.rejected, (s, a) => { s.loading = false; s.error = a.payload as string; })
-      .addCase(fetchAdminShop.pending, (s) => { s.detailLoading = true; s.error = null; })
-      .addCase(fetchAdminShop.fulfilled, (s, a) => { s.detailLoading = false; s.detail = a.payload; })
-      .addCase(fetchAdminShop.rejected, (s, a) => { s.detailLoading = false; s.error = a.payload as string; })
-      .addCase(fetchPendingShopDeletions.fulfilled, (s, a) => { s.pendingDeletion = a.payload; })
-      .addCase(fetchPendingShopDeletions.rejected, (s, a) => { s.error = a.payload as string; })
-      .addCase(deleteAdminShop.pending, (s) => { s.updating = true; })
+      .addCase(fetchAdminShops.pending, (s) => {
+        s.loading = true;
+        s.error = null;
+      })
+      .addCase(fetchAdminShops.fulfilled, (s, a) => {
+        s.loading = false;
+        s.list = a.payload;
+      })
+      .addCase(fetchAdminShops.rejected, (s, a) => {
+        s.loading = false;
+        s.error = a.payload as string;
+      })
+      .addCase(fetchAdminShop.pending, (s) => {
+        s.detailLoading = true;
+        s.error = null;
+      })
+      .addCase(fetchAdminShop.fulfilled, (s, a) => {
+        s.detailLoading = false;
+        s.detail = a.payload;
+      })
+      .addCase(fetchAdminShop.rejected, (s, a) => {
+        s.detailLoading = false;
+        s.error = a.payload as string;
+      })
+      .addCase(fetchPendingShopDeletions.fulfilled, (s, a) => {
+        s.pendingDeletion = a.payload;
+      })
+      .addCase(fetchPendingShopDeletions.rejected, (s, a) => {
+        s.error = a.payload as string;
+      })
+      .addCase(deleteAdminShop.pending, (s) => {
+        s.updating = true;
+      })
       .addCase(deleteAdminShop.fulfilled, (s, a) => {
         s.updating = false;
         if (s.detail?.id === a.payload) s.detail = null;
@@ -150,40 +228,82 @@ const adminShopsSlice = createSlice({
           }
         }
       })
-      .addCase(undoDeleteAdminShop.pending, (s) => { s.updating = true; })
+      .addCase(undoDeleteAdminShop.pending, (s) => {
+        s.updating = true;
+      })
       .addCase(undoDeleteAdminShop.fulfilled, (s, a) => {
         s.updating = false;
-        s.pendingDeletion = s.pendingDeletion.filter((shop) => shop.id !== a.payload);
+        s.pendingDeletion = s.pendingDeletion.filter(
+          (shop) => shop.id !== a.payload,
+        );
       })
-      .addCase(undoDeleteAdminShop.rejected, (s) => { s.updating = false; })
-      .addCase(deleteAdminShop.rejected, (s) => { s.updating = false; })
-      .addCase(updateAdminShopStatus.pending, (s) => { s.updating = true; })
+      .addCase(undoDeleteAdminShop.rejected, (s) => {
+        s.updating = false;
+      })
+      .addCase(deleteAdminShop.rejected, (s) => {
+        s.updating = false;
+      })
+      .addCase(updateAdminShopStatus.pending, (s) => {
+        s.updating = true;
+      })
       .addCase(updateAdminShopStatus.fulfilled, (s, a) => {
         s.updating = false;
         s.detail = a.payload;
         if (s.list?.items) {
-          const idx = s.list.items.findIndex((item) => item.id === a.payload.id);
+          const idx = s.list.items.findIndex(
+            (item) => item.id === a.payload.id,
+          );
           if (idx !== -1) {
             s.list.items[idx] = a.payload;
           }
         }
       })
-      .addCase(updateAdminShopStatus.rejected, (s) => { s.updating = false; })
-      .addCase(setAdminShopFee.pending, (s) => { s.updating = true; })
+      .addCase(updateAdminShopStatus.rejected, (s) => {
+        s.updating = false;
+      })
+      .addCase(setAdminShopFee.pending, (s) => {
+        s.updating = true;
+      })
       .addCase(setAdminShopFee.fulfilled, (s, a) => {
         s.updating = false;
         s.detail = a.payload;
         if (s.list?.items) {
-          const idx = s.list.items.findIndex((item) => item.id === a.payload.id);
+          const idx = s.list.items.findIndex(
+            (item) => item.id === a.payload.id,
+          );
           if (idx !== -1) {
             s.list.items[idx] = a.payload;
           }
         }
       })
-      .addCase(setAdminShopFee.rejected, (s) => { s.updating = false; })
-      .addCase(resetAdminShopPassword.pending, (s) => { s.updating = true; })
-      .addCase(resetAdminShopPassword.fulfilled, (s) => { s.updating = false; })
-      .addCase(resetAdminShopPassword.rejected, (s) => { s.updating = false; });
+      .addCase(setAdminShopFee.rejected, (s) => {
+        s.updating = false;
+      })
+      .addCase(setAdminShopMonthlyFee.pending, (s) => {
+        s.updating = true;
+      })
+      .addCase(setAdminShopMonthlyFee.fulfilled, (s, a) => {
+        s.updating = false;
+        s.detail = a.payload;
+        if (s.list?.items) {
+          const idx = s.list.items.findIndex(
+            (item) => item.id === a.payload.id,
+          );
+          if (idx !== -1) s.list.items[idx] = a.payload;
+        }
+      })
+      .addCase(setAdminShopMonthlyFee.rejected, (s) => {
+        s.updating = false;
+      })
+      .addCase(resetAdminShopPassword.pending, (s) => {
+        s.updating = true;
+      })
+      .addCase(resetAdminShopPassword.fulfilled, (s) => {
+        s.updating = false;
+      })
+      .addCase(resetAdminShopPassword.rejected, (s) => {
+        s.updating = false;
+      });
   },
 });
 

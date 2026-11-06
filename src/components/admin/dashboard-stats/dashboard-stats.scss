@@ -2,139 +2,317 @@
 @use "../../../styles/variables.scss" as *;
 
 .dashboard-stats {
-  @include flex-wrapper(26px);
-  h2 {
-    font-size: 19px;
-    .ds-month {
-      font-size: 14px;
-      font-weight: 700;
-      color: $primary;
-      margin-left: 8px;
+  @include flex-wrapper(22px);
+  min-width: 0;
+
+  .ds-section {
+    min-width: 0;
+  }
+
+  .ds-section-heading {
+    @include flex-between(12px);
+    align-items: flex-end;
+    margin-bottom: 13px;
+
+    h2 {
+      margin-top: 3px;
+      color: $ink;
+      font-size: 19px;
+      line-height: 1.3;
     }
   }
-  .ds-sub {
-    font-size: 14px;
+
+  .ds-eyebrow {
     color: $muted;
-    margin: 2px 0 12px;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .ds-total {
+    flex: none;
+    padding: 6px 10px;
+    border: 1px solid $line;
+    border-radius: 999px;
+    background: $white;
+    color: $muted;
+    font-size: 12px;
+
+    strong {
+      color: $ink;
+      font-size: 14px;
+    }
+  }
+
+  .ds-month {
+    flex: none;
+    padding: 7px 10px;
+    border-radius: 9px;
+    background: $primary-soft;
+    color: $primary-dark;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .ds-sub {
+    margin: -5px 0 12px;
+    color: $muted;
+    font-size: 13px;
+    line-height: 1.45;
   }
 
   .ds-grid {
-    @include grid(2, 12px);
-    @include from-desktop() {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-  .ds-card {
-    @include flex-wrapper(4px);
-    padding: 18px;
-    border-radius: 16px;
-    min-height: 130px;
-    span {
-      font-size: 15px;
-      font-weight: 700;
-      color: $muted;
-    }
-    strong {
-      font-size: 40px;
-      line-height: 1.1;
-    }
-    b {
-      margin-top: auto;
-      font-size: 14px;
-      color: $primary;
-      padding: 6px 0;
-    }
-    &.green {
-      background: $success-soft;
-      strong {
-        color: $success;
-      }
-    }
-    &.yellow {
-      background: $warning-soft;
-      strong {
-        color: $warning;
-      }
-    }
-    &.red {
-      background: $danger-soft;
-      strong {
-        color: $danger;
-      }
-    }
-    &.gray {
-      background: $bg;
-      strong {
-        color: $text;
-      }
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 11px;
+
+    @include from-tablet() {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
     }
   }
 
-  .ds-fees {
+  .ds-card {
     @include flex-wrapper(12px);
-    @include from-desktop() {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+    min-width: 0;
+    min-height: 138px;
+    padding: 15px;
+    border: 1px solid transparent;
+    border-radius: 15px;
+    transition:
+      transform 0.15s ease,
+      box-shadow 0.15s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 7px 18px rgba(18, 48, 84, 0.09);
     }
-  }
-  .ds-fee {
-    @include flex-wrapper(6px);
-    padding: 20px;
-    border-radius: 16px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    justify-content: center;
-    span {
-      font-size: 15px;
-      font-weight: 700;
-      color: $muted;
-    }
-    strong {
-      font-size: 34px;
-      font-variant-numeric: tabular-nums;
-    }
-    p {
-      font-size: 15px;
-      color: $text;
-    }
+
     &.green {
+      border-color: rgba(27, 94, 32, 0.1);
       background: $success-soft;
-      strong {
+      .ds-card-top i,
+      .ds-card-bottom b,
+      > strong {
         color: $success;
       }
     }
+
+    &.yellow {
+      border-color: rgba(122, 82, 0, 0.1);
+      background: $warning-soft;
+      .ds-card-top i,
+      .ds-card-bottom b,
+      > strong {
+        color: $warning;
+      }
+    }
+
     &.red {
+      border-color: rgba(183, 28, 28, 0.1);
       background: $danger-soft;
-      strong {
+      .ds-card-top i,
+      .ds-card-bottom b,
+      > strong {
         color: $danger;
       }
     }
-    &.white {
+
+    &.gray {
+      border-color: $line;
       background: $white;
-      span {
-        font-size: 18px;
-        color: $text;
+      .ds-card-top i,
+      .ds-card-bottom b,
+      > strong {
+        color: $muted;
       }
     }
+
+    > strong {
+      font-size: clamp(30px, 5vw, 38px);
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+    }
   }
+
+  .ds-card-top,
+  .ds-card-bottom {
+    @include flex-between(8px);
+    min-width: 0;
+  }
+
+  .ds-card-top {
+    > span {
+      color: $ink;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    i {
+      @include flex-center();
+      width: 30px;
+      height: 30px;
+      flex: none;
+      border-radius: 9px;
+      background: rgba(255, 255, 255, 0.72);
+    }
+  }
+
+  .ds-card-bottom {
+    margin-top: auto;
+
+    small {
+      min-width: 0;
+      color: $muted;
+      font-size: 11px;
+      line-height: 1.35;
+    }
+
+    b {
+      @include flex(3px);
+      flex: none;
+      font-size: 11px;
+    }
+  }
+
+  .ds-fee-section {
+    padding: 17px;
+    border: 1px solid $line;
+    border-radius: 17px;
+    background: $white;
+    box-shadow: 0 4px 16px rgba(18, 48, 84, 0.045);
+  }
+
+  .ds-fees {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .ds-fee {
+    @include flex-wrapper(7px);
+    min-width: 0;
+    min-height: 122px;
+    padding: 15px;
+    border: 1px solid transparent;
+    border-radius: 13px;
+    justify-content: center;
+
+    .ds-fee-label {
+      @include flex(6px);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    > strong {
+      overflow-wrap: anywhere;
+      font-size: clamp(22px, 4vw, 30px);
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+    }
+
+    p {
+      color: $muted;
+      font-size: 12px;
+    }
+
+    &.green {
+      border-color: rgba(27, 94, 32, 0.1);
+      background: $success-soft;
+      .ds-fee-label,
+      > strong {
+        color: $success;
+      }
+    }
+
+    &.red {
+      border-color: rgba(183, 28, 28, 0.1);
+      background: $danger-soft;
+      .ds-fee-label,
+      > strong {
+        color: $danger;
+      }
+    }
+
+    &.white {
+      grid-column: 1 / -1;
+      min-height: 0;
+      gap: 10px;
+      border-color: $line;
+      background: #fbfcfe;
+    }
+  }
+
+  .ds-progress-heading {
+    @include flex-between(8px);
+
+    span {
+      color: $ink;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    strong {
+      color: $primary;
+      font-size: 20px;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  .ds-progress-note {
+    color: $muted;
+    font-size: 11px;
+  }
+
   .ds-bar {
-    height: 12px;
+    height: 9px;
+    overflow: hidden;
+    margin: 0;
     border-radius: 99px;
     background: $primary-soft;
-    overflow: hidden;
-    margin: 6px 0;
+
     i {
       display: block;
       height: 100%;
-      background: $primary;
+      border-radius: inherit;
+      background: linear-gradient(90deg, $primary, #42a5f5);
+      transition: width 0.35s ease;
     }
   }
+
   .ds-link {
     @include flex-center();
-    min-height: 44px;
-    border-radius: 12px;
-    border: 1.5px solid $primary;
-    color: $primary;
-    font-size: 14px;
+    gap: 7px;
+    min-height: 42px;
+    margin-top: 2px;
+    border: 1px solid $primary-border;
+    border-radius: 10px;
+    background: $white;
+    color: $primary-dark;
+    font-size: 12px;
     font-weight: 700;
+    transition:
+      background 0.15s ease,
+      border-color 0.15s ease;
+
+    &:hover {
+      border-color: $primary;
+      background: $primary-soft;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .ds-fee-section {
+      padding: 13px;
+    }
+
+    .ds-fees {
+      gap: 8px;
+    }
+
+    .ds-fee {
+      padding: 12px;
+    }
   }
 }

@@ -4,6 +4,8 @@
 .st-shop-cell {
   @include flex(12px);
   align-items: center;
+  min-width: 180px;
+
   .st-avatar {
     width: 40px;
     height: 40px;
@@ -25,24 +27,43 @@
 }
 .st-shop {
   @include flex-wrapper(0);
+  min-width: 0;
+
   strong {
+    overflow: hidden;
     font-size: 15px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
+
   span {
     font-size: 12px;
     color: $muted;
     font-weight: 400;
+    white-space: nowrap;
   }
 }
 .st-actions {
   @include flex(14px);
   align-items: center;
+  white-space: nowrap;
 }
 .st-view {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 38px;
+  padding: 0 11px;
+  border: 1px solid $primary-border;
+  border-radius: 9px;
+  background: $white;
   color: $primary;
   font-weight: 700;
-  font-size: 14px;
-  padding: 12px 4px;
+  font-size: 12px;
+
+  &:hover {
+    background: $primary-soft;
+  }
 }
 
 // Monthly fee cell
@@ -114,7 +135,98 @@
   }
 
   .st-fee-na {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 9px;
+    border-radius: 999px;
+    background: $bg;
     color: $muted;
-    font-size: 14px;
+    font-size: 11px;
+  }
+}
+
+.admin-shops .data-table {
+  .dt-scroll {
+    border: 1px solid $line;
+    box-shadow: 0 5px 20px rgba(18, 48, 84, 0.045);
+  }
+
+  th {
+    background: #f7f9fc;
+    color: $muted;
+    font-size: 11px;
+    letter-spacing: 0.045em;
+    text-transform: uppercase;
+  }
+
+  td {
+    color: $ink;
+  }
+
+  @media (min-width: 768px) and (max-width: 1440px) {
+    .dt-scroll {
+      display: none;
+    }
+
+    .dt-cards {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+  }
+
+  @media (min-width: 1025px) and (max-width: 1440px) {
+    .dt-cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
+  }
+
+  .dt-cards {
+    min-width: 0;
+    gap: 12px;
+
+    > li {
+      min-width: 0;
+      padding: 15px;
+      border: 1px solid $line;
+      border-radius: 15px;
+      background: $white;
+      box-shadow: 0 4px 14px rgba(18, 48, 84, 0.045);
+      transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+
+      &:hover {
+        border-color: $primary-border;
+        box-shadow: 0 7px 18px rgba(18, 48, 84, 0.075);
+      }
+    }
+
+    .dt-card-title {
+      padding-bottom: 10px;
+      border-bottom: 1px solid $line;
+    }
+
+    .dt-card-row {
+      gap: 10px;
+      align-items: flex-start;
+
+      > :first-child {
+        font-size: 12px;
+      }
+
+      > :last-child {
+        min-width: 0;
+        font-size: 12px;
+        overflow-wrap: anywhere;
+      }
+    }
+
+    .st-actions {
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      max-width: 100%;
+    }
   }
 }
