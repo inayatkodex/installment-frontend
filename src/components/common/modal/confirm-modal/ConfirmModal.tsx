@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import type { ReactNode } from "react";
 import Modal from "../Modal";
 import CommonBtn from "../../CommonButton/Button";
 import FormInput from "../../ui/FormInput";
@@ -8,7 +9,7 @@ import "./confirmmodal.scss";
 
 interface Props {
   title: string;
-  message: string;
+  message: ReactNode;
   confirmText: string;
   cancelText?: string;
   loadingText?: string;

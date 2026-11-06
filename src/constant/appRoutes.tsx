@@ -18,6 +18,8 @@ export const ROUTES = {
     CUSTOMER_DETAIL: (id: string) => `/shop/customers/${id}`,
     CUSTOMER_EDIT: (id: string) => `/shop/customers/${id}/edit`,
     ADD_CUSTOMER: "/shop/customers/add",
+    RECENTLY_DELETED: "/shop/customers/recently-deleted",
+    ARCHIVED_CUSTOMERS: "/shop/customers/archived",
     LATE: "/shop/late",
     STATUS: "/shop/status",
   },

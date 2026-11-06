@@ -16,6 +16,11 @@
     padding: 24px 0;
     color: $muted;
   }
+  .cd-delete-warning {
+    display: block;
+    margin-top: 10px;
+    color: $danger;
+  }
   @include from-desktop() {
     max-width: 640px;
   }

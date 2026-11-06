@@ -2,6 +2,12 @@
 @use "../../../styles/variables.scss" as *;
 
 .status-page {
+  .st-saved-report {
+    margin: 8px 0;
+    color: #38734b;
+    font-size: 13px;
+    font-weight: 600;
+  }
   > .month-picker {
     max-width: 520px;
   }

@@ -17,15 +17,22 @@ const API_URLS = {
     REVERSE_PAYMENT: (id: string) => `api/shop/payments/${id}/reverse`,
     CUSTOMERS: "api/shop/customers",
     CUSTOMERS_PENDING_DELETION: "api/shop/customers/pending-deletion",
+    CUSTOMERS_ARCHIVED: "api/shop/customers/archived",
     CUSTOMER_DETAIL: (id: string) => `api/shop/customers/${id}`,
-    CUSTOMER_UNDO_DELETE: (id: string) => `api/shop/customers/${id}/undo-delete`,
-    CUSTOMER_INSTALLMENT: (id: string) => `api/shop/customers/${id}/installment`,
+    CUSTOMER_UNDO_DELETE: (id: string) =>
+      `api/shop/customers/${id}/undo-delete`,
+    CUSTOMER_ARCHIVE: (id: string) => `api/shop/customers/${id}/archive`,
+    CUSTOMER_RESTORE_ARCHIVE: (id: string) =>
+      `api/shop/customers/${id}/restore-archive`,
+    CUSTOMER_INSTALLMENT: (id: string) =>
+      `api/shop/customers/${id}/installment`,
     CUSTOMER_PURCHASES: (id: string) => `api/shop/customers/${id}/purchases`,
     CUSTOMER_PURCHASE_DATE: (customerId: string, purchaseId: string) =>
       `api/shop/customers/${customerId}/purchases/${purchaseId}/date`,
     CUSTOMER_PURCHASE_INSTALLMENT: (customerId: string, purchaseId: string) =>
       `api/shop/customers/${customerId}/purchases/${purchaseId}/installment`,
-    CUSTOMER_DOCUMENT: (id: string, docKey: string) => `api/shop/customers/${id}/documents/${docKey}`,
+    CUSTOMER_DOCUMENT: (id: string, docKey: string) =>
+      `api/shop/customers/${id}/documents/${docKey}`,
     LATE: "api/shop/late",
     STATUS: "api/shop/status",
   },

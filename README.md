@@ -50,7 +50,9 @@ Admin ke paas sirf do cheezein: **shops ka status** aur **monthly fee**.
 ## Shopkeeper ke naye kaam
 
 - **Aaj ki wasooli:** jis customer ki qist poori mil jaye woh list se hat jata hai. Neeche band line "Aaj mil gaye" mein dikhta hai, wahan "Wapas karein" (undo) hai (sirf aaj ki payments ke liye, record rehta hai).
-- **Delete customer:** sirf us customer ka jis ki saari qistein poori ho chuki hon. Customers ki list mein card ke dropdown (teen nuqtay) mein, aur customer ke detail page par.
+- **Delete customer:** kisi bhi customer ko list ya detail page se delete karein. Delete ke baad 7 din ke andar Recently deleted screen ya toast ke Undo button se wapas la sakte hain. Payment ya baqaya raqam ho to confirmation mein wazeh warning dikhai jati hai.
+- **Archive customer:** tamam qistein poori hone par customer manually archive ho sakta hai; 7 din baad backend khud archive karta hai. Archived list se customer wapas laya ja sakta hai.
+- **Monthly report:** guzre hue mahino ki report snapshot se aati hai, is liye baad ke archive/delete se purane totals nahi badalte. Closed month par "Report mehfooz hai" label dikhaya jata hai.
 - **Item ki photo:** optional, ek item par ek. Detail page par thumbnail, dabane par poori screen.
 - **Phone se photo:** Camera aur Gallery dono ka option. Gallery wala normal phone picker kholta hai, is liye alag permission nahi chahiye. Photo upload se pehle chhoti (compress) ho jati hai.
 
@@ -68,7 +70,7 @@ src/
     (public)/            "/" -> shop login
     (auth)/shop/         login, signup
     (auth)/admin/        signin
-    shop/                dashboard, profile, collection, customers (+[id], add), late, status
+    shop/                dashboard, profile, collection, customers (+[id], add, archived, recently-deleted), late, status
     admin/               dashboard, shops (+[id])
   components/
     common/              Button, FormInput, Modal, DropdownMenu, PhotoSourceSheet, PhotoViewer ...

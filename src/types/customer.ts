@@ -1,6 +1,6 @@
 import { InstallmentStatus } from "./common";
 
-export type CustomerStatus = "active" | "overdue" | "completed";
+export type CustomerStatus = "active" | "overdue" | "completed" | "archived";
 
 export interface CustomerItem {
   name: string;
@@ -30,6 +30,9 @@ export interface CustomerListItem {
   phone: string;
   photo?: string;
   status: CustomerStatus;
+  archivedAt?: string | null;
+  paid: number;
+  hasPayments: boolean;
   remaining: number;
   paidCount: number;
   totalCount: number;
@@ -49,7 +52,6 @@ export interface CustomerDetail extends CustomerListItem {
   cnic?: string;
   address?: string;
   total: number;
-  paid: number;
   downPayment: number;
   monthly: number;
   monthlyTotal: number;

@@ -12,6 +12,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface State {
   list: CustomerListItem[];
+  archived: CustomerListItem[];
+  archivedLoading: boolean;
+  archivedError: string | null;
   pendingDeletion: PendingCustomerDeletion[];
   pendingDeletionLoading: boolean;
   pendingDeletionError: string | null;
@@ -23,6 +26,9 @@ interface State {
 }
 const initialState: State = {
   list: [],
+  archived: [],
+  archivedLoading: false,
+  archivedError: null,
   pendingDeletion: [],
   pendingDeletionLoading: false,
   pendingDeletionError: null,
@@ -40,19 +46,26 @@ export const fetchCustomers = createAsyncThunk(
       const res = await api.get(API_URLS.SHOP.CUSTOMERS, { params });
       return res.data.data as CustomerListItem[];
     } catch (error) {
-      return rejectWithValue(getErrorMessage(error, "Customers load nahi ho sake"));
+      return rejectWithValue(
+        getErrorMessage(error, "Customers load nahi ho sake"),
+      );
     }
   },
 );
 
-export const fetchCustomerDetail = createAsyncThunk("shopCustomers/fetchDetail", async (id: string, { rejectWithValue }) => {
-  try {
-    const res = await api.get(API_URLS.SHOP.CUSTOMER_DETAIL(id));
-    return res.data.data as CustomerDetail;
-  } catch (error) {
-    return rejectWithValue(getErrorMessage(error, "Customer ki detail load nahi ho saki"));
-  }
-});
+export const fetchCustomerDetail = createAsyncThunk(
+  "shopCustomers/fetchDetail",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      const res = await api.get(API_URLS.SHOP.CUSTOMER_DETAIL(id));
+      return res.data.data as CustomerDetail;
+    } catch (error) {
+      return rejectWithValue(
+        getErrorMessage(error, "Customer ki detail load nahi ho saki"),
+      );
+    }
+  },
+);
 
 export const fetchPendingCustomerDeletions = createAsyncThunk(
   "shopCustomers/fetchPendingDeletion",
@@ -61,7 +74,23 @@ export const fetchPendingCustomerDeletions = createAsyncThunk(
       const res = await api.get(API_URLS.SHOP.CUSTOMERS_PENDING_DELETION);
       return res.data.data as PendingCustomerDeletion[];
     } catch (error) {
-      return rejectWithValue(getErrorMessage(error, "Pending deleted customers load nahi ho sake"));
+      return rejectWithValue(
+        getErrorMessage(error, "Pending deleted customers load nahi ho sake"),
+      );
+    }
+  },
+);
+
+export const fetchArchivedCustomers = createAsyncThunk(
+  "shopCustomers/fetchArchived",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await api.get(API_URLS.SHOP.CUSTOMERS_ARCHIVED);
+      return res.data.data as CustomerListItem[];
+    } catch (error) {
+      return rejectWithValue(
+        getErrorMessage(error, "Archived customers load nahi ho sake"),
+      );
     }
   },
 );
@@ -73,24 +102,62 @@ export const undoDeleteCustomer = createAsyncThunk(
       await api.post(API_URLS.SHOP.CUSTOMER_UNDO_DELETE(id));
       return id;
     } catch (error) {
-      return rejectWithValue(getErrorMessage(error, "Customer wapas nahi aa saka"));
+      return rejectWithValue(
+        getErrorMessage(error, "Customer wapas nahi aa saka"),
+      );
     }
   },
 );
 
-export const createCustomer = createAsyncThunk("shopCustomers/create", async (payload: NewCustomerPayload, { rejectWithValue }) => {
-  try {
-    const res = await api.post(API_URLS.SHOP.CUSTOMERS, payload);
-    return res.data.data as { id: string };
-  } catch (error) {
-    return rejectWithValue(getErrorMessage(error, "Customer save nahi ho saka"));
-  }
-});
+export const archiveCustomer = createAsyncThunk(
+  "shopCustomers/archive",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      await api.post(API_URLS.SHOP.CUSTOMER_ARCHIVE(id));
+      return id;
+    } catch (error) {
+      return rejectWithValue(
+        getErrorMessage(error, "Customer archive nahi ho saka"),
+      );
+    }
+  },
+);
+
+export const restoreArchivedCustomer = createAsyncThunk(
+  "shopCustomers/restoreArchived",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      await api.post(API_URLS.SHOP.CUSTOMER_RESTORE_ARCHIVE(id));
+      return id;
+    } catch (error) {
+      return rejectWithValue(
+        getErrorMessage(error, "Customer wapas nahi aa saka"),
+      );
+    }
+  },
+);
+
+export const createCustomer = createAsyncThunk(
+  "shopCustomers/create",
+  async (payload: NewCustomerPayload, { rejectWithValue }) => {
+    try {
+      const res = await api.post(API_URLS.SHOP.CUSTOMERS, payload);
+      return res.data.data as { id: string };
+    } catch (error) {
+      return rejectWithValue(
+        getErrorMessage(error, "Customer save nahi ho saka"),
+      );
+    }
+  },
+);
 
 export const addCustomerPurchase = createAsyncThunk(
   "shopCustomers/addPurchase",
   async (
-    { customerId, ...payload }: NewCustomerPurchasePayload & { customerId: string },
+    {
+      customerId,
+      ...payload
+    }: NewCustomerPurchasePayload & { customerId: string },
     { rejectWithValue },
   ) => {
     try {
@@ -107,15 +174,19 @@ export const addCustomerPurchase = createAsyncThunk(
   },
 );
 
-/** Only customers whose installments are all paid can be deleted. */
-export const deleteCustomer = createAsyncThunk("shopCustomers/delete", async (id: string, { rejectWithValue }) => {
-  try {
-    await api.delete(API_URLS.SHOP.CUSTOMER_DETAIL(id));
-    return id;
-  } catch (error) {
-    return rejectWithValue(getErrorMessage(error, "Customer delete nahi ho saka"));
-  }
-});
+export const deleteCustomer = createAsyncThunk(
+  "shopCustomers/delete",
+  async (id: string, { rejectWithValue }) => {
+    try {
+      await api.delete(API_URLS.SHOP.CUSTOMER_DETAIL(id));
+      return id;
+    } catch (error) {
+      return rejectWithValue(
+        getErrorMessage(error, "Customer delete nahi ho saka"),
+      );
+    }
+  },
+);
 
 export const updateCustomer = createAsyncThunk(
   "shopCustomers/update",
@@ -139,7 +210,7 @@ export const updateCustomer = createAsyncThunk(
       firstDueDate?: string;
       monthlyPayment?: number;
     },
-    { rejectWithValue }
+    { rejectWithValue },
   ) => {
     try {
       const res = await api.put(API_URLS.SHOP.CUSTOMER_DETAIL(id), {
@@ -154,10 +225,10 @@ export const updateCustomer = createAsyncThunk(
       return res.data.data as CustomerDetail;
     } catch (error) {
       return rejectWithValue(
-        getErrorMessage(error, "Customer update nahi ho saka")
+        getErrorMessage(error, "Customer update nahi ho saka"),
       );
     }
-  }
+  },
 );
 
 export const updateCustomerPurchaseDate = createAsyncThunk(
@@ -191,7 +262,10 @@ export const updateCustomerPurchaseDate = createAsyncThunk(
 export const updateCustomerBasePayment = createAsyncThunk(
   "shopCustomers/updateBasePayment",
   async (
-    { customerId, monthlyPayment }: { customerId: string; monthlyPayment: number },
+    {
+      customerId,
+      monthlyPayment,
+    }: { customerId: string; monthlyPayment: number },
     { rejectWithValue },
   ) => {
     try {
@@ -238,24 +312,40 @@ export const updateCustomerPurchasePayment = createAsyncThunk(
 
 export const uploadCustomerDocument = createAsyncThunk(
   "shopCustomers/uploadDocument",
-  async ({ customerId, docKey, photo }: { customerId: string; docKey: string; photo: string }, { rejectWithValue }) => {
+  async (
+    {
+      customerId,
+      docKey,
+      photo,
+    }: { customerId: string; docKey: string; photo: string },
+    { rejectWithValue },
+  ) => {
     try {
-      await api.put(API_URLS.SHOP.CUSTOMER_DOCUMENT(customerId, docKey), { photo });
+      await api.put(API_URLS.SHOP.CUSTOMER_DOCUMENT(customerId, docKey), {
+        photo,
+      });
       return { customerId, docKey, photo };
     } catch (error) {
-      return rejectWithValue(getErrorMessage(error, "Document save nahi ho saka"));
+      return rejectWithValue(
+        getErrorMessage(error, "Document save nahi ho saka"),
+      );
     }
   },
 );
 
 export const deleteCustomerDocument = createAsyncThunk(
   "shopCustomers/deleteDocument",
-  async ({ customerId, docKey }: { customerId: string; docKey: string }, { rejectWithValue }) => {
+  async (
+    { customerId, docKey }: { customerId: string; docKey: string },
+    { rejectWithValue },
+  ) => {
     try {
       await api.delete(API_URLS.SHOP.CUSTOMER_DOCUMENT(customerId, docKey));
       return { customerId, docKey };
     } catch (error) {
-      return rejectWithValue(getErrorMessage(error, "Document delete nahi ho saka"));
+      return rejectWithValue(
+        getErrorMessage(error, "Document delete nahi ho saka"),
+      );
     }
   },
 );
@@ -263,12 +353,25 @@ export const deleteCustomerDocument = createAsyncThunk(
 const shopCustomersSlice = createSlice({
   name: "shopCustomers",
   initialState,
-  reducers: { clearCustomerDetail: (s) => { s.detail = null; } },
+  reducers: {
+    clearCustomerDetail: (s) => {
+      s.detail = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(fetchCustomers.pending, (s) => { s.loading = true; s.error = null; })
-      .addCase(fetchCustomers.fulfilled, (s, a) => { s.loading = false; s.list = a.payload; })
-      .addCase(fetchCustomers.rejected, (s, a) => { s.loading = false; s.error = a.payload as string; })
+      .addCase(fetchCustomers.pending, (s) => {
+        s.loading = true;
+        s.error = null;
+      })
+      .addCase(fetchCustomers.fulfilled, (s, a) => {
+        s.loading = false;
+        s.list = a.payload;
+      })
+      .addCase(fetchCustomers.rejected, (s, a) => {
+        s.loading = false;
+        s.error = a.payload as string;
+      })
       .addCase(fetchPendingCustomerDeletions.pending, (s) => {
         s.pendingDeletionLoading = true;
         s.pendingDeletionError = null;
@@ -281,27 +384,72 @@ const shopCustomersSlice = createSlice({
         s.pendingDeletionLoading = false;
         s.pendingDeletionError = a.payload as string;
       })
-      .addCase(fetchCustomerDetail.pending, (s) => { s.detailLoading = true; s.error = null; })
-      .addCase(fetchCustomerDetail.fulfilled, (s, a) => { s.detailLoading = false; s.detail = a.payload; })
-      .addCase(fetchCustomerDetail.rejected, (s, a) => { s.detailLoading = false; s.error = a.payload as string; })
-      .addCase(deleteCustomer.fulfilled, (s, a) => { s.list = s.list.filter((c) => c.id !== a.payload); })
+      .addCase(fetchArchivedCustomers.pending, (s) => {
+        s.archivedLoading = true;
+        s.archivedError = null;
+      })
+      .addCase(fetchArchivedCustomers.fulfilled, (s, a) => {
+        s.archivedLoading = false;
+        s.archived = a.payload;
+      })
+      .addCase(fetchArchivedCustomers.rejected, (s, a) => {
+        s.archivedLoading = false;
+        s.archivedError = a.payload as string;
+      })
+      .addCase(fetchCustomerDetail.pending, (s) => {
+        s.detailLoading = true;
+        s.error = null;
+      })
+      .addCase(fetchCustomerDetail.fulfilled, (s, a) => {
+        s.detailLoading = false;
+        s.detail = a.payload;
+      })
+      .addCase(fetchCustomerDetail.rejected, (s, a) => {
+        s.detailLoading = false;
+        s.error = a.payload as string;
+      })
+      .addCase(deleteCustomer.fulfilled, (s, a) => {
+        s.list = s.list.filter((c) => c.id !== a.payload);
+      })
       .addCase(undoDeleteCustomer.fulfilled, (s, a) => {
-        s.pendingDeletion = s.pendingDeletion.filter((customer) => customer.id !== a.payload);
+        s.pendingDeletion = s.pendingDeletion.filter(
+          (customer) => customer.id !== a.payload,
+        );
+      })
+      .addCase(archiveCustomer.fulfilled, (s, a) => {
+        s.list = s.list.filter((customer) => customer.id !== a.payload);
+      })
+      .addCase(restoreArchivedCustomer.fulfilled, (s, a) => {
+        s.archived = s.archived.filter((customer) => customer.id !== a.payload);
       })
       .addCase(uploadCustomerDocument.fulfilled, (s, a) => {
         if (s.detail && s.detail.id === a.payload.customerId) {
           if (!s.detail.documents) s.detail.documents = {};
-          s.detail.documents[a.payload.docKey as "cnicFront" | "cnicBack" | "other"] = a.payload.photo;
+          s.detail.documents[
+            a.payload.docKey as "cnicFront" | "cnicBack" | "other"
+          ] = a.payload.photo;
         }
       })
       .addCase(deleteCustomerDocument.fulfilled, (s, a) => {
-        if (s.detail && s.detail.id === a.payload.customerId && s.detail.documents) {
-          delete s.detail.documents[a.payload.docKey as "cnicFront" | "cnicBack" | "other"];
+        if (
+          s.detail &&
+          s.detail.id === a.payload.customerId &&
+          s.detail.documents
+        ) {
+          delete s.detail.documents[
+            a.payload.docKey as "cnicFront" | "cnicBack" | "other"
+          ];
         }
       })
-      .addCase(createCustomer.pending, (s) => { s.creating = true; })
-      .addCase(createCustomer.fulfilled, (s) => { s.creating = false; })
-      .addCase(createCustomer.rejected, (s) => { s.creating = false; })
+      .addCase(createCustomer.pending, (s) => {
+        s.creating = true;
+      })
+      .addCase(createCustomer.fulfilled, (s) => {
+        s.creating = false;
+      })
+      .addCase(createCustomer.rejected, (s) => {
+        s.creating = false;
+      })
       .addCase(addCustomerPurchase.fulfilled, (s, a) => {
         if (s.detail?.id === a.payload.id) s.detail = a.payload;
       })

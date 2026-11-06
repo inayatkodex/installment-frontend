@@ -42,6 +42,11 @@ const StatusPage = () => {
         </span>
       </h1>
       <MonthPicker value={month} maxValue={max} onChange={setMonth} />
+      {month < max && (
+        <p className="st-saved-report" aria-label="Report mehfooz hai">
+          Report mehfooz hai
+        </p>
+      )}
 
       <div className="st-body">
         {error ? (

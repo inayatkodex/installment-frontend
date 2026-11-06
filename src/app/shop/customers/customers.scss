@@ -4,9 +4,33 @@
 .customers-page {
   .cu-head {
     @include flex-between();
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
     .cu-head-actions {
       @include flex(8px);
+      flex-wrap: wrap;
       flex: none;
+
+      > a:not(.cu-add-desktop) {
+        @include flex-center();
+        min-height: 40px;
+        padding: 0 12px;
+        border: 1px solid $border;
+        border-radius: 10px;
+        background: $white;
+        color: $primary-dark;
+        font-size: 13px;
+        font-weight: 700;
+        transition:
+          border-color 0.15s ease,
+          background 0.15s ease;
+
+        &:hover {
+          border-color: $primary-border;
+          background: $primary-soft;
+        }
+      }
     }
     .cu-add-desktop {
       display: none;
@@ -24,58 +48,24 @@
       }
     }
   }
+  @media (max-width: 480px) {
+    .cu-head {
+      align-items: flex-start;
+      flex-direction: column;
+    }
+    .cu-head-actions {
+      width: 100%;
+      > a:not(.cu-add-desktop) {
+        flex: 1;
+      }
+    }
+  }
   .cu-filters {
     margin: 12px 0;
   }
-  .cu-recently-deleted {
-    margin: 14px 0;
-    padding: 16px;
-    border: 1px solid $border;
-    border-radius: 14px;
-    background: $white;
-    h2 {
-      margin: 0 0 6px;
-      font-size: 18px;
-    }
-    p {
-      margin: 0 0 12px;
-      color: $muted;
-      font-size: 14px;
-    }
-    ul {
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-    li {
-      @include flex-between();
-      gap: 12px;
-      padding: 12px 0;
-      border-top: 1px solid $border;
-      div {
-        @include flex-wrapper(3px);
-      }
-      span,
-      small {
-        color: $muted;
-      }
-      button {
-        flex: 0 0 auto;
-        padding: 9px 16px;
-        border: 0;
-        border-radius: 9px;
-        background: $primary;
-        color: $white;
-        font-weight: 700;
-        &:disabled {
-          opacity: 0.6;
-        }
-      }
-    }
-  }
-  .cu-deleted-error {
-    @include flex-wrapper(12px);
-    align-items: center;
+  .cu-delete-warning {
+    display: block;
+    margin-top: 10px;
     color: $danger;
   }
   .cu-list {

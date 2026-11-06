@@ -11,11 +11,14 @@ import { ROUTES } from "@/constant/appRoutes";
 import ConfirmModal from "@/components/common/modal/confirm-modal/ConfirmModal";
 import { showToast } from "@/shared/toastUtils";
 import {
+  archiveCustomer,
   clearCustomerDetail,
   deleteCustomer,
   fetchCustomerDetail,
+  undoDeleteCustomer,
 } from "@/store/slices/shop/customers/shopCustomersSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
+import { formatRs } from "@/shared/formatUtils";
 import "./customer-detail.scss";
 
 const CustomerDetailPage = () => {
@@ -23,6 +26,7 @@ const CustomerDetailPage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [askDelete, setAskDelete] = useState(false);
+  const [askArchive, setAskArchive] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const { detail, detailLoading, error } = useAppSelector(
     (s) => s.shopCustomers,
@@ -43,13 +47,48 @@ const CustomerDetailPage = () => {
     try {
       await dispatch(deleteCustomer(id)).unwrap();
       showToast(
-        "Customer delete ho gaya. 24 ghantay tak wapas la sakte hain.",
+        <span>
+          Delete ho gaya. 7 din tak wapas la sakte hain{" "}
+          <button
+            type="button"
+            onClick={() => {
+              void dispatch(undoDeleteCustomer(id))
+                .unwrap()
+                .then(() => showToast("Customer wapas aa gaya", "success"))
+                .catch((e: unknown) =>
+                  showToast(
+                    typeof e === "string" ? e : "Customer wapas nahi aa saka",
+                    "error",
+                  ),
+                );
+            }}
+          >
+            Undo
+          </button>
+        </span>,
         "success",
+        undefined,
+        { autoClose: false },
       );
       router.push(ROUTES.SHOP.CUSTOMERS);
     } catch (e) {
       showToast(
         typeof e === "string" ? e : "Customer delete nahi ho saka",
+        "error",
+      );
+      setDeleting(false);
+    }
+  };
+
+  const confirmArchive = async () => {
+    setDeleting(true);
+    try {
+      await dispatch(archiveCustomer(id)).unwrap();
+      showToast("Customer archive ho gaya", "success");
+      router.push(ROUTES.SHOP.ARCHIVED_CUSTOMERS);
+    } catch (e) {
+      showToast(
+        typeof e === "string" ? e : "Customer archive nahi ho saka",
         "error",
       );
       setDeleting(false);
@@ -66,6 +105,7 @@ const CustomerDetailPage = () => {
           customer={detail}
           onPaid={load}
           onDelete={() => setAskDelete(true)}
+          onArchive={() => setAskArchive(true)}
         />
       ) : detailLoading ? (
         <Loader />
@@ -78,13 +118,35 @@ const CustomerDetailPage = () => {
       {askDelete && detail && (
         <ConfirmModal
           title="Customer delete karein?"
-          message="Customer list se hat jayega. 24 ghantay tak 'Delete huay customers' se wapas la sakte hain."
-          confirmText="Delete"
-          cancelText="Cancel"
+          message={
+            <>
+              Kya aap {detail.name} ko delete karna chahte hain?
+              {(detail.remaining > 0 || detail.hasPayments) && (
+                <strong className="cd-delete-warning">
+                  Is customer ka {formatRs(detail.remaining)} baqaya hai /{" "}
+                  {formatRs(detail.paid)} wasool ho chuka hai. Phir bhi delete
+                  karein?
+                </strong>
+              )}
+            </>
+          }
+          confirmText="Haan"
+          cancelText="Nahi"
           tone="danger"
           loading={deleting}
           onConfirm={confirmDelete}
           onCancel={() => setAskDelete(false)}
+        />
+      )}
+      {askArchive && (
+        <ConfirmModal
+          title="Customer archive karein?"
+          message="Yeh mukammal customer main list se hat jayega. Archived list se wapas la sakte hain."
+          confirmText="Haan"
+          cancelText="Nahi"
+          loading={deleting}
+          onConfirm={confirmArchive}
+          onCancel={() => setAskArchive(false)}
         />
       )}
     </div>

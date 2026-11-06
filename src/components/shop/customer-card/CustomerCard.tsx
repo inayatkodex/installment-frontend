@@ -14,7 +14,7 @@ interface Props {
 }
 
 const CustomerCard = ({ customer, onDelete }: Props) => {
-  const canDelete = customer.status === "completed" && !!onDelete;
+  const canDelete = !!onDelete;
   return (
     <li className="cc-wrap">
       <Link

@@ -28,10 +28,7 @@ import { ROUTES } from "@/constant/appRoutes";
 import { formatDate, formatRs } from "@/shared/formatUtils";
 import { fileToDataUrl, resolveMediaUrl } from "@/shared/imageUtils";
 import { MAX_SCHEDULE_INSTALLMENTS } from "@/shared/planUtils";
-import {
-  CustomerDetail,
-  InstallmentRow,
-} from "@/types/customer";
+import { CustomerDetail, InstallmentRow } from "@/types/customer";
 import { addCustomerPurchase } from "@/store/slices/shop/customers/shopCustomersSlice";
 import { useAppDispatch } from "@/store/store";
 import { showToast } from "@/shared/toastUtils";
@@ -43,6 +40,7 @@ interface Props {
   customer: CustomerDetail;
   onPaid: () => void;
   onDelete?: () => void;
+  onArchive?: () => void;
 }
 
 const VISIBLE = 6;
@@ -89,14 +87,14 @@ const InstallmentItem = ({
     row.status === "paid" && row.daysLate > 0
       ? "late-paid"
       : row.status === "paid"
-      ? "ok"
-      : row.status === "pending"
-        ? isNext
-          ? "next"
-          : "idle"
-        : row.status === "overdue"
-          ? "late"
-          : "partial";
+        ? "ok"
+        : row.status === "pending"
+          ? isNext
+            ? "next"
+            : "idle"
+          : row.status === "overdue"
+            ? "late"
+            : "partial";
 
   return (
     <li className="cp-inst">
@@ -175,7 +173,12 @@ const InstallmentItem = ({
   );
 };
 
-const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
+const CustomerProfile = ({
+  customer: c,
+  onPaid,
+  onDelete,
+  onArchive,
+}: Props) => {
   const dispatch = useAppDispatch();
   const [showAll, setShowAll] = useState(false);
   const [viewer, setViewer] = useState<{
@@ -356,14 +359,18 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
               trigger={<MoreVertical size={22} />}
               triggerClassName="icon-only"
               items={[
+                ...(c.status === "completed" && onArchive
+                  ? [
+                      {
+                        label: "Archive",
+                        onClick: onArchive,
+                      },
+                    ]
+                  : []),
                 {
-                  label:
-                    c.status === "completed"
-                      ? "Delete"
-                      : "Qistein mukammal hone k bad delete ho ga",
+                  label: "Delete",
                   tone: "danger",
                   onClick: onDelete,
-                  disabled: c.status !== "completed",
                 },
               ]}
             />
@@ -467,7 +474,9 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
               خریدی گئی چیزیں
             </span>
           </h2>
-          <span>{c.plans.reduce((sum, plan) => sum + plan.items.length, 0)} items</span>
+          <span>
+            {c.plans.reduce((sum, plan) => sum + plan.items.length, 0)} items
+          </span>
         </div>
         {c.plans.length === 1 ? (
           <>
@@ -541,7 +550,10 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
                           aria-label={`${item.name} ki photo dekhein`}
                         >
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={resolveMediaUrl(item.photo)} alt={item.name} />
+                          <img
+                            src={resolveMediaUrl(item.photo)}
+                            alt={item.name}
+                          />
                         </button>
                       ) : (
                         <span className="cp-item-icon">
@@ -575,8 +587,8 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
                   </div>
                 </div>
                 <p className="cp-plan-progress">
-                  {plan.receivedInstallments} of {plan.totalInstallments} qistein
-                  wasool
+                  {plan.receivedInstallments} of {plan.totalInstallments}{" "}
+                  qistein wasool
                 </p>
               </article>
             ))}
@@ -633,7 +645,10 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
             </span>
           </h2>
           <div className="cp-installment-actions">
-            <span>{formatRs(c.plans.length > 1 ? c.monthlyTotal : c.monthly)} / month</span>
+            <span>
+              {formatRs(c.plans.length > 1 ? c.monthlyTotal : c.monthly)} /
+              month
+            </span>
             <Link
               href={ROUTES.SHOP.CUSTOMER_EDIT(c.id)}
               className="cp-edit-link"
@@ -768,9 +783,7 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
                       );
                       setPurchaseItems((current) =>
                         current.map((entry, itemIndex) =>
-                          itemIndex === index
-                            ? { ...entry, name }
-                            : entry,
+                          itemIndex === index ? { ...entry, name } : entry,
                         ),
                       );
                     }}
@@ -847,7 +860,7 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
                 onClick={() =>
                   setPurchaseItems((current) => [
                     ...current,
-                      { name: "", price: "", photo: undefined },
+                    { name: "", price: "", photo: undefined },
                   ])
                 }
               >
@@ -917,7 +930,9 @@ const CustomerProfile = ({ customer: c, onPaid, onDelete }: Props) => {
                 Wapas
               </button>
               <button type="submit" disabled={savingPurchase}>
-                {savingPurchase ? "Save ho raha hai..." : "Khareedari save karein"}
+                {savingPurchase
+                  ? "Save ho raha hai..."
+                  : "Khareedari save karein"}
               </button>
             </div>
           </form>
