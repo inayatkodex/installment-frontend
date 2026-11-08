@@ -1,0 +1,241 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.admin-dashboard-skeleton {
+  .adsk-heading {
+    @include flex-wrapper(5px);
+  }
+
+  .ds-card.adsk-stat-card {
+    border-color: $line;
+    background: $white;
+  }
+
+  .adsk-stat-card {
+    > .skeleton {
+      margin-top: 2px;
+    }
+
+    .ds-card-top,
+    .ds-card-bottom {
+      .skeleton:last-child {
+        flex: none;
+      }
+    }
+  }
+
+  .adsk-fee-subtitle {
+    margin: -5px 0 12px;
+  }
+
+  .ds-fee.adsk-fee {
+    align-items: flex-start;
+  }
+
+  .ds-fee.adsk-fee-progress {
+    align-items: stretch;
+  }
+
+  .adsk-progress-bar {
+    margin: 0;
+  }
+}
+
+.pending-requests-skeleton {
+  ul {
+    @include flex-wrapper(0);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    display: grid;
+    grid-template-columns: 44px minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 0;
+    border-top: 1px solid $line;
+  }
+
+  .pr-skeleton-details {
+    @include flex-wrapper(5px);
+    min-width: 0;
+  }
+
+  @media (max-width: 600px) {
+    li {
+      grid-template-columns: 40px minmax(0, 1fr) auto;
+      gap: 9px;
+    }
+
+    .pr-avatar {
+      width: 40px !important;
+      height: 40px !important;
+    }
+
+    .pr-skeleton-badge {
+      display: none;
+    }
+
+    .pr-skeleton-review {
+      width: 64px !important;
+      height: 36px !important;
+    }
+  }
+
+  @media (max-width: 360px) {
+    li {
+      grid-template-columns: 36px minmax(0, 1fr);
+    }
+
+    .pr-avatar {
+      width: 36px !important;
+      height: 36px !important;
+    }
+
+    .pr-skeleton-review {
+      grid-column: 2;
+      justify-self: start;
+    }
+  }
+}
+
+.shops-table-skeleton {
+  .data-table {
+    .dt-scroll {
+      border: 1px solid $line;
+      border-radius: 16px;
+      background: $white;
+      box-shadow: 0 5px 20px rgba(18, 48, 84, 0.045);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th {
+      padding: 14px 16px;
+      background: #f7f9fc;
+      color: $muted;
+      font-size: 11px;
+      text-align: left;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 14px 16px;
+      border-top: 1px solid $line;
+      vertical-align: middle;
+    }
+
+    .dt-cards {
+      @include flex-wrapper(10px);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+
+      > li {
+        @include flex-wrapper(8px);
+        min-width: 0;
+        padding: 15px;
+        border: 1px solid $line;
+        border-radius: 15px;
+        background: $white;
+        box-shadow: 0 4px 14px rgba(18, 48, 84, 0.045);
+      }
+
+      .dt-card-title {
+        padding-bottom: 10px;
+        border-bottom: 1px solid $line;
+      }
+
+      .dt-card-row {
+        @include flex-between(12px);
+        min-height: 22px;
+        gap: 10px;
+        align-items: center;
+        font-size: 12px;
+
+        > :first-child {
+          flex: none;
+          color: $muted;
+        }
+
+        > :last-child {
+          min-width: 0;
+          max-width: 70%;
+          text-align: right;
+        }
+      }
+
+      .st-actions {
+        @include flex(8px);
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        max-width: 100%;
+      }
+    }
+  }
+
+  @include from-tablet() {
+    .data-table {
+      .dt-scroll {
+        display: block;
+        overflow-x: auto;
+      }
+
+      .dt-cards {
+        display: none;
+      }
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1440px) {
+    .data-table {
+      .dt-scroll {
+        display: none;
+      }
+
+      .dt-cards {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+    }
+  }
+
+  @media (min-width: 1025px) and (max-width: 1440px) {
+    .data-table .dt-cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
+  }
+}
+
+.shop-detail-skeleton {
+  .sd-skeleton-title,
+  .sd-skeleton-fee-heading,
+  .sd-skeleton-profile-meta {
+    @include flex-wrapper(6px);
+  }
+
+  .sd-skeleton-row {
+    .skeleton:last-child {
+      flex: none;
+    }
+  }
+
+  .sd-skeleton-fee-form {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+    gap: 10px;
+  }
+
+  .sd-skeleton-password-heading {
+    @include flex-wrapper(8px);
+  }
+}

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Archive, ArrowLeft, CalendarDays, RotateCcw } from "lucide-react";
 import CommonBtn from "@/components/common/CommonButton/Button";
-import Loader from "@/components/common/Loader/Loader";
+import { LifecycleListSkeleton } from "@/components/shop/skeletons/ShopSkeletons";
 import { ROUTES } from "@/constant/appRoutes";
 import { showToast } from "@/shared/toastUtils";
 import {
@@ -20,9 +20,11 @@ const ArchivedCustomersPage = () => {
     (state) => state.shopCustomers,
   );
   const [restoreId, setRestoreId] = useState<string | null>(null);
+  const [requested, setRequested] = useState(false);
 
   useEffect(() => {
     dispatch(fetchArchivedCustomers());
+    setRequested(true);
   }, [dispatch]);
 
   const restore = async (id: string, name: string) => {
@@ -55,9 +57,7 @@ const ArchivedCustomersPage = () => {
           wapas active list mein la sakte hain.
         </p>
       </header>
-      {archivedLoading ? (
-        <Loader />
-      ) : archivedError ? (
+      {archivedError ? (
         <div className="cl-panel cl-state cl-error" role="alert">
           <Archive size={26} aria-hidden="true" />
           <p>{archivedError}</p>
@@ -68,6 +68,8 @@ const ArchivedCustomersPage = () => {
             />
           </div>
         </div>
+      ) : (archivedLoading || !requested) && !archived.length ? (
+        <LifecycleListSkeleton />
       ) : archived.length === 0 ? (
         <div className="cl-panel cl-state">
           <Archive size={30} aria-hidden="true" />

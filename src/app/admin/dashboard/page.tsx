@@ -5,8 +5,8 @@ import { ArrowUpRight, ChartNoAxesCombined } from "lucide-react";
 import Link from "next/link";
 import DashboardStats from "@/components/admin/dashboard-stats/DashboardStats";
 import PendingRequests from "@/components/admin/pending-requests/PendingRequests";
+import DashboardSkeleton from "@/components/admin/skeletons/DashboardSkeleton";
 import CommonBtn from "@/components/common/CommonButton/Button";
-import Loader from "@/components/common/Loader/Loader";
 import { fetchAdminDashboard } from "@/store/slices/admin/dashboard/adminDashboardSlice";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { ROUTES } from "@/constant/appRoutes";
@@ -44,8 +44,8 @@ const AdminDashboardPage = () => {
             onClick={() => dispatch(fetchAdminDashboard())}
           />
         </div>
-      ) : !stats && loading ? (
-        <Loader />
+      ) : !stats ? (
+        <DashboardSkeleton />
       ) : (
         <div className="ad-body">
           {stats && <DashboardStats stats={stats} />}

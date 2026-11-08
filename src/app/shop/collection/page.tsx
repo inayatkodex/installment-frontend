@@ -7,8 +7,8 @@ import ReceivedToday from "@/components/shop/received-today/ReceivedToday";
 import ReceivePaymentForm, {
   ReceiveTarget,
 } from "@/components/shop/receive-payment-form/ReceivePaymentForm";
+import { CollectionTopSkeleton } from "@/components/shop/skeletons/ShopSkeletons";
 import EmptyState from "@/components/common/EmptyState/EmptyState";
-import Loader from "@/components/common/Loader/Loader";
 import CommonBtn from "@/components/common/CommonButton/Button";
 import SearchBar from "@/components/common/SearchBar/SearchBar";
 import {
@@ -22,9 +22,14 @@ import "./collection.scss";
 
 const CollectionPage = () => {
   const dispatch = useAppDispatch();
-  const { items, cashToday, received, loading, error } = useAppSelector(
-    (s) => s.shopCollection,
-  );
+  const {
+    items,
+    cashToday,
+    received,
+    loading,
+    error,
+    hasFetchedTodayCollection,
+  } = useAppSelector((s) => s.shopCollection);
   const [q, setQ] = useState("");
   const [target, setTarget] = useState<ReceiveTarget | null>(null);
 
@@ -75,8 +80,10 @@ const CollectionPage = () => {
           <p>{error}</p>
           <CommonBtn text="Dobara koshish karein" onClick={refresh} />
         </div>
-      ) : loading && !items.length && !received.length ? (
-        <Loader />
+      ) : (loading || !hasFetchedTodayCollection) &&
+        !items.length &&
+        !received.length ? (
+        <CollectionTopSkeleton />
       ) : (
         <>
           <div className="cp-top">
@@ -94,6 +101,13 @@ const CollectionPage = () => {
             </div>
           </div>
 
+          <SearchBar
+            value={q}
+            onChange={setQ}
+            placeholder="Naam ya mobile number se dhoondein"
+            label="Aaj ke customers dhoondein"
+          />
+
           {items.length === 0 ? (
             <EmptyState
               icon={<ClipboardCheck size={30} />}
@@ -108,7 +122,6 @@ const CollectionPage = () => {
             />
           ) : (
             <>
-              <SearchBar value={q} onChange={setQ} />
               {shown.length === 0 ? (
                 <p className="cp-empty">“{q}” se koi customer nahi mila.</p>
               ) : (

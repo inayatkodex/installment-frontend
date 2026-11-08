@@ -13,9 +13,9 @@ import {
   UserRound,
 } from "lucide-react";
 import CommonBtn from "@/components/common/CommonButton/Button";
-import Loader from "@/components/common/Loader/Loader";
 import StatusBadge from "@/components/common/StatusBadge/StatusBadge";
 import FormInput from "@/components/common/ui/FormInput";
+import { ShopProfileSkeleton } from "@/components/shop/skeletons/ShopSkeletons";
 import { ROUTES } from "@/constant/appRoutes";
 import api from "@/store/ApiServices/api";
 import API_URLS from "@/store/ApiServices/apiUrls";
@@ -269,7 +269,7 @@ const ShopProfilePage = () => {
           <CommonBtn text="Dobara koshish karein" onClick={loadProfile} />
         </div>
       ) : loading || !profile ? (
-        <Loader />
+        <ShopProfileSkeleton />
       ) : (
         <section className="sp-card" aria-label="Shop profile details">
           <div className="sp-heading">

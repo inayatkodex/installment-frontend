@@ -5,8 +5,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
 import CustomerProfile from "@/components/shop/customer-profile/CustomerProfile";
+import { CustomerProfileSkeleton } from "@/components/shop/skeletons/ShopSkeletons";
 import CommonBtn from "@/components/common/CommonButton/Button";
-import Loader from "@/components/common/Loader/Loader";
 import { ROUTES } from "@/constant/appRoutes";
 import ConfirmModal from "@/components/common/modal/confirm-modal/ConfirmModal";
 import { showToast } from "@/shared/toastUtils";
@@ -28,9 +28,7 @@ const CustomerDetailPage = () => {
   const [askDelete, setAskDelete] = useState(false);
   const [askArchive, setAskArchive] = useState(false);
   const [deleting, setDeleting] = useState(false);
-  const { detail, detailLoading, error } = useAppSelector(
-    (s) => s.shopCustomers,
-  );
+  const { detail, error } = useAppSelector((s) => s.shopCustomers);
 
   const load = useCallback(() => {
     dispatch(fetchCustomerDetail(id));
@@ -107,14 +105,14 @@ const CustomerDetailPage = () => {
           onDelete={() => setAskDelete(true)}
           onArchive={() => setAskArchive(true)}
         />
-      ) : detailLoading ? (
-        <Loader />
       ) : error ? (
         <div className="cd-error" role="alert">
           <p>{error}</p>
           <CommonBtn text="Dobara koshish karein" onClick={load} />
         </div>
-      ) : null}
+      ) : (
+        <CustomerProfileSkeleton />
+      )}
       {askDelete && detail && (
         <ConfirmModal
           title="Customer delete karein?"

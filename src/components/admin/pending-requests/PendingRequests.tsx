@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect } from "react";
 import { CheckCircle2 } from "lucide-react";
 import EmptyState from "@/components/common/EmptyState/EmptyState";
-import Loader from "@/components/common/Loader/Loader";
+import PendingRequestsSkeleton from "@/components/admin/skeletons/PendingRequestsSkeleton";
 import StatusBadge from "@/components/common/StatusBadge/StatusBadge";
 import { ROUTES } from "@/constant/appRoutes";
 import { fetchAdminShops } from "@/store/slices/admin/shops/adminShopsSlice";
@@ -37,7 +37,7 @@ const PendingRequests = () => {
         <Link href={ROUTES.ADMIN.SHOPS}>All Shops</Link>
       </div>
       {loading && !list ? (
-        <Loader />
+        <PendingRequestsSkeleton />
       ) : items.length === 0 ? (
         <EmptyState
           icon={<CheckCircle2 size={30} />}

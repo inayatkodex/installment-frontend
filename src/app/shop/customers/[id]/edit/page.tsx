@@ -7,7 +7,7 @@ import CommonBtn from "@/components/common/CommonButton/Button";
 import ConfirmModal from "@/components/common/modal/confirm-modal/ConfirmModal";
 import FormInput from "@/components/common/ui/FormInput";
 import DatePartsPicker from "@/components/common/ui/DatePartsPicker";
-import Loader from "@/components/common/Loader/Loader";
+import { CustomerEditSkeleton } from "@/components/shop/skeletons/ShopSkeletons";
 import PhotoSourceSheet from "@/components/common/PhotoSourceSheet/PhotoSourceSheet";
 import { ROUTES } from "@/constant/appRoutes";
 import { fileToDataUrl, resolveMediaUrl } from "@/shared/imageUtils";
@@ -404,7 +404,7 @@ const CustomerEditPage = () => {
   };
 
   if (detailLoading && !detail) {
-    return <Loader />;
+    return <CustomerEditSkeleton />;
   }
 
   if (error && !detail) {
@@ -424,6 +424,8 @@ const CustomerEditPage = () => {
       </div>
     );
   }
+
+  if (!detail || detail.id !== id) return <CustomerEditSkeleton />;
 
   return (
     <div className="customer-edit-page">

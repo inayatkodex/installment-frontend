@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Plus, Users } from "lucide-react";
 import CustomerCard from "@/components/shop/customer-card/CustomerCard";
+import { CustomerCardSkeleton } from "@/components/shop/skeletons/ShopSkeletons";
 import EmptyState from "@/components/common/EmptyState/EmptyState";
 import FilterChips from "@/components/common/FilterChips/FilterChips";
-import Loader from "@/components/common/Loader/Loader";
 import CommonBtn from "@/components/common/CommonButton/Button";
 import SearchBar from "@/components/common/SearchBar/SearchBar";
 import { ROUTES } from "@/constant/appRoutes";
@@ -36,6 +36,7 @@ const CustomersPage = () => {
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("all");
   const search = useDebounce(q, 300);
+  const [requested, setRequested] = useState(false);
   const [toDelete, setToDelete] = useState<CustomerListItem | null>(null);
   const [deleting, setDeleting] = useState(false);
   const confirmDelete = async () => {
@@ -84,6 +85,7 @@ const CustomersPage = () => {
 
   useEffect(() => {
     dispatch(fetchCustomers({ search, status }));
+    setRequested(true);
   }, [dispatch, search, status]);
   return (
     <div className="customers-page">
@@ -125,8 +127,8 @@ const CustomersPage = () => {
             onClick={() => dispatch(fetchCustomers({ search, status }))}
           />
         </div>
-      ) : loading && !list.length ? (
-        <Loader />
+      ) : (loading || !requested) && !list.length ? (
+        <CustomerCardSkeleton />
       ) : list.length === 0 ? (
         <EmptyState
           icon={<Users size={30} />}

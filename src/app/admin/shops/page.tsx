@@ -4,9 +4,9 @@ import { useCallback, useEffect, useState } from "react";
 import { ArrowUpRight, RotateCcw, Store, Trash2 } from "lucide-react";
 import Link from "next/link";
 import ShopsTable from "@/components/admin/shops-table/ShopsTable";
+import ShopsTableSkeleton from "@/components/admin/skeletons/ShopsTableSkeleton";
 import EmptyState from "@/components/common/EmptyState/EmptyState";
 import FilterChips from "@/components/common/FilterChips/FilterChips";
-import Loader from "@/components/common/Loader/Loader";
 import Pagination from "@/components/common/Pagination/Pagination";
 import SearchBar from "@/components/common/SearchBar/SearchBar";
 import { useDebounce } from "@/hooks/useDebounce";
@@ -210,7 +210,7 @@ const AdminShopsPage = () => {
           {error}
         </p>
       ) : !list ? (
-        <Loader />
+        <ShopsTableSkeleton />
       ) : list.items.length === 0 ? (
         <div className="as-empty">
           <EmptyState

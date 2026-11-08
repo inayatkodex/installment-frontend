@@ -4,11 +4,15 @@ import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { AlertCircle, ChevronRight, Plus, Store } from "lucide-react";
 import CollectionRow from "@/components/shop/collection-row/CollectionRow";
+import {
+  CollectionRowSkeleton,
+  ShopDashboardSkeleton,
+} from "@/components/shop/skeletons/ShopSkeletons";
 import ReceivePaymentForm, {
   ReceiveTarget,
 } from "@/components/shop/receive-payment-form/ReceivePaymentForm";
 import StatCard from "@/components/common/StatCard/StatCard";
-import Loader from "@/components/common/Loader/Loader";
+import { SkeletonGroup } from "@/components/common/Skeleton/Skeleton";
 import CommonBtn from "@/components/common/CommonButton/Button";
 import { ROUTES } from "@/constant/appRoutes";
 import { fetchShopDashboard } from "@/store/slices/shop/dashboard/shopDashboardSlice";
@@ -27,10 +31,12 @@ const ShopDashboardPage = () => {
     items,
     loading: collectionLoading,
     error: collectionError,
+    hasFetchedTodayCollection,
   } = useAppSelector((s) => s.shopCollection);
   const { list: customers, loading: customersLoading, error: customersError } =
     useAppSelector((s) => s.shopCustomers);
   const [target, setTarget] = useState<ReceiveTarget | null>(null);
+  const [customersRequested, setCustomersRequested] = useState(false);
 
   const refresh = useCallback(() => {
     dispatch(fetchShopDashboard());
@@ -41,6 +47,7 @@ const ShopDashboardPage = () => {
   }, [refresh]);
   useEffect(() => {
     dispatch(fetchCustomers({ status: "all" }));
+    setCustomersRequested(true);
   }, [dispatch]);
 
   const pending = items.filter((i) => i.status !== "paid");
@@ -54,7 +61,7 @@ const ShopDashboardPage = () => {
       amount: i.expected - i.paid,
     });
 
-  if (!sum) return loading ? <Loader /> : null;
+  if (!sum) return loading ? <ShopDashboardSkeleton /> : null;
   const pct = sum.month.expected
     ? Math.min(100, Math.round((sum.month.received / sum.month.expected) * 100))
     : 0;
@@ -135,8 +142,18 @@ const ShopDashboardPage = () => {
             </div>
             <Link href={ROUTES.SHOP.COLLECTION}>See all</Link>
           </div>
-          {customersLoading ? (
-            <Loader />
+          {customersLoading ||
+          (!customersRequested && !customers.length && !customersError) ? (
+            <SkeletonGroup
+              className="shop-dashboard-rows-skeleton"
+              label="Ruk jayen…"
+            >
+              <ul className="sd-list">
+                {Array.from({ length: 3 }, (_, index) => (
+                  <CollectionRowSkeleton key={index} />
+                ))}
+              </ul>
+            </SkeletonGroup>
           ) : customersError ? (
             <div role="alert">
               <p>{customersError}</p>
@@ -152,8 +169,18 @@ const ShopDashboardPage = () => {
                 <Plus size={19} aria-hidden="true" /> Pehla customer add karein
               </Link>
             </div>
-          ) : collectionLoading ? (
-            <Loader />
+          ) : collectionLoading ||
+            (!hasFetchedTodayCollection && !items.length && !collectionError) ? (
+            <SkeletonGroup
+              className="shop-dashboard-rows-skeleton"
+              label="Ruk jayen…"
+            >
+              <ul className="sd-list">
+                {Array.from({ length: 3 }, (_, index) => (
+                  <CollectionRowSkeleton key={index} />
+                ))}
+              </ul>
+            </SkeletonGroup>
           ) : collectionError ? (
             <div role="alert">
               <p>{collectionError}</p>

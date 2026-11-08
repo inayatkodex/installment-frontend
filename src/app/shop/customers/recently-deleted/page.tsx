@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowLeft, CalendarDays, RotateCcw, Trash2 } from "lucide-react";
 import CommonBtn from "@/components/common/CommonButton/Button";
-import Loader from "@/components/common/Loader/Loader";
+import { LifecycleListSkeleton } from "@/components/shop/skeletons/ShopSkeletons";
 import { ROUTES } from "@/constant/appRoutes";
 import { showToast } from "@/shared/toastUtils";
 import {
@@ -19,9 +19,11 @@ const RecentlyDeletedPage = () => {
   const { pendingDeletion, pendingDeletionLoading, pendingDeletionError } =
     useAppSelector((state) => state.shopCustomers);
   const [undoingId, setUndoingId] = useState<string | null>(null);
+  const [requested, setRequested] = useState(false);
 
   useEffect(() => {
     dispatch(fetchPendingCustomerDeletions());
+    setRequested(true);
   }, [dispatch]);
 
   const undo = async (id: string, name: string) => {
@@ -53,9 +55,7 @@ const RecentlyDeletedPage = () => {
           Delete kiye gaye customer 7 din tak wapas aa sakte hain.
         </p>
       </header>
-      {pendingDeletionLoading ? (
-        <Loader />
-      ) : pendingDeletionError ? (
+      {pendingDeletionError ? (
         <div className="cl-panel cl-state cl-error" role="alert">
           <Trash2 size={26} aria-hidden="true" />
           <p>{pendingDeletionError}</p>
@@ -66,6 +66,8 @@ const RecentlyDeletedPage = () => {
             />
           </div>
         </div>
+      ) : (pendingDeletionLoading || !requested) && !pendingDeletion.length ? (
+        <LifecycleListSkeleton />
       ) : pendingDeletion.length === 0 ? (
         <div className="cl-panel cl-state">
           <Trash2 size={30} aria-hidden="true" />

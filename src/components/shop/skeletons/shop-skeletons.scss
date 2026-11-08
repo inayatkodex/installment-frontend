@@ -1,0 +1,437 @@
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
+
+.shop-customer-list-skeleton {
+  .cu-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cc-top {
+    align-items: center;
+  }
+
+  .cc-sub {
+    margin-top: 5px;
+  }
+
+  .cc-bottom {
+    margin-top: 8px;
+  }
+
+  .cc-progress {
+    margin-top: 9px;
+  }
+}
+
+.cr-skeleton {
+  .cr-actions {
+    .skeleton {
+      flex: none;
+    }
+  }
+}
+
+.lc-skeleton {
+  .lc-name {
+    gap: 5px;
+  }
+
+  .lc-mid {
+    align-items: center;
+  }
+
+  .lc-last {
+    margin: 0 0 4px;
+  }
+
+  .lc-receive {
+    margin-top: 2px;
+  }
+}
+
+.lifecycle-list-skeleton {
+  .cl-list {
+    list-style: none;
+  }
+
+  .cl-item > div {
+    gap: 5px;
+  }
+
+  .cl-meta {
+    min-height: 24px;
+  }
+
+  .cl-date .skeleton {
+    flex: none;
+  }
+}
+
+.shop-dashboard-skeleton {
+  .sd-welcome-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .sd-greeting {
+    margin-top: 0;
+  }
+
+  .sd-title-line {
+    margin-top: 3px;
+  }
+
+  .sd-description-line {
+    margin-top: 9px;
+  }
+
+  .sd-welcome-mark {
+    .skeleton {
+      flex: none;
+    }
+  }
+
+  .sd-grid .stat-card {
+    .stat-label .skeleton {
+      flex: none;
+    }
+
+    .stat-value {
+      margin-top: 8px;
+    }
+
+    .stat-hint {
+      margin-top: 6px;
+    }
+  }
+
+  .sd-actions {
+    .sd-cta,
+    .sd-add {
+      border: 1px solid $line;
+      background: $white;
+      box-shadow: none;
+    }
+  }
+
+  .sd-skeleton-heading,
+  .sd-skeleton-late-copy {
+    @include flex-wrapper(5px);
+    min-width: 0;
+  }
+
+  .sd-head {
+    align-items: center;
+  }
+
+  .sd-customers {
+    .sd-list {
+      @include flex-wrapper(9px);
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+  }
+
+  .sd-late {
+    .skeleton {
+      flex: none;
+    }
+  }
+
+  .sd-month {
+    > .skeleton {
+      display: block;
+    }
+  }
+}
+
+.collection-top-skeleton {
+  .cp-top > div {
+    justify-content: center;
+  }
+
+  .search-bar {
+    margin-top: 12px;
+    .skeleton {
+      flex: none;
+    }
+    .skeleton:nth-child(2) {
+      flex: 1;
+    }
+  }
+
+  .cp-list {
+    @include flex-wrapper(8px);
+    margin: 12px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+}
+
+.customer-profile-skeleton {
+  .cp-who {
+    .skeleton {
+      flex: none;
+    }
+  }
+
+  .cp-sum > div {
+    @include flex-wrapper(4px);
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+  }
+
+  .cp-bar.skeleton {
+    display: block;
+    margin-right: 16px;
+    margin-left: 16px;
+    background: linear-gradient(
+      90deg,
+      $primary-soft 25%,
+      $white 50%,
+      $primary-soft 75%
+    );
+    background-size: 200% 100%;
+  }
+
+  .cp-bar-text {
+    @include flex-center();
+  }
+
+  .cp-skeleton-items {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cp-item {
+    .skeleton {
+      flex: none;
+    }
+  }
+
+  .cp-skeleton-item-copy,
+  .cp-skeleton-doc-copy {
+    @include flex-wrapper(5px);
+    flex: 1;
+    min-width: 0;
+  }
+
+  .cp-total {
+    .skeleton:last-child {
+      flex: none;
+    }
+  }
+
+  .cp-plan-date-skeleton {
+    margin-top: 4px;
+  }
+
+  .cp-plan-stats > div {
+    @include flex-wrapper(5px);
+    align-items: center;
+  }
+
+  .cp-plan-progress-skeleton {
+    margin-top: 8px;
+  }
+
+  .cp-docs-row {
+    .skeleton {
+      flex: none;
+    }
+  }
+}
+
+.customer-edit-skeleton {
+  .ce-skeleton-card-heading,
+  .ce-skeleton-field,
+  .ce-skeleton-plan {
+    @include flex-wrapper(7px);
+  }
+
+  .ce-skeleton-card-heading {
+    @include flex-between(12px);
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .ce-skeleton-field {
+    min-width: 0;
+  }
+
+  .ce-skeleton-input {
+    @include flex(0);
+    align-items: center;
+    width: 100%;
+    min-height: 54px;
+    padding: 0 14px;
+    border: 1.5px solid $border;
+    border-radius: 12px;
+    background: $white;
+  }
+
+  .ce-skeleton-textarea {
+    min-height: 76px;
+    align-items: flex-start;
+    padding-top: 14px;
+  }
+
+  .ce-skeleton-plan {
+    gap: 10px;
+  }
+
+  .ce-doc-row {
+    .ce-doc-thumb {
+      flex: none;
+    }
+
+    .ce-doc-actions {
+      .skeleton {
+        flex: none;
+      }
+    }
+  }
+
+  .ce-footer-actions {
+    .skeleton {
+      flex: 1;
+    }
+  }
+}
+
+.status-summary-skeleton {
+  .ss-cash-card {
+    .ss-cash-total {
+      margin-top: 0;
+    }
+  }
+
+  .ss-skeleton-heading {
+    @include flex-wrapper(5px);
+  }
+
+  .ss-progress.skeleton {
+    display: block;
+    background: linear-gradient(
+      90deg,
+      $primary-soft 25%,
+      $white 50%,
+      $primary-soft 75%
+    );
+    background-size: 200% 100%;
+  }
+
+  .ss-status-row {
+    display: grid;
+    grid-template-columns: 24px minmax(0, 1fr) auto 18px;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 8px 10px;
+    border-radius: 12px;
+    background: $bg;
+  }
+
+  .ss-skeleton-status-values {
+    @include flex-wrapper(3px);
+    justify-items: end;
+  }
+}
+
+.shop-profile-skeleton {
+  .sp-heading {
+    flex-wrap: nowrap;
+  }
+
+  .sp-shop-name,
+  .sp-owner {
+    @include flex-wrapper(5px);
+  }
+
+  .sp-heading-actions {
+    gap: 8px;
+  }
+
+  .sp-owner {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .sp-details dt,
+  .sp-details dd {
+    display: flex;
+    align-items: center;
+  }
+
+  .sp-card-actions {
+    .skeleton {
+      flex: none;
+    }
+  }
+}
+
+.late-page-skeleton {
+  @include flex-wrapper(14px);
+  width: 100%;
+
+  .lp-totals {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    width: 100%;
+
+    .stat-card {
+      min-height: 100px;
+      border: 1px solid $line;
+      box-shadow: 0 3px 12px rgba(18, 48, 84, 0.04);
+    }
+  }
+
+  .search-bar {
+    .skeleton {
+      flex: none;
+    }
+
+    .search-input-placeholder {
+      flex: 1;
+    }
+  }
+
+  .lp-list {
+    @include flex-wrapper(10px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    @include from-tablet() {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+  }
+}
+
+.customer-profile-skeleton,
+.customer-edit-skeleton,
+.shop-profile-skeleton,
+.shop-dashboard-skeleton,
+.collection-top-skeleton,
+.late-page-skeleton,
+.status-summary-skeleton,
+.shop-customer-list-skeleton,
+.lifecycle-list-skeleton {
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      $primary-soft 25%,
+      $white 50%,
+      $primary-soft 75%
+    );
+    background-size: 200% 100%;
+  }
+}

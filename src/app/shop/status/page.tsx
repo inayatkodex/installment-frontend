@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { Download } from "lucide-react";
 import CommonBtn from "@/components/common/CommonButton/Button";
-import Loader from "@/components/common/Loader/Loader";
 import MonthPicker from "@/components/common/MonthPicker/MonthPicker";
+import { StatusSummarySkeleton } from "@/components/shop/skeletons/ShopSkeletons";
 import StatusSummary from "@/components/shop/status-summary/StatusSummary";
 import { showToast } from "@/shared/toastUtils";
 import { downloadMonthlyReportPdf } from "@/shared/monthlyReportPdf";
@@ -58,7 +58,7 @@ const StatusPage = () => {
             />
           </div>
         ) : !data || loading ? (
-          <Loader />
+          <StatusSummarySkeleton />
         ) : (
           <StatusSummary report={data} />
         )}

@@ -3,11 +3,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { PartyPopper } from "lucide-react";
 import LateCard from "@/components/shop/late-card/LateCard";
+import { LatePageSkeleton } from "@/components/shop/skeletons/ShopSkeletons";
 import ReceivePaymentForm, {
   ReceiveTarget,
 } from "@/components/shop/receive-payment-form/ReceivePaymentForm";
 import EmptyState from "@/components/common/EmptyState/EmptyState";
-import Loader from "@/components/common/Loader/Loader";
 import CommonBtn from "@/components/common/CommonButton/Button";
 import SearchBar from "@/components/common/SearchBar/SearchBar";
 import StatCard from "@/components/common/StatCard/StatCard";
@@ -20,7 +20,9 @@ import "./late.scss";
 
 const LatePage = () => {
   const dispatch = useAppDispatch();
-  const { items, loading, error } = useAppSelector((s) => s.shopLate);
+  const { items, loading, error, hasFetchedLate } = useAppSelector(
+    (s) => s.shopLate,
+  );
   const [target, setTarget] = useState<ReceiveTarget | null>(null);
   const [query, setQuery] = useState("");
   const search = useDebounce(query, 300);
@@ -73,8 +75,8 @@ const LatePage = () => {
             onClick={() => dispatch(fetchLate())}
           />
         </div>
-      ) : loading && !items.length ? (
-        <Loader />
+      ) : (loading || !hasFetchedLate) && !items.length ? (
+        <LatePageSkeleton />
       ) : items.length === 0 ? (
         <EmptyState
           icon={<PartyPopper size={30} />}
