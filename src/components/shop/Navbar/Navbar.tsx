@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronDown, UserRound } from "lucide-react";
+import { ChevronDown, LogOut, Store, UserRound } from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { shopLogout } from "@/store/slices/shop/auth/shopAuthSlice";
 import { ROUTES } from "@/constant/appRoutes";
@@ -31,6 +31,36 @@ const Navbar = () => {
       <div className="shop-navbar-actions">
         <DropdownMenu
           ariaLabel="Shop account menu"
+          menuWidth={440}
+          menuHeight={220}
+          menuClassName="shop-account-menu"
+          menuHeader={
+            <button
+              type="button"
+              className="shop-account-menu-profile"
+              role="menuitem"
+              onClick={() => router.push(ROUTES.SHOP.PROFILE)}
+            >
+              {user?.profilePic ? (
+                <img
+                  src={resolveMediaUrl(user.profilePic)}
+                  alt=""
+                  className="shop-account-menu-photo"
+                />
+              ) : (
+                <span className="shop-account-menu-initial" aria-hidden="true">
+                  {user?.ownerName?.trim().charAt(0).toUpperCase() || "S"}
+                </span>
+              )}
+              <span className="shop-account-menu-details">
+                <strong>{user?.ownerName || "Profile"}</strong>
+                <span className="shop-account-menu-shop">
+                  <Store size={20} aria-hidden="true" />
+                  <span>Dukaan: {user?.shopName || "—"}</span>
+                </span>
+              </span>
+            </button>
+          }
           trigger={
             <>
               {user?.profilePic ? (
@@ -57,12 +87,9 @@ const Navbar = () => {
           triggerClassName="shop-navbar-account-trigger"
           items={[
             {
-              label: "Profile",
-              onClick: () => router.push(ROUTES.SHOP.PROFILE),
-            },
-            {
               label: "Logout",
               tone: "danger",
+              icon: <LogOut size={25} aria-hidden="true" />,
               onClick: () => setConfirm(true),
             },
           ]}

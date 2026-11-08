@@ -34,6 +34,9 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
   @include flex-wrapper(2px);
 }
+.dd-menu-header {
+  width: 100%;
+}
 .dd-item {
   @include flex-between(12px);
   min-height: 44px;
