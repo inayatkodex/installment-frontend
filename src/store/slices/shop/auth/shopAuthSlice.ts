@@ -6,7 +6,13 @@ import { ShopAuthState, ShopLoginPayload, ShopSignupPayload, ShopUser } from "@/
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 
-const initialState: ShopAuthState = { user: null, access_token: null, loading: false, error: null };
+const initialState: ShopAuthState = {
+  user: null,
+  access_token: null,
+  rehydrated: false,
+  loading: false,
+  error: null,
+};
 
 /* ---------------- LOGIN ---------------- */
 export const shopLogin = createAsyncThunk(
@@ -74,6 +80,7 @@ const shopAuthSlice = createSlice({
       });
     },
     rehydrateShopFromCookies: (state) => {
+      state.rehydrated = true;
       const token = Cookies.get(TOKEN_KEY);
       const user = Cookies.get(SHOP_USER_KEY);
       if (token && user) {

@@ -48,6 +48,7 @@ export interface ShopProfile {
 export interface ShopAuthState {
   user: ShopUser | null;
   access_token: string | null;
+  rehydrated: boolean;
   loading: boolean;
   error: string | null;
 }

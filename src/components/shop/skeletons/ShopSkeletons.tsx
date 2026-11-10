@@ -1,5 +1,5 @@
 import { Skeleton, SkeletonGroup } from "@/components/common/Skeleton/Skeleton";
-import { Search } from "lucide-react";
+import { Download, Search } from "lucide-react";
 import "./shop-skeletons.scss";
 
 const SHOP_LOADING_LABEL = "Ruk jayen…";
@@ -79,11 +79,11 @@ export const LateCardSkeleton = () => (
       <Skeleton className="lc-status" width={76} height={24} radius={999} />
     </div>
     <div className="lc-mid">
-      <Skeleton width={112} height={29} />
-      <Skeleton width={86} height={17} />
+      <Skeleton className="lc-amount" width={112} height={29} />
+      <Skeleton className="lc-count" width={86} height={17} />
     </div>
     <Skeleton className="lc-last" width="74%" height={15} />
-    <Skeleton className="lc-receive" width="100%" height={48} radius={12} />
+    <Skeleton className="lc-receive" width="100%" height={52} radius={12} />
   </li>
 );
 
@@ -98,10 +98,14 @@ export const LifecycleListSkeleton = () => (
               <Skeleton className="cl-code" width={86} height={24} radius={7} />
             </span>
             <span className="cl-date">
+              <Skeleton className="cl-date-icon" width={15} height={15} radius={4} />
               <Skeleton width={150} height={15} />
             </span>
           </div>
-          <Skeleton className="cl-restore" width={124} height={44} radius={10} />
+          <div className="cl-restore">
+            <Skeleton className="cl-restore-icon" width={16} height={16} radius={4} />
+            <Skeleton className="cl-restore-label" width={82} height={14} />
+          </div>
         </li>
       ))}
     </ul>
@@ -115,12 +119,15 @@ export const ShopDashboardSkeleton = () => (
         <div className="sd-welcome-copy">
           <Skeleton className="sd-eyebrow" width={176} height={25} radius={99} />
           <Skeleton className="sd-greeting" width={194} height={18} />
-          <Skeleton className="sd-title-line" width="min(100%, 420px)" height={42} />
-          <Skeleton className="sd-description-line" width="min(100%, 350px)" height={17} />
+          <Skeleton className="sd-title-line" />
+          <div className="sd-description-lines">
+            <Skeleton className="sd-description-line" />
+            <Skeleton className="sd-description-line sd-description-second" />
+          </div>
         </div>
         <div className="sd-welcome-mark">
-          <Skeleton className="sd-mark-icon" width={58} height={58} radius={18} />
-          <Skeleton width={114} height={11} />
+          <Skeleton className="sd-mark-icon sd-welcome-mark-icon" />
+          <Skeleton className="sd-mark-label" width={114} height={11} />
         </div>
       </header>
 
@@ -208,6 +215,7 @@ export const CustomerProfileSkeleton = () => (
     <div className="customer-profile">
       <div className="cp-hero">
         <div className="cp-banner" />
+        <Skeleton className="cp-menu-skeleton" width={40} height={40} radius={12} />
         <div className="cp-who">
           <Skeleton className="cp-photo" width={100} height={100} radius="50%" />
           <Skeleton width="min(72%, 230px)" height={27} />
@@ -231,7 +239,7 @@ export const CustomerProfileSkeleton = () => (
 
       <section className="cp-section">
         <div className="cp-head">
-          <Skeleton width={106} height={23} />
+          <Skeleton width={126} height={23} />
           <Skeleton width={54} height={17} />
         </div>
         <ul className="cp-skeleton-items">
@@ -256,42 +264,6 @@ export const CustomerProfileSkeleton = () => (
         <div className="cp-head">
           <Skeleton width={126} height={23} />
         </div>
-        <div className="cp-plan-list">
-          {[0, 1].map((index) => (
-            <article className="cp-plan-card" key={index}>
-              <div className="cp-plan-heading">
-                <Skeleton width={86} height={21} />
-                <Skeleton width={102} height={17} />
-              </div>
-              <Skeleton className="cp-plan-date-skeleton" width={140} height={15} />
-              <ul className="cp-skeleton-items">
-                <li className="cp-item">
-                  <Skeleton className="cp-item-icon" width={48} height={48} radius={12} />
-                  <div className="cp-skeleton-item-copy">
-                    <Skeleton width="75%" height={17} />
-                    <Skeleton width="56%" height={14} />
-                  </div>
-                  <Skeleton width={58} height={18} />
-                </li>
-              </ul>
-              <div className="cp-plan-stats">
-                {[0, 1, 2, 3].map((stat) => (
-                  <div key={stat}>
-                    <Skeleton width="70%" height={12} />
-                    <Skeleton width="78%" height={15} />
-                  </div>
-                ))}
-              </div>
-              <Skeleton className="cp-plan-progress-skeleton" width="82%" height={15} />
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section className="cp-section">
-        <div className="cp-head">
-          <Skeleton width={126} height={23} />
-        </div>
         <div className="cp-docs-row">
           <Skeleton width={20} height={20} radius={4} />
           <div className="cp-skeleton-doc-copy">
@@ -301,6 +273,40 @@ export const CustomerProfileSkeleton = () => (
           <Skeleton width={64} height={38} radius={10} />
         </div>
       </section>
+
+      <section className="cp-section cp-installments-skeleton">
+        <div className="cp-head">
+          <Skeleton width={130} height={23} />
+          <div className="cp-installment-actions">
+            <Skeleton width={90} height={16} />
+            <Skeleton width={74} height={16} />
+          </div>
+        </div>
+        <ol className="cp-timeline">
+          {Array.from({ length: 3 }, (_, index) => (
+            <li className="cp-inst" key={index}>
+              <Skeleton
+                className={`cp-dot cp-dot-skeleton ${index === 0 ? "cp-dot-paid" : ""}`}
+                width={36}
+                height={36}
+                radius="50%"
+              />
+              <div className="cp-inst-box cp-inst-box-skeleton">
+                <div className="cp-row">
+                  <Skeleton width={index === 0 ? 72 : 116} height={16} />
+                  <Skeleton width={76} height={16} />
+                </div>
+                <Skeleton width={index === 0 ? 138 : 156} height={13} />
+              </div>
+            </li>
+          ))}
+        </ol>
+        <Skeleton className="cp-show-installments" width="100%" height={48} radius={12} />
+      </section>
+
+      <div className="cp-footer cp-footer-skeleton">
+        <Skeleton className="cp-pay-skeleton" width="100%" height={64} radius={16} />
+      </div>
     </div>
   </SkeletonGroup>
 );
@@ -383,34 +389,44 @@ export const StatusSummarySkeleton = () => (
   <SkeletonGroup className="status-summary-skeleton" label={SHOP_LOADING_LABEL}>
     <div className="status-summary">
       <section className="ss-cash-card">
-        <Skeleton width={172} height={16} />
-        <Skeleton className="ss-cash-total" width={230} height={42} />
-        <Skeleton width="min(100%, 315px)" height={16} />
+        <Skeleton className="ss-eyebrow-skeleton" width={172} height={16} />
+        <Skeleton className="ss-cash-total" width="min(100%, 230px)" height={42} />
+        <div className="ss-cash-note-skeleton">
+          <Skeleton width="min(100%, 315px)" height={16} />
+          <Skeleton className="ss-cash-note-icon" width={16} height={16} radius="50%" />
+        </div>
       </section>
       <section className="ss-installments">
         <div className="ss-section-heading">
           <div className="ss-skeleton-heading">
             <Skeleton width={190} height={20} />
-            <Skeleton width={78} height={15} />
-            <Skeleton width={228} height={15} />
+            <Skeleton className="ss-paid-count" width={78} height={15} />
+            <Skeleton className="ss-monthly-target" width="min(100%, 228px)" height={15} />
           </div>
           <Skeleton width={30} height={30} radius="50%" />
         </div>
         <Skeleton className="ss-progress" width="100%" height={9} radius={99} />
         <div className="ss-status-list">
           {[0, 1, 2].map((index) => (
-            <div className="ss-status-row" key={index}>
-              <Skeleton width={24} height={24} radius="50%" />
-              <Skeleton width={58} height={16} />
+            <div className={`ss-status-row ss-status-row-${index}`} key={index}>
+              <Skeleton className="ss-status-icon-skeleton" width={24} height={24} radius="50%" />
+              <Skeleton className="ss-status-name-skeleton" width={58} height={16} />
               <div className="ss-skeleton-status-values">
                 <Skeleton width={78} height={15} />
                 <Skeleton width={92} height={13} />
               </div>
-              <Skeleton width={18} height={18} />
+              {index === 2 && <Skeleton className="ss-status-chevron" width={18} height={18} />}
             </div>
           ))}
         </div>
+        <Skeleton className="ss-footnote" width={160} height={13} />
       </section>
+    </div>
+    <div className="st-download">
+      <div className="ss-download-skeleton">
+        <Download size={20} aria-hidden="true" />
+        <Skeleton width={156} height={16} />
+      </div>
     </div>
   </SkeletonGroup>
 );
@@ -459,9 +475,11 @@ export const LatePageSkeleton = () => (
     </div>
     <div className="search-bar">
       <Search size={20} aria-hidden="true" />
-      <Skeleton width="72%" height={16} />
+      <Skeleton className="lp-search-placeholder" width="72%" height={16} />
     </div>
-    <Skeleton width="min(100%, 360px)" height={18} />
+    <div className="lp-summary-skeleton">
+      <Skeleton className="lp-summary-placeholder" width="min(100%, 360px)" height={18} />
+    </div>
     <ul className="lp-list">
       {Array.from({ length: 4 }, (_, index) => (
         <LateCardSkeleton key={index} />
