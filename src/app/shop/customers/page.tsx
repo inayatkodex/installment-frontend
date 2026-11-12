@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Plus, Users } from "lucide-react";
 import CustomerCard from "@/components/shop/customer-card/CustomerCard";
 import { CustomerCardSkeleton } from "@/components/shop/skeletons/ShopSkeletons";
@@ -15,6 +15,7 @@ import ConfirmModal from "@/components/common/modal/confirm-modal/ConfirmModal";
 import {
   deleteCustomer,
   fetchCustomers,
+  fetchMoreCustomers,
   undoDeleteCustomer,
 } from "@/store/slices/shop/customers/shopCustomersSlice";
 import { showToast } from "@/shared/toastUtils";
@@ -32,13 +33,50 @@ const FILTERS = [
 
 const CustomersPage = () => {
   const dispatch = useAppDispatch();
-  const { list, loading, error } = useAppSelector((s) => s.shopCustomers);
+  const { list, loading, loadingMore, hasMore, currentPage, error } =
+    useAppSelector((s) => s.shopCustomers);
+
   const [q, setQ] = useState("");
   const [status, setStatus] = useState("all");
   const search = useDebounce(q, 300);
+
   const [requested, setRequested] = useState(false);
   const [toDelete, setToDelete] = useState<CustomerListItem | null>(null);
   const [deleting, setDeleting] = useState(false);
+
+  // Sentinel div at bottom — when visible, load next page
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  // Load page 1 when search/filter changes
+  useEffect(() => {
+    dispatch(fetchCustomers({ search, status }));
+    setRequested(true);
+  }, [dispatch, search, status]);
+
+  // Intersection Observer — fires when sentinel becomes visible
+  useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loadingMore && !loading) {
+          dispatch(
+            fetchMoreCustomers({
+              search,
+              status,
+              page: currentPage + 1,
+            }),
+          );
+        }
+      },
+      { rootMargin: "200px" },
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [dispatch, hasMore, loadingMore, loading, search, status, currentPage]);
+
   const confirmDelete = async () => {
     if (!toDelete) return;
     setDeleting(true);
@@ -83,10 +121,6 @@ const CustomersPage = () => {
     }
   };
 
-  useEffect(() => {
-    dispatch(fetchCustomers({ search, status }));
-    setRequested(true);
-  }, [dispatch, search, status]);
   return (
     <div className="customers-page">
       <div className="cu-head">
@@ -149,11 +183,28 @@ const CustomersPage = () => {
           }
         />
       ) : (
-        <ul className="cu-list">
-          {list.map((c) => (
-            <CustomerCard key={c.id} customer={c} onDelete={setToDelete} />
-          ))}
-        </ul>
+        <>
+          <ul className="cu-list">
+            {list.map((c) => (
+              <CustomerCard key={c.id} customer={c} onDelete={setToDelete} />
+            ))}
+          </ul>
+
+          {/* Sentinel — load more when visible */}
+          <div ref={sentinelRef} className="cu-sentinel" aria-hidden="true" />
+
+          {/* Loading spinner for next page */}
+          {loadingMore && (
+            <div className="cu-load-more" aria-label="Aur customers load ho rahe hain">
+              <span className="cu-load-more-spinner" />
+            </div>
+          )}
+
+          {/* End of list */}
+          {!hasMore && list.length > 0 && (
+            <p className="cu-end">Sab customers load ho gaye</p>
+          )}
+        </>
       )}
 
       {toDelete && (

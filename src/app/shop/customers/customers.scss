@@ -101,6 +101,32 @@
     font-weight: 700;
     margin-top: 6px;
   }
+  .cu-sentinel {
+    height: 1px;
+  }
+  .cu-load-more {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+  }
+  .cu-load-more-spinner {
+    width: 28px;
+    height: 28px;
+    border: 3px solid $primary-soft;
+    border-top-color: $primary;
+    border-radius: 50%;
+    animation: cu-spin 0.7s linear infinite;
+  }
+  @keyframes cu-spin {
+    to { transform: rotate(360deg); }
+  }
+  .cu-end {
+    text-align: center;
+    color: $muted;
+    font-size: 13px;
+    padding: 16px 0 8px;
+  }
+
   .cu-fab {
     position: fixed;
     right: 16px;

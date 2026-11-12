@@ -2,6 +2,14 @@ import { InstallmentStatus } from "./common";
 
 export type CustomerStatus = "active" | "overdue" | "completed" | "archived";
 
+export interface CustomerListPage {
+  items: CustomerListItem[];
+  hasMore: boolean;
+  total: number;
+  page: number;
+  limit: number;
+}
+
 export interface CustomerItem {
   name: string;
   price: number;

@@ -4,14 +4,20 @@ import { getErrorMessage } from "@/shared/apiError";
 import {
   CustomerDetail,
   CustomerListItem,
+  CustomerListPage,
   NewCustomerPayload,
   NewCustomerPurchasePayload,
   PendingCustomerDeletion,
 } from "@/types/customer";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
+const PAGE_SIZE = 20;
+
 interface State {
   list: CustomerListItem[];
+  hasMore: boolean;
+  currentPage: number;
+  loadingMore: boolean;
   archived: CustomerListItem[];
   archivedLoading: boolean;
   archivedError: string | null;
@@ -24,8 +30,12 @@ interface State {
   creating: boolean;
   error: string | null;
 }
+
 const initialState: State = {
   list: [],
+  hasMore: false,
+  currentPage: 1,
+  loadingMore: false,
   archived: [],
   archivedLoading: false,
   archivedError: null,
@@ -39,12 +49,38 @@ const initialState: State = {
   error: null,
 };
 
+// Page 1 — list reset
 export const fetchCustomers = createAsyncThunk(
   "shopCustomers/fetchList",
-  async (params: { search?: string; status?: string }, { rejectWithValue }) => {
+  async (
+    params: { search?: string; status?: string },
+    { rejectWithValue },
+  ) => {
     try {
-      const res = await api.get(API_URLS.SHOP.CUSTOMERS, { params });
-      return res.data.data as CustomerListItem[];
+      const res = await api.get(API_URLS.SHOP.CUSTOMERS, {
+        params: { ...params, page: 1, limit: PAGE_SIZE },
+      });
+      return res.data.data as CustomerListPage;
+    } catch (error) {
+      return rejectWithValue(
+        getErrorMessage(error, "Customers load nahi ho sake"),
+      );
+    }
+  },
+);
+
+// Next page — append to list
+export const fetchMoreCustomers = createAsyncThunk(
+  "shopCustomers/fetchMore",
+  async (
+    params: { search?: string; status?: string; page: number },
+    { rejectWithValue },
+  ) => {
+    try {
+      const res = await api.get(API_URLS.SHOP.CUSTOMERS, {
+        params: { ...params, limit: PAGE_SIZE },
+      });
+      return res.data.data as CustomerListPage;
     } catch (error) {
       return rejectWithValue(
         getErrorMessage(error, "Customers load nahi ho sake"),
@@ -366,11 +402,25 @@ const shopCustomersSlice = createSlice({
       })
       .addCase(fetchCustomers.fulfilled, (s, a) => {
         s.loading = false;
-        s.list = a.payload;
+        s.list = a.payload.items;
+        s.hasMore = a.payload.hasMore;
+        s.currentPage = a.payload.page;
       })
       .addCase(fetchCustomers.rejected, (s, a) => {
         s.loading = false;
         s.error = a.payload as string;
+      })
+      .addCase(fetchMoreCustomers.pending, (s) => {
+        s.loadingMore = true;
+      })
+      .addCase(fetchMoreCustomers.fulfilled, (s, a) => {
+        s.loadingMore = false;
+        s.list = [...s.list, ...a.payload.items];
+        s.hasMore = a.payload.hasMore;
+        s.currentPage = a.payload.page;
+      })
+      .addCase(fetchMoreCustomers.rejected, (s) => {
+        s.loadingMore = false;
       })
       .addCase(fetchPendingCustomerDeletions.pending, (s) => {
         s.pendingDeletionLoading = true;
