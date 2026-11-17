@@ -1,6 +1,8 @@
 export const ROUTES = {
   HOME: { INDEX: "/" },
 
+  PRIVACY: "/privacy",
+
   ADMIN: {
     SIGNIN: "/admin/signin",
     DASHBOARD: "/admin/dashboard",

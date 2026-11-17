@@ -30,6 +30,17 @@
       flex: none;
     }
   }
+  .su-terms {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 13px;
+    line-height: 1.6;
+    color: $muted;
+    a {
+      color: $primary;
+      font-weight: 700;
+    }
+  }
   .su-login-link {
     text-align: center;
     margin-top: 20px;

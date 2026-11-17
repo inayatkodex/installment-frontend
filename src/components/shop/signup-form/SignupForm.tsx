@@ -173,6 +173,12 @@ const SignupForm = () => {
         )}
       </div>
 
+      <p className="su-terms">
+        Aage barh kar registration bhejne ka matlab hai ke aap hamari{" "}
+        <Link href={ROUTES.PRIVACY}>Privacy Policy</Link> se ittefaq karte
+        hain.
+      </p>
+
       <p className="su-login-link">
         Pehle se account hai? <Link href={ROUTES.SHOP.LOGIN}>Login karein</Link>
       </p>

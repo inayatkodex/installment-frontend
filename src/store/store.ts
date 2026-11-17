@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 
 import shopAuthReducer from "./slices/shop/auth/shopAuthSlice";
@@ -12,21 +12,32 @@ import adminAuthReducer from "./slices/admin/auth/adminAuthSlice";
 import adminDashboardReducer from "./slices/admin/dashboard/adminDashboardSlice";
 import adminShopsReducer from "./slices/admin/shops/adminShopsSlice";
 
-export const store = configureStore({
-  reducer: {
-    shopAuth: shopAuthReducer,
-    shopDashboard: shopDashboardReducer,
-    shopCollection: shopCollectionReducer,
-    shopCustomers: shopCustomersReducer,
-    shopLate: shopLateReducer,
-    shopStatus: shopStatusReducer,
-    adminAuth: adminAuthReducer,
-    adminDashboard: adminDashboardReducer,
-    adminShops: adminShopsReducer,
-  },
+import { shopRevalidation } from "./middleware/shopRevalidation";
+
+// Root reducer alag define kiya gaya hai taake `RootState` sirf reducers par
+// munhasir rahe — warna middleware (jo RootState istemal karta hai) aur store
+// ke darmiyan circular type reference ban jata hai.
+const rootReducer = combineReducers({
+  shopAuth: shopAuthReducer,
+  shopDashboard: shopDashboardReducer,
+  shopCollection: shopCollectionReducer,
+  shopCustomers: shopCustomersReducer,
+  shopLate: shopLateReducer,
+  shopStatus: shopStatusReducer,
+  adminAuth: adminAuthReducer,
+  adminDashboard: adminDashboardReducer,
+  adminShops: adminShopsReducer,
 });
 
-export type RootState = ReturnType<typeof store.getState>;
+export const store = configureStore({
+  reducer: rootReducer,
+  // Har shop mutation ke baad mutalliq data khud-ba-khud taza hota hai
+  // (socket ke baghair instant sync).
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().prepend(shopRevalidation.middleware),
+});
+
+export type RootState = ReturnType<typeof rootReducer>;
 export type AppDispatch = typeof store.dispatch;
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();

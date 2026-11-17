@@ -95,6 +95,10 @@ const ShopLoginPage = () => {
           </span>
         </Link>
 
+        <Link href={ROUTES.PRIVACY} className="shop-login-privacy">
+          Privacy Policy
+        </Link>
+
       </form>
     </main>
   );

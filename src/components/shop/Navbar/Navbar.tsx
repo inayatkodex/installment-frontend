@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronDown, LogOut, Store, UserRound } from "lucide-react";
+import {
+  ChevronDown,
+  LogOut,
+  ShieldCheck,
+  Store,
+  UserRound,
+} from "lucide-react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import { shopLogout } from "@/store/slices/shop/auth/shopAuthSlice";
 import { ROUTES } from "@/constant/appRoutes";
@@ -44,7 +50,7 @@ const Navbar = () => {
           <DropdownMenu
             ariaLabel="Shop account menu"
             menuWidth={440}
-            menuHeight={220}
+            menuHeight={266}
             menuClassName="shop-account-menu"
             menuHeader={
               <button
@@ -60,7 +66,10 @@ const Navbar = () => {
                     className="shop-account-menu-photo"
                   />
                 ) : (
-                  <span className="shop-account-menu-initial" aria-hidden="true">
+                  <span
+                    className="shop-account-menu-initial"
+                    aria-hidden="true"
+                  >
                     {user?.ownerName?.trim().charAt(0).toUpperCase() || "S"}
                   </span>
                 )}
@@ -98,6 +107,12 @@ const Navbar = () => {
             }
             triggerClassName="shop-navbar-account-trigger"
             items={[
+              {
+                label: "Privacy Policy",
+                tone: "primary",
+                icon: <ShieldCheck size={25} aria-hidden="true" />,
+                onClick: () => router.push(ROUTES.PRIVACY),
+              },
               {
                 label: "Logout",
                 tone: "danger",

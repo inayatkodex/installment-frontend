@@ -452,6 +452,7 @@ const LandingPage = () => (
             <a href="#faq">Sawal jawab</a>
             <Link href={ROUTES.SHOP.LOGIN}>Login</Link>
             <Link href={ROUTES.SHOP.SIGNUP}>Signup</Link>
+            <Link href={ROUTES.PRIVACY}>Privacy Policy</Link>
           </nav>
         </div>
         <p className="lp-copy">

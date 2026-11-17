@@ -1,0 +1,185 @@
+@use "../../styles/mixin.scss" as *;
+@use "../../styles/variables.scss" as *;
+
+// ---------------------------------------------------------------
+// Installment Pro · Privacy Policy page
+// Public page (no auth). Classes prefixed `policy-` to avoid clashes.
+// ---------------------------------------------------------------
+
+$policy-footer-bg: #0f172a;
+
+.policy {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: $white;
+  color: $ink;
+}
+
+.policy-container {
+  width: 100%;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.policy-top {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid $line;
+}
+.policy-top-inner {
+  height: 60px;
+  @include flex-between(16px);
+}
+.policy-logo {
+  display: inline-flex;
+  align-items: center;
+}
+.policy-back {
+  @include flex(8px);
+  font-size: 14px;
+  font-weight: 600;
+  color: $primary;
+}
+
+.policy-hero {
+  padding: 40px 0 28px;
+  text-align: center;
+  background: linear-gradient(180deg, $primary-soft, $white);
+
+  .policy-shield {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    background: $white;
+    border: 1px solid $primary-border;
+    color: $primary;
+    @include flex-center();
+  }
+  h1 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: $ink;
+  }
+  p {
+    margin-top: 8px;
+    font-size: 14px;
+    color: $muted;
+  }
+  @include tablet {
+    padding: 30px 0 22px;
+    h1 {
+      font-size: 22px;
+    }
+  }
+}
+
+.policy-body {
+  flex: 1;
+  padding: 28px 0 48px;
+
+  .policy-container {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+}
+
+.policy-card {
+  padding: 18px;
+  background: $white;
+  border: 1px solid $border;
+  border-radius: 16px;
+
+  h2 {
+    font-size: 16px;
+    font-weight: 700;
+    color: $ink;
+  }
+  p {
+    margin-top: 10px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: $muted;
+  }
+  ul {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    li {
+      position: relative;
+      padding-left: 18px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: $muted;
+
+      &::before {
+        content: "";
+        position: absolute;
+        left: 2px;
+        top: 9px;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: $primary;
+      }
+    }
+  }
+}
+
+.policy-card-head {
+  @include flex(12px);
+
+  .policy-card-icon {
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: $primary-soft;
+    color: $primary;
+    @include flex-center();
+  }
+}
+
+.policy-contact {
+  @include flex(12px, flex-start);
+  padding: 18px;
+  background: $primary-soft;
+  border: 1px solid $primary-border;
+  border-radius: 16px;
+  color: $primary-dark;
+
+  svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  strong {
+    font-size: 15px;
+    color: $primary-dark;
+  }
+  p {
+    margin-top: 4px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: $muted;
+  }
+}
+
+.policy-footer {
+  padding: 22px 0;
+  background: $policy-footer-bg;
+
+  p {
+    text-align: center;
+    font-size: 13px;
+    color: #94a3b8;
+  }
+}
