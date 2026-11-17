@@ -56,6 +56,13 @@ ul {
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+.brand-logo {
+  display: block;
+  width: auto;
+  height: clamp(26px, calc(1.25vw + 24px), var(--brand-logo-height));
+  max-width: 100%;
+  flex: none;
+}
 .page-title {
   font-size: 22px;
   font-weight: 700;

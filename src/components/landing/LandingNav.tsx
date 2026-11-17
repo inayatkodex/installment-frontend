@@ -32,7 +32,7 @@ const LandingNav = () => {
         <Link
           href={ROUTES.HOME.INDEX}
           className="lp-logo"
-          aria-label="Installment Pro, home"
+          aria-label="QistPro, home"
         >
           <BrandLogo size={34} />
         </Link>

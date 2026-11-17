@@ -1,11 +1,11 @@
-# Installment Pro (Next.js)
+# QistPro (Next.js)
 
 Dukaandaron ke liye qiston ka hisaab. Do alag portal:
 
 - **Shopkeeper** - `/shop/login`, `/shop/signup`, `/shop/dashboard` ...
 - **Admin** - `/admin/signin`, `/admin/dashboard`, `/admin/shops`
 
-Mobile-first (390px). Baad mein mobile app isi API par banegi.
+Mobile-first shop and admin portals backed by the QistPro API.
 
 ## VS Code mein chalane ka tareeqa
 

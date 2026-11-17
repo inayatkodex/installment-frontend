@@ -4,7 +4,7 @@ import CustomerForm from "@/components/shop/customer-form/CustomerForm";
 import { ROUTES } from "@/constant/appRoutes";
 import "./add-customer.scss";
 
-export const metadata = { title: "Naya customer · Installment Pro" };
+export const metadata = { title: "Naya customer · QistPro" };
 
 const AddCustomerPage = () => (
   <div className="add-customer-page">

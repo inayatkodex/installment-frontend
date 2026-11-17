@@ -45,7 +45,7 @@ const ShopLoginPage = () => {
     <main className="shop-login">
       <form className="shop-login-card" onSubmit={handleLogin} noValidate>
         <BrandLogo size={44} />
-        <h1 className="visually-hidden">Installment Pro</h1>
+        <h1 className="visually-hidden">QistPro</h1>
         <p className="shop-login-tag">Qiston ka hisaab, aasaan tareeqe se</p>
 
         <div className="shop-login-fields">

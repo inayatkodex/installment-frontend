@@ -18,9 +18,9 @@ import { ROUTES } from "@/constant/appRoutes";
 import BrandLogo from "@/components/common/BrandLogo";
 import "./privacy.scss";
 
-const TITLE = "Privacy Policy | Installment Pro";
+const TITLE = "Privacy Policy | QistPro";
 const DESCRIPTION =
-  "Installment Pro kin maloomat ko collect karta hai, unhein kaise istemal aur mehfooz rakhta hai. Poori privacy policy Roman Urdu mein.";
+  "QistPro kin maloomat ko collect karta hai, unhein kaise istemal aur mehfooz rakhta hai. Poori privacy policy Roman Urdu mein.";
 
 export const metadata: Metadata = {
   title: TITLE,
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     type: "website",
     locale: "en_PK",
-    siteName: "Installment Pro",
+    siteName: "QistPro",
   },
 };
 
@@ -46,8 +46,8 @@ const SECTIONS: PolicySection[] = [
     icon: Info,
     title: "Ye policy kis bare mein hai",
     paragraphs: [
-      "Installment Pro aap ki dukaan ka installment hisaab rakhne wali app aur website hai. Ye Privacy Policy batati hai ke hum kaun sa data collect karte hain, usay kaise istemal karte hain, aur usay kaise mehfooz rakhte hain.",
-      "Installment Pro istemal karne ka matlab hai ke aap is policy se ittefaq rakhte hain.",
+      "QistPro aap ki dukaan ka installment hisaab rakhne wali app aur website hai. Ye Privacy Policy batati hai ke hum kaun sa data collect karte hain, usay kaise istemal karte hain, aur usay kaise mehfooz rakhte hain.",
+      "QistPro istemal karne ka matlab hai ke aap is policy se ittefaq rakhte hain.",
     ],
   },
   {
@@ -115,7 +115,7 @@ const PrivacyPolicyPage = () => (
   <main className="policy">
     <header className="policy-top">
       <div className="policy-container policy-top-inner">
-        <Link href={ROUTES.HOME.INDEX} className="policy-logo" aria-label="Installment Pro">
+        <Link href={ROUTES.HOME.INDEX} className="policy-logo" aria-label="QistPro">
           <BrandLogo size={30} />
         </Link>
         <Link href={ROUTES.HOME.INDEX} className="policy-back">
@@ -174,7 +174,7 @@ const PrivacyPolicyPage = () => (
     <footer className="policy-footer">
       <div className="policy-container">
         <p>
-          © {new Date().getFullYear()} Installment Pro. Saare haqooq mahfooz.
+          © {new Date().getFullYear()} QistPro. Saare haqooq mahfooz.
         </p>
       </div>
     </footer>

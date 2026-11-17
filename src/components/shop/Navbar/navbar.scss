@@ -19,13 +19,6 @@
     display: inline-flex;
     align-items: center;
   }
-  .shop-navbar-brand > img {
-    display: block;
-    width: auto;
-    height: 34px;
-    max-width: 100%;
-    flex: none;
-  }
   .shop-navbar-actions {
     @include flex(8px);
   }
@@ -234,18 +227,12 @@
     height: 64px;
     padding-right: 16px;
     padding-left: 16px;
-    .shop-navbar-brand > img {
-      height: 30px;
-    }
   }
 }
 
 @media only screen and (min-width: 577px) and (max-width: 767px) {
   .shop-navbar {
     height: 64px;
-    .shop-navbar-brand > img {
-      height: 32px;
-    }
   }
 }
 
@@ -256,10 +243,7 @@
     padding-left: 12px;
 
     .shop-navbar-brand > img {
-      width: auto;
       max-width: calc(100vw - 176px);
-      height: auto;
-      max-height: 30px;
     }
 
     .shop-navbar-account-trigger {

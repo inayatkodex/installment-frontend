@@ -24,7 +24,7 @@ const Navbar = () => {
   return (
     <header className="admin-navbar">
       <div className="an-brand">
-        <BrandLogo size={28} />
+        <BrandLogo size={34} />
         <span>Admin</span>
       </div>
       <div className="an-right">

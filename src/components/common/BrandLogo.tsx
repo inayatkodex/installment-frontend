@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import Image from "next/image";
 
 interface BrandLogoProps {
@@ -16,13 +17,14 @@ const BrandLogo = ({
   <Image
     src={
       variant === "white"
-        ? "/logo/installment-pro-logo-horizontal-white.svg"
-        : "/logo/installment-pro-logo-horizontal.svg"
+        ? "/qistpro-logos/svg/05-logo-white-transparent.svg"
+        : "/qistpro-logos/svg/01-logo-primary.svg"
     }
-    width={Math.round(size * 4.711)}
+    width={Math.round(size * (879 / 258))}
     height={size}
     loading="eager"
-    className={className}
+    className={["brand-logo", className].filter(Boolean).join(" ")}
+    style={{ "--brand-logo-height": `${size}px` } as CSSProperties}
     alt={title ?? ""}
     aria-hidden={title ? undefined : true}
   />

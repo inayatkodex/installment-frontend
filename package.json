@@ -1,6 +1,7 @@
 {
-  "name": "installment-pro",
+  "name": "qistpro",
   "version": "0.2.0",
+  "description": "QistPro installment management web application.",
   "private": true,
   "scripts": {
     "dev": "next dev",

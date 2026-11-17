@@ -5,7 +5,7 @@ import SignupForm from "@/components/shop/signup-form/SignupForm";
 import { ROUTES } from "@/constant/appRoutes";
 import "./signup.scss";
 
-export const metadata = { title: "Signup · Installment Pro" };
+export const metadata = { title: "Signup · QistPro" };
 
 const ShopSignupPage = () => (
   <main className="shop-signup">
@@ -19,7 +19,7 @@ const ShopSignupPage = () => (
       </span>
     </header>
     <div className="shop-signup-body">
-      <BrandLogo size={28} className="shop-signup-logo" />
+      <BrandLogo size={40} className="shop-signup-logo" />
       <SignupForm />
     </div>
   </main>

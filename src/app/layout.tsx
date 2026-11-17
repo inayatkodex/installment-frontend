@@ -7,12 +7,12 @@ import "../styles/global.scss";
 import ClientProviders from "./ClientProviders";
 
 export const metadata: Metadata = {
-  title: "Installment Pro",
+  title: "QistPro",
   description: "Dukaandaron ke liye aasaan qiston ka hisaab",
   icons: {
-    icon: "/logo/favicon.svg",
-    shortcut: "/logo/favicon.ico",
-    apple: "/logo/apple-touch-icon-180.png",
+    icon: "/qistpro-logos/svg/favicon-32x32.svg",
+    shortcut: "/qistpro-logos/favicon.ico",
+    apple: "/qistpro-logos/apple-touch-icon.png",
   },
 };
 

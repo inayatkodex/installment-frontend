@@ -61,7 +61,7 @@ const AdminSignInPage = () => {
 
   return (
     <main className="admin-signin">
-      <section className="as-hero" aria-label="Installment Pro Admin">
+      <section className="as-hero" aria-label="QistPro Admin">
         <div className="as-hero-inner">
           <span className="as-badge">
             <BrandLogo size={26} variant="white" />

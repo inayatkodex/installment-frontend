@@ -2,7 +2,7 @@
 @use "../../styles/variables.scss" as *;
 
 // ---------------------------------------------------------------
-// Installment Pro · landing page
+// QistPro · landing page
 // All classes are prefixed with `lp-` so they never clash with the app.
 // ---------------------------------------------------------------
 
@@ -143,21 +143,7 @@ $lift-shadow: 0 18px 44px rgba(16, 64, 128, 0.14);
   display: inline-flex;
   align-items: center;
   img {
-    flex: none;
     display: block;
-    width: auto;
-    height: 34px;
-    max-width: 100%;
-  }
-  @include tablet {
-    img {
-      height: 32px;
-    }
-  }
-  @include mobile {
-    img {
-      height: 30px;
-    }
   }
 }
 .lp-nav-links {

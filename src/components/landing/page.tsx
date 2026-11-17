@@ -257,7 +257,7 @@ const LandingPage = () => (
             id="lp-compare-title"
             eyebrow="Purana tareeqa, naya tareeqa"
             title="Register mein likhna aasan hai. Yaad rakhna mushkil."
-            text="Installment Pro wohi kaam karta hai jo aap roz karte hain, bas bhoolne ki gunjaish khatam."
+            text="QistPro wohi kaam karta hai jo aap roz karte hain, bas bhoolne ki gunjaish khatam."
           />
           <div className="lp-compare lp-reveal">
             <article className="lp-compare-card lp-bad">
@@ -276,7 +276,7 @@ const LandingPage = () => (
             </article>
             <article className="lp-compare-card lp-good">
               <span className="lp-tag">AB</span>
-              <h3>Installment Pro ke sath</h3>
+              <h3>QistPro ke sath</h3>
               <ul>
                 {SOLUTIONS.map((t) => (
                   <li key={t}>
@@ -440,7 +440,7 @@ const LandingPage = () => (
             <Link
               href={ROUTES.HOME.INDEX}
               className="lp-logo"
-              aria-label="Installment Pro, home"
+              aria-label="QistPro, home"
             >
               <BrandLogo size={34} variant="white" />
             </Link>
@@ -456,7 +456,7 @@ const LandingPage = () => (
           </nav>
         </div>
         <p className="lp-copy">
-          © {new Date().getFullYear()} Installment Pro. Saare haqooq mahfooz.
+          © {new Date().getFullYear()} QistPro. Saare haqooq mahfooz.
         </p>
       </div>
     </footer>

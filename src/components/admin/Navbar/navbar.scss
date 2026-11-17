@@ -21,11 +21,6 @@
     align-items: center;
     min-width: 0;
 
-    img {
-      width: 132px;
-      height: auto;
-      flex: none;
-    }
     span {
       font-size: 12px;
       padding: 4px 8px;
@@ -75,9 +70,6 @@
   @include mobile() {
     padding: 0 14px;
 
-    .an-brand img {
-      width: 118px;
-    }
     .an-brand span {
       display: none;
     }
