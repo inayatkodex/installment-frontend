@@ -32,6 +32,38 @@
     text-align: left;
     @include flex-wrapper(16px);
   }
+  .shop-login-agree {
+    width: 100%;
+    @include flex(10px, flex-start);
+    text-align: left;
+    color: $muted;
+    font-size: 13px;
+    line-height: 1.45;
+    cursor: pointer;
+    input[type="checkbox"] {
+      flex: none;
+      width: 18px;
+      height: 18px;
+      margin-top: 1px;
+      accent-color: $primary;
+      cursor: pointer;
+      &:disabled {
+        cursor: not-allowed;
+      }
+    }
+    .shop-login-agree-link {
+      color: $primary;
+      font-weight: 700;
+      text-decoration: underline;
+    }
+  }
+  .shop-login-agree-error {
+    width: 100%;
+    text-align: left;
+    color: $danger;
+    font-size: 12.5px;
+    font-weight: 600;
+  }
   .shop-login-divider {
     width: 100%;
     @include flex(12px);

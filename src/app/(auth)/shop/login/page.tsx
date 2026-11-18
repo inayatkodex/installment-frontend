@@ -21,6 +21,8 @@ const ShopLoginPage = () => {
   const loading = useAppSelector((s) => s.shopAuth.loading);
   const [form, setForm] = useState({ mobile: "", password: "" });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [agreed, setAgreed] = useState(false);
+  const [agreementError, setAgreementError] = useState<string | null>(null);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,6 +31,13 @@ const ShopLoginPage = () => {
       errs.mobile = "Mobile number 11 digits ka hona chahiye";
     setErrors(errs);
     if (Object.keys(errs).length) return;
+    if (!agreed) {
+      setAgreementError(
+        "Login se pehle Terms aur Privacy Policy se ittefaq karein.",
+      );
+      return;
+    }
+    setAgreementError(null);
 
     try {
       await dispatch(shopLogin({ ...form, rememberMe: true })).unwrap();
@@ -77,6 +86,34 @@ const ShopLoginPage = () => {
             error={errors.password}
           />
         </div>
+
+        <label className="shop-login-agree">
+          <input
+            type="checkbox"
+            checked={agreed}
+            disabled={loading}
+            onChange={(e) => {
+              setAgreed(e.target.checked);
+              setAgreementError(null);
+            }}
+          />
+          <span>
+            Main{" "}
+            <Link href={ROUTES.TERMS} className="shop-login-agree-link">
+              Terms and Conditions
+            </Link>{" "}
+            aur{" "}
+            <Link href={ROUTES.PRIVACY} className="shop-login-agree-link">
+              Privacy Policy
+            </Link>{" "}
+            se ittefaq karta/karti hoon.
+          </span>
+        </label>
+        {agreementError && (
+          <p className="shop-login-agree-error" role="alert">
+            {agreementError}
+          </p>
+        )}
 
         <CommonBtn
           type="submit"

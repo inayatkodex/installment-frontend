@@ -436,32 +436,74 @@ export const ShopProfileSkeleton = () => (
     <section className="sp-card">
       <div className="sp-heading">
         <Skeleton className="sp-photo" width={58} height={58} radius="50%" />
-        <div className="sp-shop-name sp-skeleton-shop-name">
-          <Skeleton width="min(100%, 230px)" height={24} />
-          <Skeleton width={82} height={15} />
+        <div className="sp-shop-name">
+          <Skeleton width="min(100%, 224px)" height={22} />
+          <Skeleton width={80} height={14} />
         </div>
         <div className="sp-heading-actions">
-          <Skeleton width={76} height={28} radius={999} />
-          <Skeleton width={114} height={38} radius={9} />
+          <Skeleton width={76} height={26} radius={999} />
+          <Skeleton width={116} height={38} radius={9} />
         </div>
       </div>
+
       <div className="sp-owner">
-        <Skeleton className="sp-owner-icon" width={40} height={40} radius="50%" />
-        <div className="sp-skeleton-owner">
-          <Skeleton width={42} height={13} />
-          <Skeleton width={142} height={17} />
+        <Skeleton className="sp-owner-icon" />
+        <div>
+          <Skeleton width={42} height={12} />
+          <Skeleton width={146} height={16} />
         </div>
       </div>
+
       <dl className="sp-details">
         {Array.from({ length: 7 }, (_, index) => (
           <div key={index}>
-            <dt><Skeleton width={108} height={15} /></dt>
-            <dd><Skeleton width={`${38 + (index % 3) * 10}%`} height={15} /></dd>
+            <dt>
+              <Skeleton width={108} height={14} />
+            </dt>
+            <dd>
+              <Skeleton width={`${42 + (index % 3) * 12}%`} height={14} />
+            </dd>
           </div>
         ))}
       </dl>
+
       <div className="sp-card-actions">
         <Skeleton width={168} height={44} radius={10} />
+      </div>
+    </section>
+
+    <section className="sp-password">
+      <div className="sp-password-heading">
+        <div className="sp-skeleton-copy">
+          <Skeleton width={190} height={20} />
+          <Skeleton width="min(100%, 320px)" height={14} />
+        </div>
+        <Skeleton
+          className="sp-password-skel-btn"
+          width={196}
+          height={48}
+          radius={10}
+        />
+      </div>
+    </section>
+
+    <section className="sp-info">
+      <Skeleton width={152} height={22} />
+      <div className="sp-info-rows">
+        {[0, 1, 2].map((index) => (
+          <div className="sp-info-row" key={index}>
+            <Skeleton className="sp-info-icon" />
+            <span className="sp-info-label">
+              <Skeleton width={`${46 + index * 12}%`} height={15} />
+            </span>
+            <Skeleton
+              className="sp-info-chevron"
+              width={18}
+              height={18}
+              radius={5}
+            />
+          </div>
+        ))}
       </div>
     </section>
   </SkeletonGroup>

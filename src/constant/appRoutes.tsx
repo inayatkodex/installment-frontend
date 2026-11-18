@@ -2,6 +2,8 @@ export const ROUTES = {
   HOME: { INDEX: "/" },
 
   PRIVACY: "/privacy",
+  ABOUT: "/about",
+  TERMS: "/terms",
 
   ADMIN: {
     SIGNIN: "/admin/signin",

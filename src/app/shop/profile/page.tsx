@@ -7,8 +7,11 @@ import { useRouter } from "next/navigation";
 import {
   Camera,
   ChevronLeft,
+  ChevronRight,
+  FileText,
   LockKeyhole,
   Pencil,
+  ShieldCheck,
   Store,
   UserRound,
 } from "lucide-react";
@@ -580,6 +583,35 @@ const ShopProfilePage = () => {
               </div>
             </form>
           )}
+        </section>
+      )}
+
+      {!loading && profile && (
+        <section className="sp-info" aria-label="App ke bare mein">
+          <h2>App ke bare mein</h2>
+          <div className="sp-info-rows">
+            <Link href={ROUTES.ABOUT} className="sp-info-row">
+              <span className="sp-info-icon" aria-hidden="true">
+                <Store size={18} />
+              </span>
+              <span className="sp-info-label">About Us</span>
+              <ChevronRight size={18} aria-hidden="true" />
+            </Link>
+            <Link href={ROUTES.PRIVACY} className="sp-info-row">
+              <span className="sp-info-icon" aria-hidden="true">
+                <ShieldCheck size={18} />
+              </span>
+              <span className="sp-info-label">Privacy Policy</span>
+              <ChevronRight size={18} aria-hidden="true" />
+            </Link>
+            <Link href={ROUTES.TERMS} className="sp-info-row">
+              <span className="sp-info-icon" aria-hidden="true">
+                <FileText size={18} />
+              </span>
+              <span className="sp-info-label">Terms and Conditions</span>
+              <ChevronRight size={18} aria-hidden="true" />
+            </Link>
+          </div>
         </section>
       )}
     </div>

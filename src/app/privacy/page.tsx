@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import {
-  ArrowLeft,
   Ban,
   ChartColumn,
-  CircleHelp,
   FolderOpen,
   IdCard,
   Info,
@@ -12,11 +9,8 @@ import {
   RefreshCw,
   ShieldCheck,
   Trash2,
-  type LucideIcon,
 } from "lucide-react";
-import { ROUTES } from "@/constant/appRoutes";
-import BrandLogo from "@/components/common/BrandLogo";
-import "./privacy.scss";
+import InfoPage, { type InfoSection } from "@/components/common/InfoPage/InfoPage";
 
 const TITLE = "Privacy Policy | QistPro";
 const DESCRIPTION =
@@ -34,14 +28,7 @@ export const metadata: Metadata = {
   },
 };
 
-interface PolicySection {
-  icon: LucideIcon;
-  title: string;
-  paragraphs?: string[];
-  bullets?: string[];
-}
-
-const SECTIONS: PolicySection[] = [
+const SECTIONS: InfoSection[] = [
   {
     icon: Info,
     title: "Ye policy kis bare mein hai",
@@ -112,73 +99,14 @@ const SECTIONS: PolicySection[] = [
 ];
 
 const PrivacyPolicyPage = () => (
-  <main className="policy">
-    <header className="policy-top">
-      <div className="policy-container policy-top-inner">
-        <Link href={ROUTES.HOME.INDEX} className="policy-logo" aria-label="QistPro">
-          <BrandLogo size={30} />
-        </Link>
-        <Link href={ROUTES.HOME.INDEX} className="policy-back">
-          <ArrowLeft size={18} aria-hidden="true" />
-          Wapas
-        </Link>
-      </div>
-    </header>
-
-    <section className="policy-hero">
-      <div className="policy-container">
-        <span className="policy-shield" aria-hidden="true">
-          <ShieldCheck size={32} />
-        </span>
-        <h1>Aap ki maloomat, aap ke paas</h1>
-        <p>Aakhri update: {new Date().getFullYear()}</p>
-      </div>
-    </section>
-
-    <section className="policy-body">
-      <div className="policy-container">
-        {SECTIONS.map(({ icon: Icon, title, paragraphs, bullets }) => (
-          <article className="policy-card" key={title}>
-            <div className="policy-card-head">
-              <span className="policy-card-icon" aria-hidden="true">
-                <Icon size={20} />
-              </span>
-              <h2>{title}</h2>
-            </div>
-            {paragraphs?.map((text) => (
-              <p key={text}>{text}</p>
-            ))}
-            {bullets && (
-              <ul>
-                {bullets.map((text) => (
-                  <li key={text}>{text}</li>
-                ))}
-              </ul>
-            )}
-          </article>
-        ))}
-
-        <div className="policy-contact">
-          <CircleHelp size={22} aria-hidden="true" />
-          <div>
-            <strong>Koi sawal hai?</strong>
-            <p>
-              Privacy ya aap ke data ke bare mein koi bhi sawal ho to apne
-              dukaan admin se rabta karein.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <footer className="policy-footer">
-      <div className="policy-container">
-        <p>
-          © {new Date().getFullYear()} QistPro. Saare haqooq mahfooz.
-        </p>
-      </div>
-    </footer>
-  </main>
+  <InfoPage
+    heroIcon={ShieldCheck}
+    heroTitle="Aap ki maloomat, aap ke paas"
+    heroSubtitle={`Aakhri update: ${new Date().getFullYear()}`}
+    sections={SECTIONS}
+    contactTitle="Koi sawal hai?"
+    contactBody="Privacy ya aap ke data ke bare mein koi bhi sawal ho to apne dukaan admin se rabta karein."
+  />
 );
 
 export default PrivacyPolicyPage;

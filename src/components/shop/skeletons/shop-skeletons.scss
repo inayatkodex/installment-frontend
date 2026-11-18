@@ -885,33 +885,89 @@
 }
 
 .shop-profile-skeleton {
-  .sp-heading {
-    flex-wrap: nowrap;
+  // Har section asli page ke DOM/classes ko mirror karta hai; sirf text ki
+  // jagah shimmer bars hain.
+
+  .sp-shop-name {
+    @include flex-wrapper(6px);
   }
 
-  .sp-shop-name,
-  .sp-owner {
-    @include flex-wrapper(5px);
+  .sp-shop-name > .skeleton,
+  .sp-heading-actions > .skeleton {
+    flex: none;
   }
 
   .sp-heading-actions {
     gap: 8px;
   }
 
-  .sp-owner {
-    flex-direction: row;
-    align-items: center;
+  // Asli `sp-owner-icon`/`sp-info-icon` ka solid background shimmer ko
+  // chhupa deta hai — is liye tinted gradient dubara apply karte hain.
+  .sp-owner-icon.skeleton,
+  .sp-info-icon.skeleton {
+    background-image: linear-gradient(
+      90deg,
+      $primary-border 25%,
+      $white 50%,
+      $primary-border 75%
+    );
+    background-size: 200% 100%;
   }
 
-  .sp-details dt,
-  .sp-details dd {
+  .sp-owner > .skeleton {
+    flex: none;
+  }
+
+  .sp-details {
+    dt,
+    dd {
+      display: flex;
+      align-items: center;
+    }
+
+    dt > .skeleton,
+    dd > .skeleton {
+      flex: none;
+    }
+
+    dd {
+      justify-content: flex-end;
+    }
+  }
+
+  .sp-card-actions > .skeleton {
+    flex: none;
+  }
+
+  .sp-skeleton-copy {
+    @include flex-wrapper(5px);
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  .sp-skeleton-copy > .skeleton,
+  .sp-password-skel-btn {
+    flex: none;
+  }
+
+  .sp-info-label {
     display: flex;
     align-items: center;
   }
 
-  .sp-card-actions {
-    .skeleton {
-      flex: none;
+  .sp-info-label > .skeleton,
+  .sp-info-chevron {
+    flex: none;
+  }
+
+  // Skeleton par hover/interaction ka koi matlab nahi.
+  .sp-info-row {
+    pointer-events: none;
+  }
+
+  @include mobile() {
+    .sp-password-skel-btn {
+      width: 100%;
     }
   }
 }

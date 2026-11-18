@@ -1,14 +1,14 @@
-@use "../../styles/mixin.scss" as *;
-@use "../../styles/variables.scss" as *;
+@use "../../../styles/mixin.scss" as *;
+@use "../../../styles/variables.scss" as *;
 
 // ---------------------------------------------------------------
-// QistPro · Privacy Policy page
-// Public page (no auth). Classes prefixed `policy-` to avoid clashes.
+// QistPro · Shared info page shell (About Us / Privacy / Terms)
+// Public pages (no auth). Classes prefixed `info-` to avoid clashes.
 // ---------------------------------------------------------------
 
-$policy-footer-bg: #0f172a;
+$info-footer-bg: #0f172a;
 
-.policy {
+.info-page {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -16,14 +16,14 @@ $policy-footer-bg: #0f172a;
   color: $ink;
 }
 
-.policy-container {
+.info-container {
   width: 100%;
   max-width: 760px;
   margin: 0 auto;
   padding: 0 20px;
 }
 
-.policy-top {
+.info-top {
   position: sticky;
   top: 0;
   z-index: 10;
@@ -31,27 +31,27 @@ $policy-footer-bg: #0f172a;
   backdrop-filter: blur(8px);
   border-bottom: 1px solid $line;
 }
-.policy-top-inner {
+.info-top-inner {
   height: 60px;
   @include flex-between(16px);
 }
-.policy-logo {
+.info-logo {
   display: inline-flex;
   align-items: center;
 }
-.policy-back {
+.info-back {
   @include flex(8px);
   font-size: 14px;
   font-weight: 600;
   color: $primary;
 }
 
-.policy-hero {
+.info-hero {
   padding: 40px 0 28px;
   text-align: center;
   background: linear-gradient(180deg, $primary-soft, $white);
 
-  .policy-shield {
+  .info-hero-icon {
     width: 64px;
     height: 64px;
     margin: 0 auto 16px;
@@ -80,18 +80,18 @@ $policy-footer-bg: #0f172a;
   }
 }
 
-.policy-body {
+.info-body {
   flex: 1;
   padding: 28px 0 48px;
 
-  .policy-container {
+  .info-container {
     display: flex;
     flex-direction: column;
     gap: 14px;
   }
 }
 
-.policy-card {
+.info-card {
   padding: 18px;
   background: $white;
   border: 1px solid $border;
@@ -135,10 +135,10 @@ $policy-footer-bg: #0f172a;
   }
 }
 
-.policy-card-head {
+.info-card-head {
   @include flex(12px);
 
-  .policy-card-icon {
+  .info-card-icon {
     flex-shrink: 0;
     width: 36px;
     height: 36px;
@@ -149,7 +149,7 @@ $policy-footer-bg: #0f172a;
   }
 }
 
-.policy-contact {
+.info-contact {
   @include flex(12px, flex-start);
   padding: 18px;
   background: $primary-soft;
@@ -173,9 +173,9 @@ $policy-footer-bg: #0f172a;
   }
 }
 
-.policy-footer {
+.info-footer {
   padding: 22px 0;
-  background: $policy-footer-bg;
+  background: $info-footer-bg;
 
   p {
     text-align: center;
